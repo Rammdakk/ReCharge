@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ReCharge</string>
+    <string name="greeting">\nПривет!</string>
+    <string name="conditional_info">Совершая авторизацию, вы соглашаетесь\nс правилами работы сервиса</string>
+</resources>

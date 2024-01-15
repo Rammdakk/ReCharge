@@ -1,4 +1,4 @@
-package com.rammdakk.recharge.ui.theme
+package com.rammdakk.recharge.base.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

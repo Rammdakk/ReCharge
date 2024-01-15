@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">ReCharge</string>
     <string name="greeting">\nПривет!</string>
+    <string name="request_code_title">Введите код из смс</string>
+    <string name="resend_code">Отправить код повторно</string>
     <string name="conditional_info">Совершая авторизацию, вы соглашаетесь\nс правилами работы сервиса</string>
+    <string name="greeting_with_username">Привет, %1$s!</string>
+    <string name="greeting_without_username">Привет!</string>
+    <string name="today">сегодня, %1$s</string>
+    <string name="next_activity">Следующее занятие</string>
+    <string name="suggested_activity">Рекомендуем</string>
+    <string name="contacts">Контакты</string>
 </resources>

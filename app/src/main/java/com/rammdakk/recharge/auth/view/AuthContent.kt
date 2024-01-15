@@ -1,23 +1,19 @@
 package com.rammdakk.recharge.auth.view
 
-import androidx.activity.ComponentActivity
 import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.rammdakk.recharge.base.MainViewModel
-import com.rammdakk.recharge.destinations.MainScreenDestination
 
 @Destination
 @Composable
 fun AuthContent(
-    navigator: DestinationsNavigator,
-    vm: MainViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    vm: AuthViewModel
 ) {
-    Crossfade(targetState = vm.authState.value) { state ->
+
+    val uiState by vm.authState
+    Crossfade(targetState = uiState, label = "") { state ->
         if (state is AuthScreenState.Idle) {
             vm.init()
         }
@@ -25,8 +21,8 @@ fun AuthContent(
             AuthPhoneScreen(
                 greetingText = stringResource(id = state.greetingText),
                 hintText = state.hintText?.let { stringResource(id = it) },
-                onClick = state.onClick,
-                extraInfo = state.extraInfo,
+                onClick = state.onRequestCodeClick,
+                errorMessage = state.errorMessage,
             )
         }
         if (state is AuthScreenState.RequestCode) {
@@ -34,14 +30,11 @@ fun AuthContent(
                 greetingText = state.greetingText,
                 codeSize = state.codeSize,
                 onBackPressed = state.onBackPressed,
-                onClick = state.onClick,
-                extraInfo = state.extraInfo,
-                errorInfo = state.extraInfo,
+                onClick = state.onSubmitClick,
+                onRequestCodeClick = state.onRequestCodeClick,
+                errorMessage = state.errorMessage,
                 bottomInfo = state.bottomInfo
             )
-        }
-        if (state is AuthScreenState.LoggedIn) {
-            navigator.navigate(MainScreenDestination)
         }
     }
 

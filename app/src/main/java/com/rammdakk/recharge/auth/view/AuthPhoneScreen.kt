@@ -46,6 +46,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rammdakk.recharge.R
+import com.rammdakk.recharge.base.theme.ReChargeTokens
+import com.rammdakk.recharge.base.theme.getThemedColor
 
 @SuppressLint("UnrememberedMutableState")
 @Preview
@@ -55,16 +57,19 @@ fun AuthPreview() {
         greetingText = "Привет!",
         onClick = { },
         hintText = "Номер телефона",
-        extraInfo = mutableStateOf(ExtraInfo("Отправить код повторно", false, null)),
+        errorMessage = mutableStateOf("Отправить код повторно")
     )
 }
 
+/**
+ * Экран ввода номера телефона
+ */
 @Composable
 fun AuthPhoneScreen(
     greetingText: String,
     hintText: String? = null,
     onClick: (String) -> Unit,
-    extraInfo: State<ExtraInfo?>,
+    errorMessage: State<String?>,
 ) {
     Column(
         modifier = Modifier
@@ -87,22 +92,20 @@ fun AuthPhoneScreen(
             textAlign = TextAlign.Center,
             fontSize = 45.sp,
             lineHeight = 50.sp,
-            color = Color.White,
+            color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
             fontWeight = FontWeight.Bold
         )
         PhoneCell(hint = hintText) { str -> onClick.invoke(str) }
-        extraInfo.value?.let { info ->
-            Text(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(vertical = 20.dp),
-                text = info.message ?: "",
-                textAlign = TextAlign.Center,
-                fontSize = 14.sp,
-                color = if (info.isError) Color.Red else Color.White,
-                fontWeight = FontWeight.Bold
-            )
-        }
+        Text(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(vertical = 10.dp),
+            text = errorMessage.value ?: "",
+            textAlign = TextAlign.Center,
+            fontSize = 14.sp,
+            color = ReChargeTokens.TextError.getThemedColor(),
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
@@ -129,7 +132,10 @@ fun PhoneCell(hint: String? = null, onVerifyClick: (String) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .background(Color.White, shape = RoundedCornerShape(50))
+                .background(
+                    ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+                    shape = RoundedCornerShape(50)
+                )
                 .onSizeChanged {
                     height = it.height
                 }
@@ -156,7 +162,13 @@ fun PhoneCell(hint: String? = null, onVerifyClick: (String) -> Unit) {
                 Text(text = "+7 ", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 Box {
                     if (text.text.isEmpty()) {
-                        hint?.let { Text(it, fontSize = 24.sp, color = Color.LightGray) }
+                        hint?.let {
+                            Text(
+                                it,
+                                fontSize = 24.sp,
+                                color = ReChargeTokens.TextTertiary.getThemedColor()
+                            )
+                        }
                     }
                     innerTextField()
                 }
@@ -178,7 +190,7 @@ fun PhoneCell(hint: String? = null, onVerifyClick: (String) -> Unit) {
                     .height(height = (height).pxToDp() - 10.dp)
                     .padding(10.dp)
                     .aspectRatio(1f, true),
-                Color.White
+                ReChargeTokens.TextPrimaryInverse.getThemedColor()
             )
         }
     }

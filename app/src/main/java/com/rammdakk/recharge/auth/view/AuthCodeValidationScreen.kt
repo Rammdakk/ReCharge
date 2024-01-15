@@ -1,8 +1,6 @@
 package com.rammdakk.recharge.auth.view
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,9 +33,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -46,8 +44,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import com.rammdakk.recharge.R
+import com.rammdakk.recharge.base.theme.ReChargeTokens
+import com.rammdakk.recharge.base.theme.getThemedColor
 
 @SuppressLint("UnrememberedMutableState")
 @Preview
@@ -59,12 +58,12 @@ fun AuthCodePreview() {
         codeSize = 5,
         onBackPressed = {},
         onClick = { },
-        errorInfo = mutableStateOf(null),
-        extraInfo = mutableStateOf(ExtraInfo("Отправить код повторно", false, null)),
+        errorMessage = mutableStateOf(null),
+        onRequestCodeClick = {},
         bottomInfo = mutableStateOf(
             BottomInfo(
                 "Совершая авторизацию, вы соглашаетесь \n" +
-                        "с правилами работы сервиса", "", {}
+                        "с правилами работы сервиса", {}
             )
         )
     )
@@ -76,8 +75,8 @@ fun AuthCodeValidationScreen(
     codeSize: Int,
     onBackPressed: () -> Unit,
     onClick: (String) -> Unit,
-    errorInfo: State<ExtraInfo?>,
-    extraInfo: State<ExtraInfo?>,
+    errorMessage: State<String?>,
+    onRequestCodeClick: () -> Unit,
     bottomInfo: State<BottomInfo?>
 ) {
     Column(
@@ -104,7 +103,7 @@ fun AuthCodeValidationScreen(
                 .clickable { onBackPressed.invoke() }
                 .height(height = 45.dp)
                 .aspectRatio(1f, true)
-                .padding(10.dp), Color.White)
+                .padding(10.dp), ReChargeTokens.TextPrimaryInverse.getThemedColor())
         Box(modifier = Modifier.fillMaxHeight(0.3f))
         Text(
             modifier = Modifier
@@ -114,50 +113,45 @@ fun AuthCodeValidationScreen(
             textAlign = TextAlign.Center,
             fontSize = 45.sp,
             lineHeight = 50.sp,
-            color = Color.White,
+            color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
             fontWeight = FontWeight.Bold
         )
         CodeCell(codeSize) { str -> onClick.invoke(str) }
-        extraInfo.value?.let { info ->
-            Text(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 10.dp)
-                    .clickable { info.onClick },
-                text = info.message ?: "",
-                textAlign = TextAlign.Center,
-                fontSize = 14.sp,
-                color = if (info.isError) Color.Red else Color.White,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        errorInfo.value?.let {info ->
-            Text(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally),
-                text = info.message ?: "",
-                textAlign = TextAlign.Center,
-                fontSize = 14.sp,
-                color = Color.Red,
-                fontWeight = FontWeight.Bold
-            )
+        Text(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 10.dp),
+            text = errorMessage.value ?: "",
+            textAlign = TextAlign.Center,
+            fontSize = 14.sp,
+            color = ReChargeTokens.TextError.getThemedColor(),
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 5.dp)
+                .clickable { onRequestCodeClick.invoke() },
+            text = stringResource(id = R.string.resend_code),
+            textAlign = TextAlign.Center,
+            fontSize = 14.sp,
+            color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+            fontWeight = FontWeight.Bold
+        )
 
-        }
         bottomInfo.value?.let { info ->
             Box(modifier = Modifier.fillMaxSize()) {
-                val context = LocalContext.current
                 Text(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(vertical = 20.dp)
                         .clickable {
-                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(info.path))
-                            ContextCompat.startActivity(context, browserIntent, null)
+                            info.onClick?.invoke()
                         },
                     text = info.message,
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
-                    color = Color.White,
+                    color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
                     fontWeight = FontWeight.Bold
                 )
             }

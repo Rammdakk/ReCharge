@@ -9,13 +9,16 @@ import kotlinx.coroutines.withContext
 
 class AuthRepositoryImpl : AuthRepository {
     override suspend fun requestCode(phone: String): AuthPhoneResponse {
-        delay(2000)
+        delay(200)
         return AuthPhoneResponse(
-            true, "", "Введите \n" +
-                    "код из смс", 5, ConditionalInfo(
+            true, null, "423678",
+            "Введите \n" +
+                    "код из смс",
+            5,
+            ConditionalInfo(
                 "Совершая авторизацию, вы соглашаетесь \n" +
-                        "с правилами работы сервиса", ""
-            ), "Отправить код повторно"
+                        "с правилами работы сервиса", "http://www.google.com"
+            ),
         )
     }
 

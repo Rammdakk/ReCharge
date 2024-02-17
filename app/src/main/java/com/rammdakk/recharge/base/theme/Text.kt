@@ -106,6 +106,23 @@ fun TextPrimaryLargeInverse(
 }
 
 @Composable
+fun TextPrimaryLargeThemed(
+    modifier: Modifier = Modifier,
+    text: String,
+    textAlign: TextAlign = TextAlign.Center
+) {
+    Text(
+        modifier = modifier,
+        text = text,
+        textAlign = textAlign,
+        fontSize = 20.sp,
+        lineHeight = 20.sp,
+        color = ReChargeTokens.TextPrimaryColored.getThemedColor(),
+        fontWeight = FontWeight.SemiBold
+    )
+}
+
+@Composable
 fun TextPrimaryMedium(
     modifier: Modifier = Modifier,
     text: String,
@@ -220,6 +237,40 @@ fun TextSecondarySmall(
         fontSize = 14.sp,
         lineHeight = 14.sp,
         color = ReChargeTokens.TextSecondary.getThemedColor(),
+        fontWeight = FontWeight.Normal
+    )
+}
+
+@Composable
+fun PlainTextLarge(
+    modifier: Modifier = Modifier,
+    text: String,
+    textAlign: TextAlign = TextAlign.Center
+) {
+    Text(
+        modifier = modifier,
+        text = text,
+        textAlign = textAlign,
+        fontSize = 16.sp,
+        lineHeight = 16.sp,
+        color = ReChargeTokens.TextPrimary.getThemedColor(),
+        fontWeight = FontWeight.Normal
+    )
+}
+
+@Composable
+fun PlainTextLargeInverse(
+    modifier: Modifier = Modifier,
+    text: String,
+    textAlign: TextAlign = TextAlign.Center
+) {
+    Text(
+        modifier = modifier,
+        text = text,
+        textAlign = textAlign,
+        fontSize = 16.sp,
+        lineHeight = 16.sp,
+        color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
         fontWeight = FontWeight.Normal
     )
 }

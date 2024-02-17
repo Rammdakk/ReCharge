@@ -1,10 +1,13 @@
 package com.rammdakk.recharge.activity.view
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,12 +21,14 @@ import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,6 +49,7 @@ import com.rammdakk.recharge.activity.data.model.ActivityExtendedDataModel
 import com.rammdakk.recharge.activity.data.model.TimePadDataModel
 import com.rammdakk.recharge.activity.view.components.ActivityImage
 import com.rammdakk.recharge.activity.view.components.DateField
+import com.rammdakk.recharge.activity.view.components.NumberField
 import com.rammdakk.recharge.activity.view.components.TimePad
 import com.rammdakk.recharge.activity.view.components.WarningText
 import com.rammdakk.recharge.activity.view.model.ActivityExtendedInfo
@@ -54,8 +60,10 @@ import com.rammdakk.recharge.base.theme.HeaderTextPrimary
 import com.rammdakk.recharge.base.theme.HeaderTextPrimaryInverse
 import com.rammdakk.recharge.base.theme.InputIconTextField
 import com.rammdakk.recharge.base.theme.PlainText
+import com.rammdakk.recharge.base.theme.PlainTextLarge
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryLargeInverse
+import com.rammdakk.recharge.base.theme.TextPrimaryLargeThemed
 import com.rammdakk.recharge.base.theme.TextPrimarySmall
 import com.rammdakk.recharge.base.theme.getThemedColor
 import java.text.SimpleDateFormat
@@ -78,7 +86,14 @@ fun ActivityInfoScreen(
         mutableStateOf(null)
     }
 
+    LaunchedEffect(state.bottomSheetState.isVisible) {
+        if (!state.bottomSheetState.isVisible) {
+            selectedId = null
+        }
+    }
+
     LaunchedEffect(selectedId) {
+        Log.d("Ramil", selectedId.toString())
         if (selectedId == null) {
             state.bottomSheetState.hide()
         } else {
@@ -189,9 +204,9 @@ private fun SheetContent(
     height: Int,
     selectedId: Int?,
     timePadList: List<TimePad>,
-    activityInfo: ActivityExtendedInfo
+    activityInfo: ActivityExtendedInfo,
+    onSuccess: () -> Unit = {}
 ) {
-    var selectedId1 = selectedId
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -199,11 +214,8 @@ private fun SheetContent(
             .padding(top = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val id = selectedId1 ?: 0
+        val id = selectedId ?: 0
         val timePad = runCatching { timePadList.first { it.id == id } }.getOrNull()
-        if (timePad == null) {
-            selectedId1 = null
-        }
         if (timePad == null) {
             WarningText(text = stringResource(id = R.string.error_text))
             return
@@ -216,6 +228,9 @@ private fun SheetContent(
         }
         var email by remember {
             mutableStateOf(TextFieldValue())
+        }
+        var guestNum by remember {
+            mutableIntStateOf(1)
         }
         val format = SimpleDateFormat("HH:mm", Locale.getDefault())
         HeaderTextPrimaryInverse(
@@ -264,8 +279,45 @@ private fun SheetContent(
         ) { fieldValue ->
             email = fieldValue
         }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            PlainTextLarge(text = stringResource(id = R.string.number_of_visitors))
+            NumberField(maxValue = 4, onNumberChanged = { guestNum = it })
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        TextPrimaryLargeThemed(
+            text = stringResource(id = R.string.confirm),
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(bottom = 16.dp)
+                .clip(RoundedCornerShape(50))
+                .background(ReChargeTokens.Background.getThemedColor())
+                .clickable { onSuccess.invoke() }
+                .padding(vertical = 8.dp),
+            textAlign = TextAlign.Center,
+        )
     }
 
+}
+
+@Preview
+@Composable
+fun test() {
+    Text(
+        text = stringResource(id = R.string.confirm),
+        Modifier
+            .fillMaxWidth(0.9f)
+            .clip(RoundedCornerShape(50))
+            .background(ReChargeTokens.Background.getThemedColor())
+            .padding(vertical = 8.dp),
+        textAlign = TextAlign.Center,
+        color = ReChargeTokens.BackgroundColored.getThemedColor()
+    )
 }
 
 

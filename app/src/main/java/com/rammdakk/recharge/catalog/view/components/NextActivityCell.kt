@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +32,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.rammdakk.recharge.R
+import com.rammdakk.recharge.base.theme.PlainTextSmallInverse
 import com.rammdakk.recharge.base.theme.ReChargeTokens
+import com.rammdakk.recharge.base.theme.TextPrimaryMediumInverse
 import com.rammdakk.recharge.base.theme.getThemedColor
 import com.rammdakk.recharge.catalog.view.model.ActivityInfo
 
@@ -50,7 +51,7 @@ fun NextActivityCell(
         modifier = Modifier
             .fillMaxWidth(0.9f)
             .clip(RoundedCornerShape(roundedCorner))
-            .aspectRatio(1.7f)
+            .aspectRatio(1.8f)
             .clickable {
 //                navigator.navigate(ActivityContentDestination(activityInfo.id))
             }
@@ -69,18 +70,16 @@ fun NextActivityCell(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .background(ReChargeTokens.BackgroundColored.getThemedColor())
-                .aspectRatio(4.5f)
                 .wrapContentHeight()
                 .fillMaxWidth()
-                .padding(horizontal = 15.dp),
+                .padding(horizontal = 15.dp, vertical = 4.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                val textColor = ReChargeTokens.TextPrimaryInverse.getThemedColor()
-                Text(text = activityInfo.name, color = textColor)
-                Text(text = activityInfo.time, color = textColor)
-                Text(text = activityInfo.address, color = textColor)
+                TextPrimaryMediumInverse(text = activityInfo.name)
+                activityInfo.time?.let { PlainTextSmallInverse(text = it) }
+                PlainTextSmallInverse(text = activityInfo.address)
             }
 
             Icon(

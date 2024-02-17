@@ -45,7 +45,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rammdakk.recharge.R
+import com.rammdakk.recharge.base.theme.PlainTextBoldInverse
 import com.rammdakk.recharge.base.theme.ReChargeTokens
+import com.rammdakk.recharge.base.theme.TextError
 import com.rammdakk.recharge.base.theme.getThemedColor
 
 @SuppressLint("UnrememberedMutableState")
@@ -117,31 +119,24 @@ fun AuthCodeValidationScreen(
             fontWeight = FontWeight.Bold
         )
         CodeCell(codeSize) { str -> onClick.invoke(str) }
-        Text(
+        TextError(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 10.dp),
-            text = errorMessage.value ?: "",
-            textAlign = TextAlign.Center,
-            fontSize = 14.sp,
-            color = ReChargeTokens.TextError.getThemedColor(),
-            fontWeight = FontWeight.Bold
+            text = errorMessage.value ?: "test",
         )
-        Text(
+        PlainTextBoldInverse(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 5.dp)
                 .clickable { onRequestCodeClick.invoke() },
             text = stringResource(id = R.string.resend_code),
             textAlign = TextAlign.Center,
-            fontSize = 14.sp,
-            color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
-            fontWeight = FontWeight.Bold
         )
 
         bottomInfo.value?.let { info ->
             Box(modifier = Modifier.fillMaxSize()) {
-                Text(
+                PlainTextBoldInverse(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(vertical = 20.dp)
@@ -149,10 +144,6 @@ fun AuthCodeValidationScreen(
                             info.onClick?.invoke()
                         },
                     text = info.message,
-                    textAlign = TextAlign.Center,
-                    fontSize = 14.sp,
-                    color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
-                    fontWeight = FontWeight.Bold
                 )
             }
         }

@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.theme.ReChargeTokens
+import com.rammdakk.recharge.base.theme.TextError
 import com.rammdakk.recharge.base.theme.getThemedColor
 
 @SuppressLint("UnrememberedMutableState")
@@ -96,15 +97,11 @@ fun AuthPhoneScreen(
             fontWeight = FontWeight.Bold
         )
         PhoneCell(hint = hintText) { str -> onClick.invoke(str) }
-        Text(
+        TextError(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(vertical = 10.dp),
             text = errorMessage.value ?: "",
-            textAlign = TextAlign.Center,
-            fontSize = 14.sp,
-            color = ReChargeTokens.TextError.getThemedColor(),
-            fontWeight = FontWeight.Bold
         )
     }
 }

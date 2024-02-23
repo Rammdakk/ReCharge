@@ -1,4 +1,4 @@
-package com.rammdakk.recharge.activity.view
+package com.rammdakk.recharge.profile.view
 
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.Crossfade
@@ -16,36 +16,38 @@ import com.rammdakk.recharge.base.theme.getThemedColor
 
 @Destination
 @Composable
-fun ActivityContent(
+fun ProfileContent(
     navigator: DestinationsNavigator,
-    activityId: Int,
-    viewModel: ActivityViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    viewModel: ProfileViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
-    val uiState by viewModel.screenState
+
+    val uiState by viewModel.profileState
 
     val systemUiController = rememberSystemUiController()
-    systemUiController.setNavigationBarColor(ReChargeTokens.BackgroundColored.getThemedColor())
-    systemUiController.setStatusBarColor(ReChargeTokens.BackgroundColored.getThemedColor())
+    systemUiController.setNavigationBarColor(ReChargeTokens.Background.getThemedColor())
+    systemUiController.setStatusBarColor(ReChargeTokens.Background.getThemedColor())
 
     Crossfade(
-        modifier = Modifier.background(ReChargeTokens.BackgroundColored.getThemedColor()),
+        modifier = Modifier.background(ReChargeTokens.Background.getThemedColor()),
         targetState = uiState,
         label = ""
     ) { state ->
         when (state) {
-            is ActivityScreenState.Idle -> {
-                viewModel.loadData(activityId)
+            is ProfileScreenState.Idle -> {
+                viewModel.loadData()
             }
 
-            is ActivityScreenState.Loaded -> {
-                ActivityInfoScreen(
-                    state.activityInfo,
-                    viewModel::loadScheduleForDate,
-                    state.scheduleInfo,
-                    navigator
+            is ProfileScreenState.Loaded -> {
+                ProfileScreen(
+                    firstName = state.firstName,
+                    secondName = state.secondName,
+                    phone = state.phone,
+                    email = state.email,
+                    birthDay = state.birthDay,
+                    isMale = state.isMale,
+                    city = state.city
                 )
             }
-
         }
     }
 }

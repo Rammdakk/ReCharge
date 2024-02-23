@@ -23,9 +23,9 @@ import com.rammdakk.recharge.base.theme.TextPrimaryMediumInverse
 import com.rammdakk.recharge.base.theme.getThemedColor
 
 @Composable
-fun WarningText(text: String) {
+fun WarningText(modifier: Modifier = Modifier, text: String) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .wrapContentHeight()
             .fillMaxWidth(0.9f)
             .clip(RoundedCornerShape(20.dp))

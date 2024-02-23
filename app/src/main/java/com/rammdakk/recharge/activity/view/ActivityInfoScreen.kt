@@ -1,28 +1,34 @@
 package com.rammdakk.recharge.activity.view
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,14 +36,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.rammdakk.recharge.R
 import com.rammdakk.recharge.activity.data.model.ActivityExtendedDataModel
 import com.rammdakk.recharge.activity.data.model.TimePadDataModel
 import com.rammdakk.recharge.activity.view.components.ActivityImage
 import com.rammdakk.recharge.activity.view.components.DateField
+import com.rammdakk.recharge.activity.view.components.NumberField
 import com.rammdakk.recharge.activity.view.components.TimePad
 import com.rammdakk.recharge.activity.view.components.WarningText
 import com.rammdakk.recharge.activity.view.model.ActivityExtendedInfo
@@ -46,9 +58,12 @@ import com.rammdakk.recharge.activity.view.model.convertToActivityInfo
 import com.rammdakk.recharge.activity.view.model.covertToTimePad
 import com.rammdakk.recharge.base.theme.HeaderTextPrimary
 import com.rammdakk.recharge.base.theme.HeaderTextPrimaryInverse
+import com.rammdakk.recharge.base.theme.InputIconTextField
 import com.rammdakk.recharge.base.theme.PlainText
+import com.rammdakk.recharge.base.theme.PlainTextLarge
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryLargeInverse
+import com.rammdakk.recharge.base.theme.TextPrimaryLargeThemed
 import com.rammdakk.recharge.base.theme.TextPrimarySmall
 import com.rammdakk.recharge.base.theme.getThemedColor
 import java.text.SimpleDateFormat
@@ -71,7 +86,14 @@ fun ActivityInfoScreen(
         mutableStateOf(null)
     }
 
+    LaunchedEffect(state.bottomSheetState.isVisible) {
+        if (!state.bottomSheetState.isVisible) {
+            selectedId = null
+        }
+    }
+
     LaunchedEffect(selectedId) {
+        Log.d("Ramil", selectedId.toString())
         if (selectedId == null) {
             state.bottomSheetState.hide()
         } else {
@@ -85,29 +107,7 @@ fun ActivityInfoScreen(
     BottomSheetScaffold(
         scaffoldState = state,
         sheetContent = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height((height * 2 / 3).dp)
-                    .padding(top = 30.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                val id = selectedId ?: 0
-                val timePad = runCatching { timePadList.value.first { it.id == id } }.getOrNull()
-                if (timePad == null) {
-                    selectedId = null
-                }
-                timePad?.let {
-                    val format = SimpleDateFormat("HH:mm", Locale.getDefault())
-                    HeaderTextPrimaryInverse(text = activityInfo.name, textAlign = TextAlign.Center)
-                    TextPrimaryLargeInverse(
-                        text = "${format.format(timePad.startTime)}-${format.format(timePad.endTime)}, ${timePad.price}₽",
-                        modifier = Modifier.padding(bottom = 15.dp)
-                    )
-                    activityInfo.cancellationMessage?.let { text -> WarningText(text = text) }
-                }
-
-            }
+            SheetContent(height, selectedId, timePadList.value, activityInfo)
         },
         topBar = {
             Row(
@@ -197,6 +197,130 @@ fun ActivityInfoScreen(
         }
 
     }
+}
+
+@Composable
+private fun SheetContent(
+    height: Int,
+    selectedId: Int?,
+    timePadList: List<TimePad>,
+    activityInfo: ActivityExtendedInfo,
+    onSuccess: () -> Unit = {}
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height((height * 2 / 3).dp)
+            .padding(top = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        val id = selectedId ?: 0
+        val timePad = runCatching { timePadList.first { it.id == id } }.getOrNull()
+        if (timePad == null) {
+            WarningText(text = stringResource(id = R.string.error_text))
+            return
+        }
+        var userName by remember {
+            mutableStateOf(TextFieldValue())
+        }
+        var phone by remember {
+            mutableStateOf(TextFieldValue())
+        }
+        var email by remember {
+            mutableStateOf(TextFieldValue())
+        }
+        var guestNum by remember {
+            mutableIntStateOf(1)
+        }
+        val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+        HeaderTextPrimaryInverse(
+            modifier = Modifier.padding(vertical = 8.dp),
+            text = activityInfo.name,
+            textAlign = TextAlign.Center
+        )
+        TextPrimaryLargeInverse(
+            text = "${format.format(timePad.startTime)}-${format.format(timePad.endTime)}, ${timePad.price}₽",
+            modifier = Modifier.padding(bottom = 8.dp, top = 4.dp),
+        )
+        activityInfo.cancellationMessage?.let { text ->
+            WarningText(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = text
+            )
+        }
+        InputIconTextField(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(vertical = 8.dp),
+            value = userName,
+            fontSize = 18.sp,
+            iconId = R.drawable.account_circle,
+            iconColor = ReChargeTokens.TextPrimaryInverse.getThemedColor()
+        ) { fieldValue ->
+            userName = fieldValue
+        }
+        InputIconTextField(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(vertical = 8.dp),
+            value = phone,
+            fontSize = 18.sp,
+            iconId = R.drawable.call,
+            iconColor = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        ) { fieldValue ->
+            phone = fieldValue
+        }
+        InputIconTextField(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(vertical = 8.dp),
+            value = email,
+            fontSize = 18.sp,
+            iconId = R.drawable.mail,
+            iconColor = ReChargeTokens.TextPrimaryInverse.getThemedColor()
+        ) { fieldValue ->
+            email = fieldValue
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            PlainTextLarge(text = stringResource(id = R.string.number_of_visitors))
+            NumberField(maxValue = 4, onNumberChanged = { guestNum = it })
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        TextPrimaryLargeThemed(
+            text = stringResource(id = R.string.confirm),
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(bottom = 16.dp)
+                .clip(RoundedCornerShape(50))
+                .background(ReChargeTokens.Background.getThemedColor())
+                .clickable { onSuccess.invoke() }
+                .padding(vertical = 8.dp),
+            textAlign = TextAlign.Center,
+        )
+    }
+
+}
+
+@Preview
+@Composable
+fun test() {
+    Text(
+        text = stringResource(id = R.string.confirm),
+        Modifier
+            .fillMaxWidth(0.9f)
+            .clip(RoundedCornerShape(50))
+            .background(ReChargeTokens.Background.getThemedColor())
+            .padding(vertical = 8.dp),
+        textAlign = TextAlign.Center,
+        color = ReChargeTokens.BackgroundColored.getThemedColor()
+    )
 }
 
 

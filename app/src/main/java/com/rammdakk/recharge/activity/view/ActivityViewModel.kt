@@ -33,12 +33,12 @@ class ActivityViewModel @Inject constructor(
     val screenState: State<ActivityScreenState> = _screenState
 
     fun loadData(activityId: Int) = viewModelScope.launch(dispatchers.IO) {
-        val activityInfo = activityRepository.getActivityInfo(activityId).convertToActivityInfo()
         loadScheduleForDate(Date())
+        val activityInfoJob = activityRepository.getActivityInfo(activityId).convertToActivityInfo()
         withContext(dispatchers.Main)
         {
             _screenState.value = ActivityScreenState.Loaded(
-                activityInfo = activityInfo,
+                activityInfo = activityInfoJob,
                 scheduleInfo = _schedule
             )
         }

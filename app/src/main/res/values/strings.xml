@@ -9,5 +9,12 @@
     <string name="today">сегодня, %1$s</string>
     <string name="next_activity">Следующее занятие</string>
     <string name="suggested_activity">Рекомендуем</string>
+    <string name="start_price">от %1$s₽</string>
+    <string name="error_text">Произошла ошибка,\nпопробуйте перезапустить приложение</string>
+    <string name="number_of_visitors">Количество</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="save">Сохранить</string>
+    <string name="exit">Выйти</string>
     <string name="contacts">Контакты</string>
+    <string name="profile_header">Профиль</string>
 </resources>

@@ -8,8 +8,9 @@ data class ActivityInfo(
     val id: Int,
     val imagePath: String,
     val name: String,
-    val time: String,
-    val price: String,
+    val organizationName: String,
+    val time: String?,
+    val startPrice: Float,
     val address: String,
     val location: LocationInfo,
 )
@@ -19,19 +20,19 @@ data class LocationInfo(
     val latitude: Float
 )
 
-fun ActivityDataModel.convertToActivityInfo(): ActivityInfo {
-    return ActivityInfo(
+fun ActivityDataModel.convertToActivityInfo() =
+    ActivityInfo(
         id = this.id,
         imagePath = this.imagePath,
         name = this.name,
-        time = DateFormat.format("d MMM", this.time).toString(),
+        time = this.time?.let { DateFormat.format("d MMM", it).toString() },
         address = this.address,
-        price = "${this.price}₽",
-        location = this.coordinates.convertToLacationInfo(),
+        startPrice = this.startPrice,
+        location = this.coordinates.convertToLocationInfo(),
+        organizationName = this.organizationName
     )
-}
 
-fun Coordinates.convertToLacationInfo(): LocationInfo {
+fun Coordinates.convertToLocationInfo(): LocationInfo {
     return LocationInfo(
         longitude = this.longitude,
         latitude = this.latitude

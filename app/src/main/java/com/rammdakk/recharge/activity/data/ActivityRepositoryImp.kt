@@ -4,14 +4,12 @@ import com.rammdakk.recharge.activity.data.model.ActivityExtendedDataModel
 import com.rammdakk.recharge.activity.data.model.TimePadDataModel
 import com.rammdakk.recharge.activity.domain.ActivityRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import java.util.Date
 
 class ActivityRepositoryImp(
     private val dispatchers: Dispatchers,
 ) : ActivityRepository {
     override suspend fun getActivityInfo(id: Int): ActivityExtendedDataModel {
-        delay(1000L)
         return ActivityExtendedDataModel(
             id = 1,
             imagePath = "https://riamo.ru/files/image/04/54/86/gallery!alf.jpg",
@@ -27,7 +25,6 @@ class ActivityRepositoryImp(
     }
 
     override suspend fun getActivityTimeTable(date: Date): List<TimePadDataModel> {
-        delay(1000L)
         val delta = 60000 * 60
         return listOf(
             TimePadDataModel(

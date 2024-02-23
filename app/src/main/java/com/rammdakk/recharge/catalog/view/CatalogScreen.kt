@@ -69,11 +69,10 @@ fun CatalogScreen(
                     modifier = Modifier
                         .background(ReChargeTokens.Background.getThemedColor())
                         .fillMaxWidth(0.9f)
-                        .padding(vertical = 15.dp),
+                        .padding(vertical = 10.dp),
                     text = stringResource(id = R.string.suggested_activity),
                     textAlign = TextAlign.Start
                 )
-
                 CategoryRow(categories.value)
             }
 

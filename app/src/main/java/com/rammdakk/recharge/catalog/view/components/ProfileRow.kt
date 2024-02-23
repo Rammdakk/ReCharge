@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
@@ -24,16 +23,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryLarge
+import com.rammdakk.recharge.base.theme.TextSecondarySmall
 import com.rammdakk.recharge.base.theme.getThemedColor
 import com.rammdakk.recharge.catalog.view.model.ProfileInfo
 import com.rammdakk.recharge.destinations.ProfileContentDestination
@@ -80,16 +77,11 @@ fun ProfileRow(
                     )
                 } ?: stringResource(id = R.string.greeting_without_username),
             )
-            Text(
+            TextSecondarySmall(
                 text = stringResource(
                     id = R.string.today,
                     DateFormat.format("d MMM", Date().time)
-                ),
-                color = ReChargeTokens.TextSecondary.getThemedColor(),
-                fontSize = 16.sp,
-                lineHeight = 16.sp,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Center
+                )
             )
         }
 

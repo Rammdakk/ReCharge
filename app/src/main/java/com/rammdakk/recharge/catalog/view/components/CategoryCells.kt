@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -46,7 +47,7 @@ fun CategoryRow(categories: List<Category>) {
 @Composable
 fun CategoryCell(category: Category) {
     Box(modifier = Modifier
-        .padding(horizontal = 15.dp)
+        .padding(horizontal = 10.dp)
         .fillMaxHeight()
         .aspectRatio(1f, true)
         .clip(CircleShape)
@@ -61,6 +62,7 @@ fun CategoryCell(category: Category) {
                 .crossfade(true)
                 .build(),
             contentDescription = "",
+            colorFilter = ColorFilter.tint(ReChargeTokens.TextPrimaryInverse.getThemedColor()),
             contentScale = ContentScale.Fit,
         )
     }

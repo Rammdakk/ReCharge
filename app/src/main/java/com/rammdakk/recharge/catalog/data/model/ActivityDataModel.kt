@@ -4,9 +4,9 @@ data class ActivityDataModel(
     val id: Int,
     val imagePath: String,
     val name: String,
-    val time: Long,
+    val time: Long?,
     val duration: Long,
-    val price: Float,
+    val startPrice: Float,
     val organizationName: String,
     val address: String,
     val coordinates: Coordinates

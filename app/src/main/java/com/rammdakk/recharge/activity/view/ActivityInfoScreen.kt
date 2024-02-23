@@ -254,7 +254,8 @@ private fun SheetContent(
                 .padding(vertical = 8.dp),
             value = userName,
             fontSize = 18.sp,
-            iconId = R.drawable.account_circle
+            iconId = R.drawable.account_circle,
+            iconColor = ReChargeTokens.TextPrimaryInverse.getThemedColor()
         ) { fieldValue ->
             userName = fieldValue
         }
@@ -265,6 +266,7 @@ private fun SheetContent(
             value = phone,
             fontSize = 18.sp,
             iconId = R.drawable.call,
+            iconColor = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         ) { fieldValue ->
             phone = fieldValue
@@ -275,7 +277,8 @@ private fun SheetContent(
                 .padding(vertical = 8.dp),
             value = email,
             fontSize = 18.sp,
-            iconId = R.drawable.mail
+            iconId = R.drawable.mail,
+            iconColor = ReChargeTokens.TextPrimaryInverse.getThemedColor()
         ) { fieldValue ->
             email = fieldValue
         }

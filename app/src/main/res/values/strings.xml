@@ -13,5 +13,8 @@
     <string name="error_text">Произошла ошибка,\nпопробуйте перезапустить приложение</string>
     <string name="number_of_visitors">Количество</string>
     <string name="confirm">Подтвердить</string>
+    <string name="save">Сохранить</string>
+    <string name="exit">Выйти</string>
     <string name="contacts">Контакты</string>
+    <string name="profile_header">Профиль</string>
 </resources>

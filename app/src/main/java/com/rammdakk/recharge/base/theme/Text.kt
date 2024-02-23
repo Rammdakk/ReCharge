@@ -25,6 +25,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -399,7 +400,9 @@ fun TextError(
 @Composable
 fun InputIconTextField(
     modifier: Modifier = Modifier,
-    @DrawableRes iconId: Int,
+    @DrawableRes iconId: Int? = null,
+    iconVector: ImageVector? = null,
+    iconColor: Color = ReChargeTokens.TextPrimary.getThemedColor(),
     value: TextFieldValue,
     hint: String? = null,
     fontSize: TextUnit,
@@ -443,18 +446,33 @@ fun InputIconTextField(
                 Modifier
                     .fillMaxWidth()
             ) {
-                Icon(
-                    painterResource(id = iconId),
-                    "",
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .clip(RoundedCornerShape(50))
-                        .background(Color(0xFFA5B7E4))
-                        .height(height = (height).pxToDp() - 4.dp)
-                        .padding(3.dp)
-                        .aspectRatio(1f, true),
-                    ReChargeTokens.TextPrimaryInverse.getThemedColor()
-                )
+                iconId?.let {
+                    Icon(
+                        painterResource(id = it),
+                        "",
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(Color(0xFFA5B7E4))
+                            .height(height = (height).pxToDp() - 4.dp)
+                            .padding(3.dp)
+                            .aspectRatio(1f, true),
+                        iconColor
+                    )
+                } ?: iconVector?.let {
+                    Icon(
+                        imageVector = it,
+                        "",
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(Color(0xFFA5B7E4))
+                            .height(height = (height).pxToDp() - 4.dp)
+                            .padding(3.dp)
+                            .aspectRatio(1f, true),
+                        iconColor
+                    )
+                }
                 Box(modifier = Modifier.padding(all = 6.dp)) {
                     if (value.text.isEmpty()) {
                         hint?.let {

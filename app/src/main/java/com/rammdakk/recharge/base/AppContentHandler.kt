@@ -40,18 +40,18 @@ import androidx.navigation.NavHostController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.rememberNavHostEngine
-import com.rammdakk.recharge.NavGraphs
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.view.NavScaffold
-import com.rammdakk.recharge.destinations.ActivityContentDestination
-import com.rammdakk.recharge.destinations.AuthContentDestination
-import com.rammdakk.recharge.destinations.CalendarContentDestination
-import com.rammdakk.recharge.destinations.CatalogContentDestination
-import com.rammdakk.recharge.destinations.Destination
-import com.rammdakk.recharge.destinations.DirectionDestination
-import com.rammdakk.recharge.destinations.ExercisesContentDestination
-import com.rammdakk.recharge.destinations.MapContentDestination
-import com.rammdakk.recharge.destinations.ProfileContentDestination
+import com.rammdakk.recharge.feature.NavGraphs
+import com.rammdakk.recharge.feature.destinations.ActivityContentDestination
+import com.rammdakk.recharge.feature.destinations.AuthContentDestination
+import com.rammdakk.recharge.feature.destinations.CalendarContentDestination
+import com.rammdakk.recharge.feature.destinations.CatalogContentDestination
+import com.rammdakk.recharge.feature.destinations.Destination
+import com.rammdakk.recharge.feature.destinations.DirectionDestination
+import com.rammdakk.recharge.feature.destinations.ExercisesContentDestination
+import com.rammdakk.recharge.feature.destinations.MapContentDestination
+import com.rammdakk.recharge.feature.destinations.ProfileContentDestination
 
 @Composable
 fun AppContentHandler() {

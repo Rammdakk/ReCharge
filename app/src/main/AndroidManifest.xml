@@ -22,7 +22,7 @@
             android:theme="@style/Theme.ReCharge">
         </activity>
         <activity
-            android:name=".auth.view.AuthActivity"
+            android:name=".feature.auth.view.AuthActivity"
             android:exported="true"
             android:theme="@style/Theme.ReCharge">
             <intent-filter>

@@ -2,7 +2,8 @@ package com.rammdakk.recharge.feature.catalog.data.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class ProfileDataModel(
-    @JsonProperty("photoUrl") val photoPath: String,
+data class CategoryDataModel(
+    @JsonProperty("image") val imagePath: String,
+    @JsonProperty("id") val id: String,
     @JsonProperty("name") val name: String
 )

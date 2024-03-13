@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rammdakk.recharge.R
+import com.rammdakk.recharge.feature.auth.data.model.AuthPhoneResponse
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -46,47 +47,66 @@ class AuthViewModel @Inject constructor(
         )
     }
 
-    private fun checkLoginStatus() {
-        _isLoggedIn.value = true
+    private fun checkLoginStatus() = viewModelScope.launch {
+        _isLoggedIn.value = authRepository.validateAuth()
     }
 
     private fun requestCode(phoneNumber: String) {
         viewModelScope.launch {
             _errorMessage.value = null
-            val result = authRepository.requestCode(phoneNumber)
-            if (result.isSuccess) {
-                sessionId = result.sessionId
-                _authState.value = AuthScreenState.RequestCode(
-                    greetingText = result.titleText
-                        ?: resources.getString(R.string.request_code_title),
-                    codeSize = result.codeSize ?: 0,
-                    onBackPressed = this@AuthViewModel::init,
-                    onSubmitClick = this@AuthViewModel::validateCode,
-                    onRequestCodeClick = { requestCode(phoneNumber) },
-                    errorMessage = _errorMessage,
-                    bottomInfo = mutableStateOf(
-                        result.conditionalInfo?.let { info ->
-                            BottomInfo(info.message) {
-                                _openLink.value = info.url
-                            }
-                        }
-                    )
-                )
-            } else {
-                _errorMessage.value = result.errorText
-            }
+
+            authRepository.requestCode(phoneNumber).fold(
+                onSuccess = { result ->
+                    updateState(result, phoneNumber)
+                },
+                onFailure = {}
+            )
+
+
         }
     }
 
-    private fun validateCode(code: String) {
-        viewModelScope.launch {
-            sessionId?.let {
-                authRepository.validateCode(code, it).let { success ->
-                    if (success) {
-                        _isLoggedIn.value = success
+    private fun updateState(
+        result: AuthPhoneResponse,
+        phoneNumber: String
+    ) {
+        if (result.isSuccess) {
+            sessionId = result.sessionId
+            _authState.value = AuthScreenState.RequestCode(
+                greetingText = result.titleText
+                    ?: resources.getString(R.string.request_code_title),
+                codeSize = result.codeSize ?: 0,
+                onBackPressed = this@AuthViewModel::init,
+                onSubmitClick = this@AuthViewModel::validateCode,
+                onRequestCodeClick = { requestCode(phoneNumber) },
+                errorMessage = _errorMessage,
+                bottomInfo = mutableStateOf(
+                    result.conditionalInfo?.let { info ->
+                        BottomInfo(info.message) {
+                            _openLink.value = info.url
+                        }
                     }
-                }
-            } ?: init()
+                )
+            )
+        } else {
+            _errorMessage.value = result.errorText
         }
+    }
+
+
+    private fun validateCode(code: String) = viewModelScope.launch {
+        sessionId?.let {
+            authRepository.validateCode(code, it).fold(
+                onSuccess = { result ->
+                    if (result.isSuccess) {
+                        _isLoggedIn.value = true
+                    } else {
+                        _errorMessage.value = result.message
+                    }
+
+                },
+                onFailure = {}
+            )
+        } ?: init()
     }
 }

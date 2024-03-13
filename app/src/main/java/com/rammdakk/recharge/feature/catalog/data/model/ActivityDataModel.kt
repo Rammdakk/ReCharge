@@ -1,15 +1,17 @@
 package com.rammdakk.recharge.feature.catalog.data.model
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class ActivityDataModel(
-    val id: Int,
-    val imagePath: String,
-    val name: String,
-    val time: Long?,
-    val duration: Long,
-    val startPrice: Float,
-    val organizationName: String,
-    val address: String,
-    val coordinates: Coordinates
+    @JsonProperty("id") val id: Int,
+    @JsonProperty("activityName") val name: String,
+    @JsonProperty("id") val imagePath: String,
+    @JsonProperty("id") val time: Long?,
+    @JsonProperty("id") val duration: Long,
+    @JsonProperty("id") val startPrice: Float,
+    @JsonProperty("id") val organizationName: String,
+    @JsonProperty("id") val address: String,
+    @JsonProperty("id") val coordinates: Coordinates
 )
 
 data class Coordinates(

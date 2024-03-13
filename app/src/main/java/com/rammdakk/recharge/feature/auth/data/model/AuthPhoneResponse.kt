@@ -1,5 +1,7 @@
 package com.rammdakk.recharge.feature.auth.data.model
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 /**
  * Отправляется после получения номера телефона
  * @param isSuccess валиден ли номер телефона или нет
@@ -12,12 +14,18 @@ package com.rammdakk.recharge.feature.auth.data.model
  */
 
 data class AuthPhoneResponse(
+    @JsonProperty("isSuccess")
     val isSuccess: Boolean,
-    val errorText: String?,
-    val sessionId: String?,
-    val titleText: String?,
+    @JsonProperty("errorText")
+    val errorText: String? = null,
+    @JsonProperty("sessionId")
+    val sessionId: String? = null,
+    @JsonProperty("titleText")
+    val titleText: String? = null,
+    @JsonProperty("codeSize")
     val codeSize: Int? = 4,
-    val conditionalInfo: ConditionalInfo?,
+    @JsonProperty("conditionalInfo")
+    val conditionalInfo: ConditionalInfo? = null,
 )
 
 /**
@@ -27,18 +35,9 @@ data class AuthPhoneResponse(
  */
 
 data class ConditionalInfo(
+    @JsonProperty("message")
     val message: String,
+    @JsonProperty("url")
     val url: String
 )
 
-/**
- * Отправляется после получения кода
- * @param accessToken при успешной регистрации отправляется токен для дальнейшего использования
- * @param message сообщение об ошибке
- */
-
-data class AuthResponse(
-    val isSuccess: Boolean,
-    val accessToken: String?,
-    val message: String?,
-)

@@ -28,7 +28,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -44,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextError
@@ -106,7 +106,6 @@ fun AuthPhoneScreen(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PhoneCell(hint: String? = null, onVerifyClick: (String) -> Unit) {
     var text by remember {
@@ -140,23 +139,33 @@ fun PhoneCell(hint: String? = null, onVerifyClick: (String) -> Unit) {
                 .align(Alignment.CenterStart),
             value = text,
             onValueChange = {
-                isButtonAvailable = it.text.length == 10
+                if (it.text.length > 10) return@BasicTextField
+                isButtonAvailable = PhoneNumberUtil.getInstance()
+                    .isPossibleNumber(it.text, LOCALE) && it.text.length == 10
                 text = it
             },
             textStyle = TextStyle.Default.copy(fontSize = 24.sp, fontWeight = FontWeight.Bold),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             singleLine = true,
+            visualTransformation = PhoneNumberVisualTransformation(),
             keyboardActions = KeyboardActions(onDone = {
-                keyboardController?.hide()
-                onVerifyClick(text.text)
+                if (isButtonAvailable) {
+                    keyboardController?.hide()
+                    onVerifyClick(text.text.formatPhone())
+                }
             }),
         )
         { innerTextField ->
             Row(
                 Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "+7 ", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    text = PREFIX,
+                    style = TextStyle.Default.copy(fontSize = 24.sp, fontWeight = FontWeight.Bold),
+                    modifier = Modifier.padding(end = 4.dp)
+                )
                 Box {
                     if (text.text.isEmpty()) {
                         hint?.let {
@@ -182,7 +191,7 @@ fun PhoneCell(hint: String? = null, onVerifyClick: (String) -> Unit) {
                     .background(Color(0xFFA5B7E4))
                     .clickable {
                         keyboardController?.hide()
-                        onVerifyClick(text.text)
+                        onVerifyClick(text.text.formatPhone())
                     }
                     .height(height = (height).pxToDp() - 10.dp)
                     .padding(10.dp)
@@ -192,4 +201,9 @@ fun PhoneCell(hint: String? = null, onVerifyClick: (String) -> Unit) {
         }
     }
 }
+
+private fun String.formatPhone(): String = "$PREFIX$this"
+
+private const val PREFIX = "+7"
+private const val LOCALE = "RU"
 

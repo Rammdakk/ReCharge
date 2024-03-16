@@ -77,7 +77,7 @@ class AuthViewModel @Inject constructor(
                     ?: resources.getString(R.string.request_code_title),
                 codeSize = result.codeSize ?: 0,
                 onBackPressed = this@AuthViewModel::init,
-                onSubmitClick = this@AuthViewModel::validateCode,
+                onSubmitClick = { validateCode(it, phoneNumber) },
                 onRequestCodeClick = { requestCode(phoneNumber) },
                 errorMessage = _errorMessage,
                 bottomInfo = mutableStateOf(
@@ -94,9 +94,9 @@ class AuthViewModel @Inject constructor(
     }
 
 
-    private fun validateCode(code: String) = viewModelScope.launch {
+    private fun validateCode(code: String, phoneNumber: String) = viewModelScope.launch {
         sessionId?.let {
-            authRepository.validateCode(code, it).fold(
+            authRepository.validateCode(code, it, phoneNumber).fold(
                 onSuccess = { result ->
                     if (result.isSuccess) {
                         _isLoggedIn.value = true

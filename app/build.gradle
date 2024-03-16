@@ -96,4 +96,7 @@ dependencies {
 
     // store
     implementation "androidx.security:security-crypto:1.0.0"
+
+    //phone validation
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.13.9'
 }

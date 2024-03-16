@@ -6,6 +6,6 @@ import com.rammdakk.recharge.feature.auth.data.model.AuthResponse
 interface AuthRepository {
     suspend fun requestCode(phone: String): Result<AuthPhoneResponse>
 
-    suspend fun validateCode(code: String, sessionId: String): Result<AuthResponse>
+    suspend fun validateCode(code: String, sessionId: String, phone: String): Result<AuthResponse>
     suspend fun validateAuth(): Boolean
 }

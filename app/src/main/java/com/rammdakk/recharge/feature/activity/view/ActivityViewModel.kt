@@ -28,7 +28,7 @@ class ActivityViewModel @Inject constructor(
         mutableStateOf(ActivityScreenState.Idle)
     private val _schedule: MutableState<List<TimePad>> = mutableStateOf(emptyList())
 
-    var job: Job? = null
+    private var job: Job? = null
 
     val screenState: State<ActivityScreenState> = _screenState
 

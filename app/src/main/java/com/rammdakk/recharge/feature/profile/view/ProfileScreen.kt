@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.profile.view
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -33,10 +35,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.theme.HeaderTextPrimary
+import com.rammdakk.recharge.base.theme.IconText
 import com.rammdakk.recharge.base.theme.InputIconTextField
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryLarge
 import com.rammdakk.recharge.base.theme.getThemedColor
+import com.rammdakk.recharge.feature.profile.models.data.Gender
+import com.rammdakk.recharge.feature.profile.models.presentation.ProfileScreenModel
+import com.rammdakk.recharge.feature.profile.view.components.DatePickerDialog
+import java.text.SimpleDateFormat
 import java.util.Date
 
 @Composable
@@ -45,9 +52,11 @@ fun ProfileScreen(
     secondName: String,
     phone: String,
     email: String,
-    birthDay: Date,
+    birthDay: Long,
     isMale: Boolean,
-    city: String
+    city: String,
+    onSaveClick: (ProfileScreenModel) -> Unit,
+    onLogOutClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -66,11 +75,11 @@ fun ProfileScreen(
                 )
             }
         }
-    ) {
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(it),
+                .padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -80,16 +89,12 @@ fun ProfileScreen(
             var secondNameState by remember {
                 mutableStateOf(TextFieldValue(secondName))
             }
-            var phoneState by remember {
-                mutableStateOf(TextFieldValue(phone))
-            }
             var emailState by remember {
                 mutableStateOf(TextFieldValue(email))
             }
 
-//            TODO("Поправить работу с датой")
             var birthDateState by remember {
-                mutableStateOf(birthDay)
+                mutableLongStateOf(birthDay)
             }
             var isMaleState by remember {
                 mutableStateOf(isMale)
@@ -125,14 +130,12 @@ fun ProfileScreen(
                 ) { fieldValue ->
                     secondNameState = fieldValue
                 }
-                InputIconTextField(
+                IconText(
                     modifier = modifier,
-                    value = phoneState,
+                    text = phone,
                     fontSize = 18.sp,
                     iconVector = Icons.Default.Phone
-                ) { fieldValue ->
-                    phoneState = fieldValue
-                }
+                )
                 InputIconTextField(
                     modifier = modifier,
                     value = emailState,
@@ -145,16 +148,32 @@ fun ProfileScreen(
                     modifier = modifier,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    InputIconTextField(
+
+                    var visibleCalendar by remember {
+                        mutableStateOf(false)
+                    }
+
+                    if (visibleCalendar) {
+                        DatePickerDialog(
+                            0,
+                            initialVale = birthDateState,
+                            {
+                                birthDateState = it
+                                visibleCalendar = false
+                            },
+                            { visibleCalendar = false })
+                    }
+
+                    IconText(
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
-                            .padding(end = 4.dp),
-                        value = cityState,
+                            .padding(end = 4.dp)
+                            .clip(RoundedCornerShape(50))
+                            .clickable { visibleCalendar = true },
+                        text = birthDateState.convertMillisToDate(),
                         fontSize = 18.sp,
                         iconVector = Icons.Default.DateRange
-                    ) { fieldValue ->
-                        cityState = fieldValue
-                    }
+                    )
                     InputIconTextField(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -183,7 +202,18 @@ fun ProfileScreen(
                     .padding(top = 16.dp)
                     .clip(RoundedCornerShape(50))
                     .background(ReChargeTokens.BackgroundColored.getThemedColor())
-                    .clickable { }
+                    .clickable {
+                        ProfileScreenModel(
+                            firstName = firstNameState.text,
+                            secondName = secondNameState.text,
+                            phone = phone,
+                            email = emailState.text,
+                            birthDay = birthDateState,
+                            city = cityState.text,
+                            gender = if (isMaleState) Gender.MALE else Gender.FEMALE
+                        ).let(onSaveClick)
+//                        onSaveClick.invoke(model)
+                    }
                     .padding(vertical = 10.dp),
                 textAlign = TextAlign.Center,
             )
@@ -191,7 +221,9 @@ fun ProfileScreen(
                 text = stringResource(id = R.string.exit),
                 modifier = Modifier
                     .wrapContentSize()
-                    .clickable { }
+                    .clickable {
+                        onLogOutClick.invoke()
+                    }
                     .padding(vertical = 10.dp, horizontal = 10.dp),
                 textAlign = TextAlign.Center,
             )
@@ -199,16 +231,25 @@ fun ProfileScreen(
     }
 }
 
+@SuppressLint("SimpleDateFormat")
+private fun Long.convertMillisToDate(): String {
+    val formatter = SimpleDateFormat("dd.MM.yyyy")
+    return formatter.format(Date(this))
+}
+
+
 @Preview
 @Composable
-fun preview() {
+fun ProfileScreenPreview() {
     ProfileScreen(
         "Анна",
         "Попова",
         "79811232323",
         "test@mail.ru",
-        Date(),
+        System.currentTimeMillis(),
         isMale = false,
-        "Москва"
+        "Москва",
+        {},
+        {}
     )
 }

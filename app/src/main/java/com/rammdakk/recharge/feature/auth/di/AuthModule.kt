@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
 
 @Module
@@ -19,9 +20,10 @@ class AuthModule {
     @Provides
     fun provideAuthRepository(
         retrofit: Retrofit,
-        encryptedSharedPreferences: EncryptedSharedPreferences
+        encryptedSharedPreferences: EncryptedSharedPreferences,
+        dispatchers: Dispatchers
     ): AuthRepository {
-        return AuthRepositoryImpl(retrofit, encryptedSharedPreferences)
+        return AuthRepositoryImpl(retrofit, encryptedSharedPreferences, dispatchers)
     }
 
     @Provides

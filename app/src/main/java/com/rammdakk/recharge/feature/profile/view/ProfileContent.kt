@@ -43,9 +43,11 @@ fun ProfileContent(
                     secondName = state.secondName,
                     phone = state.phone,
                     email = state.email,
-                    birthDay = state.birthDay,
+                    birthDay = state.birthDay.time,
                     isMale = state.isMale,
-                    city = state.city
+                    city = state.city,
+                    onSaveClick = viewModel::updateData,
+                    onLogOutClick = viewModel::logOut
                 )
             }
         }

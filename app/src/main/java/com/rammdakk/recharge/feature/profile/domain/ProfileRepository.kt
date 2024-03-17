@@ -1,10 +1,10 @@
 package com.rammdakk.recharge.feature.profile.domain
 
-import com.rammdakk.recharge.feature.profile.data.model.ProfileInfo
+import com.rammdakk.recharge.feature.profile.models.data.ProfileInfo
 
 
 interface ProfileRepository {
-    suspend fun getProfile(): ProfileInfo
+    suspend fun getProfile(): Result<ProfileInfo>
 
     suspend fun updateProfile(profile: ProfileInfo)
 }

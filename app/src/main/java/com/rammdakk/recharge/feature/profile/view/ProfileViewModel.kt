@@ -5,9 +5,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rammdakk.recharge.feature.profile.data.model.Gender
-import com.rammdakk.recharge.feature.profile.data.model.ProfileInfo
+import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.profile.domain.ProfileRepository
+import com.rammdakk.recharge.feature.profile.models.data.Gender
+import com.rammdakk.recharge.feature.profile.models.data.ProfileInfo
+import com.rammdakk.recharge.feature.profile.models.presentation.ProfileScreenModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
+    private val authRepository: AuthRepository,
     private val dispatchers: Dispatchers,
 ) : ViewModel() {
 
@@ -25,8 +28,8 @@ class ProfileViewModel @Inject constructor(
         mutableStateOf(ProfileScreenState.Idle)
     val profileState: State<ProfileScreenState> = _profileState
 
-    fun loadData() = viewModelScope.launch(dispatchers.IO) {
-        val profile = profileRepository.getProfile()
+    fun loadData() = viewModelScope.launch {
+        val profile = profileRepository.getProfile().getOrNull() ?: return@launch
         withContext(dispatchers.Main) {
             _profileState.value = ProfileScreenState.Loaded(
                 firstName = profile.firstName,
@@ -41,19 +44,21 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun updateData(
-        firstName: String,
-        secondName: String,
-        phone: String,
-        email: String,
-        birthDay: Date,
-        isMale: Boolean,
-        city: String
+        profileScreenModel: ProfileScreenModel
     ) = viewModelScope.launch(dispatchers.IO) {
-        val profileInfo = ProfileInfo(
-            firstName, secondName,
-            phone, email, birthDay,
-            if (isMale) Gender.MALE else Gender.FEMALE,
-            city
-        ).let { profileRepository::updateProfile }
+        profileScreenModel.covertToProfileInfo()
+            .let { profileRepository.updateProfile(it) }
+    }
+
+    private fun ProfileScreenModel.covertToProfileInfo(): ProfileInfo = ProfileInfo(
+        firstName, secondName,
+        phone, email, Date(birthDay),
+        gender,
+        city
+    )
+
+
+    fun logOut() = viewModelScope.launch {
+        authRepository.logOut()
     }
 }

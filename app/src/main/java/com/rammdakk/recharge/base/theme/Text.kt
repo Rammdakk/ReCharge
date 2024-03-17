@@ -21,7 +21,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -396,7 +395,89 @@ fun TextError(
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun IconText(
+    modifier: Modifier = Modifier,
+    @DrawableRes iconId: Int? = null,
+    iconVector: ImageVector? = null,
+    iconColor: Color = ReChargeTokens.TextPrimary.getThemedColor(),
+    text: String,
+    hint: String? = null,
+    fontSize: TextUnit,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+    ) {
+        var height by remember {
+            mutableIntStateOf(0)
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .onSizeChanged {
+                    if (height == 0) {
+                        height = it.height
+                    }
+                }
+                .background(
+                    ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+                    shape = RoundedCornerShape(50)
+                )
+        ) {
+            iconId?.let {
+                Icon(
+                    painterResource(id = it),
+                    "",
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(Color(0xFFA5B7E4))
+                        .height(height = (height).pxToDp() - 4.dp)
+                        .padding(3.dp),
+                    iconColor
+                )
+            } ?: iconVector?.let {
+                Icon(
+                    imageVector = it,
+                    "",
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(Color(0xFFA5B7E4))
+                        .height(height = (height).pxToDp() - 4.dp)
+                        .padding(3.dp),
+                    iconColor
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .padding(all = 6.dp)
+                    .wrapContentHeight()
+            ) {
+                if (text.isEmpty()) {
+                    hint?.let {
+                        Text(
+                            it,
+                            fontSize = fontSize,
+                            color = ReChargeTokens.TextTertiary.getThemedColor()
+                        )
+                    }
+                }
+                Text(
+                    text = text,
+                    style = TextStyle.Default.copy(
+                        fontSize = fontSize,
+                        fontWeight = FontWeight.Normal
+                    )
+                )
+            }
+        }
+    }
+}
+
 @Composable
 fun InputIconTextField(
     modifier: Modifier = Modifier,
@@ -406,6 +487,7 @@ fun InputIconTextField(
     value: TextFieldValue,
     hint: String? = null,
     fontSize: TextUnit,
+    readOnly: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onValueChange: (TextFieldValue) -> Unit
 ) {
@@ -433,6 +515,7 @@ fun InputIconTextField(
                 }
                 .align(Alignment.CenterStart),
             value = value,
+            readOnly = readOnly,
             onValueChange = onValueChange,
             textStyle = TextStyle.Default.copy(fontSize = fontSize, fontWeight = FontWeight.Normal),
             keyboardOptions = keyboardOptions,

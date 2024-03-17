@@ -17,4 +17,9 @@
     <string name="exit">Выйти</string>
     <string name="contacts">Контакты</string>
     <string name="profile_header">Профиль</string>
+    <string name="profile_calendar_error_dialog_title">Некорректный возвраст</string>
+    <string name="profile_calendar_error_dialog_text">Ваш возвраст меньше минимального</string>
+    <string name="profile_calendar_error_dialog_confirm">ОК</string>
+    <string name="profile_calendar_confirm">ОК</string>
+    <string name="profile_calendar_cancel">Отменить</string>
 </resources>

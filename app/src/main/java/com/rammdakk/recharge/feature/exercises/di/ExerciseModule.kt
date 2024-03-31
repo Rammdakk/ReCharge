@@ -1,6 +1,6 @@
 package com.rammdakk.recharge.feature.exercises.di
 
-import com.rammdakk.recharge.base.data.sp.EncryptedSharedPreferences
+import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.exercises.data.ExerciseRepositoryMockImpl
 import com.rammdakk.recharge.feature.exercises.domain.ExerciseRepository
 import dagger.Module
@@ -17,10 +17,10 @@ class ExerciseModule {
     @Provides
     fun provideExerciseRepository(
         dispatchers: Dispatchers,
-        encryptedSharedPreferences: EncryptedSharedPreferences,
+        authRepository: AuthRepository,
         retrofit: Retrofit,
     ): ExerciseRepository {
-//        return ExerciseRepositoryImpl(retrofit, encryptedSharedPreferences, dispatchers)
+//        return ExerciseRepositoryImpl(retrofit, authRepository, dispatchers)
         return ExerciseRepositoryMockImpl()
     }
 }

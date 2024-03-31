@@ -46,7 +46,7 @@ class AuthRepositoryImpl(
                 )
             }
             return@withContext Result.success(response.body()!!)
-    }
+        }
 
     override suspend fun validateCode(
         code: String,
@@ -85,6 +85,15 @@ class AuthRepositoryImpl(
         withContext(dispatchers.IO) {
             val value = encryptedSharedPreferences.sharedPreferences.getString(ACCESS_KEY, null)
             return@withContext !value.isNullOrBlank()
+        }
+
+
+    override suspend fun getToken(): String? =
+        withContext(dispatchers.IO) {
+            val value =
+                encryptedSharedPreferences.sharedPreferences.getString(ACCESS_KEY, null)
+            if (value.isNullOrBlank()) logOut()
+            return@withContext value
         }
 
 

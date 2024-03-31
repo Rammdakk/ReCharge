@@ -4,7 +4,7 @@ import com.rammdakk.recharge.base.data.network.error.ErrorHandlerImpl
 import com.rammdakk.recharge.base.data.network.error.HttpException
 import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
-import com.rammdakk.recharge.base.data.sp.EncryptedSharedPreferences
+import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.profile.data.net.ProfileApi
 import com.rammdakk.recharge.feature.profile.domain.ProfileRepository
 import com.rammdakk.recharge.feature.profile.models.data.ProfileInfo
@@ -14,7 +14,7 @@ import retrofit2.Retrofit
 
 class ProfileRepositoryImpl(
     retrofit: Retrofit,
-    private val encryptedSharedPreferences: EncryptedSharedPreferences,
+    private val authRepository: AuthRepository,
     private val dispatchers: Dispatchers
 ) : ProfileRepository {
 
@@ -67,9 +67,7 @@ class ProfileRepositoryImpl(
         }
 
     private suspend fun getAccessToken(): String? = withContext(dispatchers.IO) {
-        encryptedSharedPreferences.sharedPreferences.getString(
-            ACCESS_KEY, null
-        )
+        authRepository.getToken()
     }
 
     companion object {

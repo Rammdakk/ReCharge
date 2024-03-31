@@ -1,6 +1,6 @@
 package com.rammdakk.recharge.feature.profile.di
 
-import com.rammdakk.recharge.base.data.sp.EncryptedSharedPreferences
+import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.profile.data.ProfileRepositoryImpl
 import com.rammdakk.recharge.feature.profile.domain.ProfileRepository
 import dagger.Module
@@ -17,9 +17,9 @@ class ProfileModule {
     @Provides
     fun provideProfileRepository(
         retrofit: Retrofit,
-        encryptedSharedPreferences: EncryptedSharedPreferences,
+        authRepository: AuthRepository,
         dispatchers: Dispatchers,
     ): ProfileRepository {
-        return ProfileRepositoryImpl(retrofit, encryptedSharedPreferences, dispatchers)
+        return ProfileRepositoryImpl(retrofit, authRepository, dispatchers)
     }
 }

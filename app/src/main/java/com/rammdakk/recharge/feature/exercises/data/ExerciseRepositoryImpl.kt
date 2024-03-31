@@ -4,7 +4,7 @@ import com.rammdakk.recharge.base.data.network.error.ErrorHandlerImpl
 import com.rammdakk.recharge.base.data.network.error.HttpException
 import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
-import com.rammdakk.recharge.base.data.sp.EncryptedSharedPreferences
+import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.exercises.domain.ExerciseRepository
 import com.rammdakk.recharge.feature.exercises.models.data.ExerciseTabDataModel
 import com.rammdakk.recharge.feature.exercises.models.data.SportTypeDataModel
@@ -14,7 +14,7 @@ import retrofit2.Retrofit
 
 class ExerciseRepositoryImpl(
     retrofit: Retrofit,
-    private val encryptedSharedPreferences: EncryptedSharedPreferences,
+    private val authRepository: AuthRepository,
     private val dispatchers: Dispatchers
 ) : ExerciseRepository {
 
@@ -93,9 +93,7 @@ class ExerciseRepositoryImpl(
         }
 
     private suspend fun getAccessToken(): String? = withContext(dispatchers.IO) {
-        encryptedSharedPreferences.sharedPreferences.getString(
-            ACCESS_KEY, null
-        )
+        authRepository.getToken()
     }
 
     companion object {

@@ -27,6 +27,11 @@ interface AuthRepository {
     suspend fun validateAuth(): Boolean
 
     /**
+     * Запрос на получение токена
+     */
+    suspend fun getToken(): String?
+
+    /**
      * Удаление данных пользователя
      */
     suspend fun logOut()

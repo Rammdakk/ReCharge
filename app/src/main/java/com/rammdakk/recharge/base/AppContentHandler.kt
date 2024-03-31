@@ -49,7 +49,7 @@ import com.rammdakk.recharge.feature.destinations.CalendarContentDestination
 import com.rammdakk.recharge.feature.destinations.CatalogContentDestination
 import com.rammdakk.recharge.feature.destinations.Destination
 import com.rammdakk.recharge.feature.destinations.DirectionDestination
-import com.rammdakk.recharge.feature.destinations.ExercisesContentDestination
+import com.rammdakk.recharge.feature.destinations.ExercisesCatContentDestination
 import com.rammdakk.recharge.feature.destinations.MapContentDestination
 import com.rammdakk.recharge.feature.destinations.ProfileContentDestination
 
@@ -180,7 +180,7 @@ sealed class BottomNavItem(
 ) {
     data object Home : BottomNavItem("Home", R.drawable.home, CatalogContentDestination)
     data object Exercise :
-        BottomNavItem("Exercise", R.drawable.exercise, ExercisesContentDestination)
+        BottomNavItem("Exercise", R.drawable.exercise, ExercisesCatContentDestination)
 
     data object Map : BottomNavItem("Map", R.drawable.map, MapContentDestination)
     data object Calendar :

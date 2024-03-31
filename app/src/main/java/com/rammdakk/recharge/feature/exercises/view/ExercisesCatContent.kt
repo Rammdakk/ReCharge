@@ -1,4 +1,4 @@
-package com.rammdakk.recharge.feature.activity.view
+package com.rammdakk.recharge.feature.exercises.view
 
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.Crossfade
@@ -17,39 +17,37 @@ import com.rammdakk.recharge.base.theme.getThemedColor
 
 @Destination
 @Composable
-fun ActivityContent(
+fun ExercisesCatContent(
     navigator: DestinationsNavigator,
-    activityId: Int,
-    viewModel: ActivityViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    viewModel: ExerciseCatViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val uiState by viewModel.screenState
 
     LaunchedEffect(Unit) {
-        viewModel.loadData(activityId)
+        viewModel.loadData()
     }
 
     val systemUiController = rememberSystemUiController()
-    systemUiController.setNavigationBarColor(ReChargeTokens.BackgroundColored.getThemedColor())
-    systemUiController.setStatusBarColor(ReChargeTokens.BackgroundColored.getThemedColor())
+    systemUiController.setNavigationBarColor(ReChargeTokens.Background.getThemedColor())
+    systemUiController.setStatusBarColor(ReChargeTokens.Background.getThemedColor())
 
     Crossfade(
-        modifier = Modifier.background(ReChargeTokens.BackgroundColored.getThemedColor()),
+        modifier = Modifier.background(ReChargeTokens.Background.getThemedColor()),
         targetState = uiState,
         label = ""
     ) { state ->
         when (state) {
-            is ActivityScreenState.Idle -> {
-            }
+            is ExercisesCatScreenState.Idle -> {}
 
-            is ActivityScreenState.Loaded -> {
-                ActivityInfoScreen(
-                    state.activityInfo,
-                    viewModel::loadScheduleForDate,
-                    state.scheduleInfo,
-                    navigator
+            is ExercisesCatScreenState.Loaded -> {
+                ExerciseCatScreen(
+                    selectedId = state.selectedId.value,
+                    tabs = state.tabs.value,
+                    sportTypeItems = state.items.value,
+                    onTabClick = viewModel::onTabSelected,
+                    onCategoryClick = viewModel::onCategorySelected
                 )
             }
-
         }
     }
 }

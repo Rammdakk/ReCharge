@@ -27,7 +27,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.rammdakk.recharge.R
-import com.rammdakk.recharge.base.theme.TextPrimarySmallInverse
+import com.rammdakk.recharge.base.theme.ReChargeTokens
+import com.rammdakk.recharge.base.theme.TextPrimarySmallInverseConstant
+import com.rammdakk.recharge.base.theme.getThemedColor
 import com.rammdakk.recharge.feature.activity.view.model.AdminInfo
 
 @Composable
@@ -56,12 +58,12 @@ fun ActivityImage(
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .height(45.dp)
-                    .background(Color.Black.copy(alpha = 0.8f))
+                    .background(Color.Black.copy(alpha = 0.7f))
                     .padding(horizontal = roundedCorner),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TextPrimarySmallInverse(
+                TextPrimarySmallInverseConstant(
                     text = stringResource(id = R.string.contacts),
                 )
                 Row(modifier = Modifier.fillMaxHeight(0.6f)) {
@@ -69,7 +71,7 @@ fun ActivityImage(
                         Image(
                             painter = painterResource(id = R.drawable.wa_image),
                             contentDescription = "",
-                            colorFilter = ColorFilter.tint(Color.White),
+                            colorFilter = ColorFilter.tint(ReChargeTokens.TextPrimaryInverseConstant.getThemedColor()),
                             modifier = Modifier.clickable {
                                 adminInfo.onWhatsAppClick.invoke(it)
                             }
@@ -79,7 +81,7 @@ fun ActivityImage(
                         Image(
                             painter = painterResource(id = R.drawable.tg_image),
                             contentDescription = "",
-                            colorFilter = ColorFilter.tint(Color.White),
+                            colorFilter = ColorFilter.tint(ReChargeTokens.TextPrimaryInverseConstant.getThemedColor()),
                             modifier = Modifier
                                 .padding(start = 10.dp)
                                 .clickable {

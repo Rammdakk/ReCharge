@@ -4,6 +4,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,6 +22,10 @@ fun ProfileContent(
     viewModel: ProfileViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
 
+    LaunchedEffect(Unit) {
+        viewModel.loadData()
+    }
+
     val uiState by viewModel.profileState
 
     val systemUiController = rememberSystemUiController()
@@ -34,7 +39,7 @@ fun ProfileContent(
     ) { state ->
         when (state) {
             is ProfileScreenState.Idle -> {
-                viewModel.loadData()
+
             }
 
             is ProfileScreenState.Loaded -> {

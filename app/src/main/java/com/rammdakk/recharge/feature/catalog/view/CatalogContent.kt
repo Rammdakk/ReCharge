@@ -4,6 +4,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,6 +23,10 @@ fun CatalogContent(
 ) {
     val uiState by viewModel.screenState
 
+    LaunchedEffect(Unit) {
+        viewModel.loadData()
+    }
+
     val systemUiController = rememberSystemUiController()
     systemUiController.setNavigationBarColor(ReChargeTokens.Background.getThemedColor())
     systemUiController.setStatusBarColor(ReChargeTokens.Background.getThemedColor())
@@ -33,7 +38,6 @@ fun CatalogContent(
     ) { state ->
         when (state) {
             is CatalogScreenState.Idle -> {
-                viewModel.loadData()
             }
 
             is CatalogScreenState.Loaded -> {

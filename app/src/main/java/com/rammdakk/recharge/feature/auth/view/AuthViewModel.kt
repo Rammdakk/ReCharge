@@ -36,19 +36,22 @@ class AuthViewModel @Inject constructor(
     val openLink: LiveData<String?>
         get() = _openLink
 
-    fun init() {
-        checkLoginStatus()
-        _errorMessage.value = null
-        _authState.value = AuthScreenState.RequestPhone(
-            greetingText = R.string.greeting,
-            hintText = null,
-            onRequestCodeClick = this::requestCode,
-            errorMessage = _errorMessage
-        )
+    fun init() = viewModelScope.launch {
+        if (!checkLoginStatus()) {
+            _errorMessage.value = null
+            _authState.value = AuthScreenState.RequestPhone(
+                greetingText = R.string.greeting,
+                hintText = null,
+                onRequestCodeClick = this@AuthViewModel::requestCode,
+                errorMessage = _errorMessage
+            )
+        }
     }
 
-    private fun checkLoginStatus() = viewModelScope.launch {
-        _isLoggedIn.value = authRepository.validateAuth()
+    private suspend fun checkLoginStatus(): Boolean {
+        return authRepository.validateAuth().also {
+            _isLoggedIn.value = it
+        }
     }
 
     private fun requestCode(phoneNumber: String) {

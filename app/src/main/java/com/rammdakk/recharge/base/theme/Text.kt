@@ -191,6 +191,23 @@ fun TextPrimarySmallInverse(
 }
 
 @Composable
+fun TextPrimarySmallInverseConstant(
+    modifier: Modifier = Modifier,
+    text: String,
+    textAlign: TextAlign = TextAlign.Center
+) {
+    Text(
+        modifier = modifier,
+        text = text,
+        textAlign = textAlign,
+        fontSize = 16.sp,
+        lineHeight = 16.sp,
+        color = ReChargeTokens.TextPrimaryInverseConstant.getThemedColor(),
+        fontWeight = FontWeight.SemiBold
+    )
+}
+
+@Composable
 fun TextSecondaryLarge(
     modifier: Modifier = Modifier,
     text: String,

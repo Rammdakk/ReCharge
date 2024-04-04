@@ -7,10 +7,10 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface ActivityListApi {
-    @GET("/api/Activities/Tabs")
+    @GET("/api/Activities/List")
     suspend fun getActivities(
         @Header("accessToken") accessToken: String,
-        @Query("activityId") activityCatId: Int,
+        @Query("activityCatId") activityCatId: Int,
         @Query("date") date: Long
     ): Response<ActivityListDataModel>
 

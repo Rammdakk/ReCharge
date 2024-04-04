@@ -24,6 +24,12 @@ class ActivityListViewModel @Inject constructor(
     val screenState: State<ActivityListScreenState> = _screenState
 
     fun loadData(activityCatId: Int, date: Date) = viewModelScope.launch {
+        date.apply {
+            hours = 0
+            minutes = 0
+            seconds = 0
+        }
+
         activityListRepository.getActivities(activityCatId, date.time).getOrNull()?.let {
             _screenState.value = ActivityListScreenState.Loaded(
                 title = it.activityName,

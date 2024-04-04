@@ -21,7 +21,7 @@ class ActivityListRepositoryImpl(
     override suspend fun getActivities(activityCatId: Int, date: Long) =
         withContext(dispatchers.IO) {
             val response =
-//            runCatching {
+            runCatching {
                 api.getActivities(
                     accessToken = getAccessToken() ?: return@withContext Result.failure(
                         NetworkError(InternetError.Unauthorized)
@@ -29,13 +29,13 @@ class ActivityListRepositoryImpl(
                     activityCatId = activityCatId,
                     date = date
                 )
-//        }.getOrNull()
-//            ?: return@withContext Result.failure(
-//                NetworkError(
-//                    InternetError.Unknown,
-//                    "Не удалось получить значения"
-//                )
-//            )
+            }.getOrNull()
+                ?: return@withContext Result.failure(
+                    NetworkError(
+                        InternetError.Unknown,
+                        "Не удалось получить значения"
+                    )
+                )
 
             if (!response.isSuccessful) {
                 return@withContext Result.failure(

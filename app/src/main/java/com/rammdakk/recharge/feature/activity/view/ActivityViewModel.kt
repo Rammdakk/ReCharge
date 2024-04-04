@@ -47,6 +47,11 @@ class ActivityViewModel @Inject constructor(
     fun loadScheduleForDate(date: Date) = viewModelScope.launch {
         job?.cancel()
         job = async(dispatchers.IO) {
+            date.apply {
+                hours = 0
+                minutes = 0
+                seconds = 0
+            }
             val timePad = activityRepository.getActivityTimeTable(date)
                 .map { timePad -> timePad.covertToTimePad { reserveActivity(timePad.id) } }
             withContext(dispatchers.Main) {

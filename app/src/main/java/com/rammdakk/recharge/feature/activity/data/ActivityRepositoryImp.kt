@@ -1,6 +1,7 @@
 package com.rammdakk.recharge.feature.activity.data
 
 
+import com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel
 import com.rammdakk.recharge.feature.activity.domain.ActivityRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -26,28 +27,28 @@ class ActivityRepositoryImp(
             )
         }
 
-    override suspend fun getActivityTimeTable(date: Date): List<com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel> {
+    override suspend fun getActivityTimeTable(date: Date): List<TimePadDataModel> {
         val delta = 60000 * 60
         return listOf(
-            com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel(
+            TimePadDataModel(
                 12,
                 2000.00,
                 Date(System.currentTimeMillis()),
                 Date(System.currentTimeMillis() + delta)
             ),
-            com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel(
+            TimePadDataModel(
                 12,
                 2000.00,
                 Date(System.currentTimeMillis() + delta),
                 Date(System.currentTimeMillis() + delta * 2)
             ),
-            com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel(
+            TimePadDataModel(
                 12,
                 2000.00,
                 Date(System.currentTimeMillis() + delta * 2),
                 Date(System.currentTimeMillis() + delta * 3)
             ),
-            com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel(
+            TimePadDataModel(
                 12,
                 2000.00,
                 Date(System.currentTimeMillis() + delta * 3),

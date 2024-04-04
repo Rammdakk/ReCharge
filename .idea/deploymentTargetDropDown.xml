@@ -2,13 +2,13 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="ActivityInfoScreenPreview">
+      <entry key="ReCharge">
         <State />
       </entry>
-      <entry key="app">
+      <entry key="TabCellPreview">
         <State />
       </entry>
-      <entry key="preview">
+      <entry key="datePickerPreview">
         <State />
       </entry>
     </value>

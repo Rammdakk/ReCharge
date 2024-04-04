@@ -21,12 +21,12 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -36,7 +36,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.rammdakk.recharge.auth.view.pxToDp
 
 @Composable
 fun HeaderTextPrimary(
@@ -187,6 +186,23 @@ fun TextPrimarySmallInverse(
         fontSize = 16.sp,
         lineHeight = 16.sp,
         color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+        fontWeight = FontWeight.SemiBold
+    )
+}
+
+@Composable
+fun TextPrimarySmallInverseConstant(
+    modifier: Modifier = Modifier,
+    text: String,
+    textAlign: TextAlign = TextAlign.Center
+) {
+    Text(
+        modifier = modifier,
+        text = text,
+        textAlign = textAlign,
+        fontSize = 16.sp,
+        lineHeight = 16.sp,
+        color = ReChargeTokens.TextPrimaryInverseConstant.getThemedColor(),
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -396,7 +412,89 @@ fun TextError(
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun IconText(
+    modifier: Modifier = Modifier,
+    @DrawableRes iconId: Int? = null,
+    iconVector: ImageVector? = null,
+    iconColor: Color = ReChargeTokens.TextPrimary.getThemedColor(),
+    text: String,
+    hint: String? = null,
+    fontSize: TextUnit,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+    ) {
+        var height by remember {
+            mutableIntStateOf(0)
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .onSizeChanged {
+                    if (height == 0) {
+                        height = it.height
+                    }
+                }
+                .background(
+                    ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+                    shape = RoundedCornerShape(50)
+                )
+        ) {
+            iconId?.let {
+                Icon(
+                    painterResource(id = it),
+                    "",
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(Color(0xFFA5B7E4))
+                        .height(height = (height).pxToDp() - 4.dp)
+                        .padding(3.dp),
+                    iconColor
+                )
+            } ?: iconVector?.let {
+                Icon(
+                    imageVector = it,
+                    "",
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(Color(0xFFA5B7E4))
+                        .height(height = (height).pxToDp() - 4.dp)
+                        .padding(3.dp),
+                    iconColor
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .padding(all = 6.dp)
+                    .wrapContentHeight()
+            ) {
+                if (text.isEmpty()) {
+                    hint?.let {
+                        Text(
+                            it,
+                            fontSize = fontSize,
+                            color = ReChargeTokens.TextTertiary.getThemedColor()
+                        )
+                    }
+                }
+                Text(
+                    text = text,
+                    style = TextStyle.Default.copy(
+                        fontSize = fontSize,
+                        fontWeight = FontWeight.Normal
+                    )
+                )
+            }
+        }
+    }
+}
+
 @Composable
 fun InputIconTextField(
     modifier: Modifier = Modifier,
@@ -406,6 +504,7 @@ fun InputIconTextField(
     value: TextFieldValue,
     hint: String? = null,
     fontSize: TextUnit,
+    readOnly: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onValueChange: (TextFieldValue) -> Unit
 ) {
@@ -433,6 +532,7 @@ fun InputIconTextField(
                 }
                 .align(Alignment.CenterStart),
             value = value,
+            readOnly = readOnly,
             onValueChange = onValueChange,
             textStyle = TextStyle.Default.copy(fontSize = fontSize, fontWeight = FontWeight.Normal),
             keyboardOptions = keyboardOptions,
@@ -488,5 +588,7 @@ fun InputIconTextField(
             }
         }
     }
-
 }
+
+@Composable
+fun Int.pxToDp() = with(LocalDensity.current) { this@pxToDp.toDp() }

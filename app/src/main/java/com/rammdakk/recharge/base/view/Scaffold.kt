@@ -8,9 +8,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.ramcosta.composedestinations.spec.Route
-import com.rammdakk.recharge.appCurrentDestinationAsState
-import com.rammdakk.recharge.destinations.Destination
-import com.rammdakk.recharge.startAppDestination
+import com.rammdakk.recharge.feature.appCurrentDestinationAsState
+import com.rammdakk.recharge.feature.destinations.Destination
+import com.rammdakk.recharge.feature.startAppDestination
 
 @SuppressLint("RestrictedApi")
 @Composable

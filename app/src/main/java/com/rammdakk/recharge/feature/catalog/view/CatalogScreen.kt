@@ -54,7 +54,7 @@ fun CatalogScreen(
                 item {
                     TextPrimaryLarge(
                         modifier = Modifier
-                            .fillMaxWidth(0.9f)
+                            .fillMaxWidth()
                             .padding(vertical = 15.dp),
                         text = stringResource(id = R.string.next_activity),
                         textAlign = TextAlign.Start
@@ -67,7 +67,7 @@ fun CatalogScreen(
                 TextPrimaryLarge(
                     modifier = Modifier
                         .background(ReChargeTokens.Background.getThemedColor())
-                        .fillMaxWidth(0.9f)
+                        .fillMaxWidth()
                         .padding(vertical = 10.dp),
                     text = stringResource(id = R.string.suggested_activity),
                     textAlign = TextAlign.Start

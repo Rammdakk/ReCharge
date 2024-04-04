@@ -1,4 +1,4 @@
-package com.rammdakk.recharge.feature.activity.view.components
+package com.rammdakk.recharge.feature.activityList.view.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

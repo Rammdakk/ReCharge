@@ -10,6 +10,7 @@
     <string name="next_activity">Следующее занятие</string>
     <string name="suggested_activity">Рекомендуем</string>
     <string name="start_price">от %1$s₽</string>
+    <string name="price">%1$s₽</string>
     <string name="error_text">Произошла ошибка,\nпопробуйте перезапустить приложение</string>
     <string name="number_of_visitors">Количество</string>
     <string name="confirm">Подтвердить</string>
@@ -22,4 +23,6 @@
     <string name="profile_calendar_error_dialog_confirm">ОК</string>
     <string name="profile_calendar_confirm">ОК</string>
     <string name="profile_calendar_cancel">Отменить</string>
+    <string name="profile_gender_male">Мужской</string>
+    <string name="profile_gender_female">Женский</string>
 </resources>

@@ -43,7 +43,7 @@ fun ActivityCell(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxWidth(0.9f)
+            .fillMaxWidth()
             .padding(vertical = 10.dp)
             .clip(RoundedCornerShape(roundedCorner))
             .aspectRatio(2.2f)
@@ -91,7 +91,7 @@ fun ActivityCell(
 }
 
 @Composable
-fun launchWebPage(url: String) {
+fun LaunchWebPage(url: String) {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
     startActivity(LocalContext.current, intent, null)
 }

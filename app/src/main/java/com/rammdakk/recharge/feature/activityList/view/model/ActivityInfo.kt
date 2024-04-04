@@ -1,8 +1,8 @@
-package com.rammdakk.recharge.feature.catalog.view.model
+package com.rammdakk.recharge.feature.activityList.view.model
 
 import android.text.format.DateFormat
-import com.rammdakk.recharge.feature.catalog.data.model.ActivityDataModel
-import com.rammdakk.recharge.feature.catalog.data.model.Coordinates
+import com.rammdakk.recharge.feature.activityList.data.model.ActivityDataModel
+import com.rammdakk.recharge.feature.activityList.data.model.Coordinates
 
 data class ActivityInfo(
     val id: Int,
@@ -10,7 +10,7 @@ data class ActivityInfo(
     val name: String,
     val organizationName: String,
     val time: String?,
-    val startPrice: Float,
+    val price: Float,
     val address: String,
     val location: LocationInfo,
 )
@@ -25,9 +25,9 @@ fun ActivityDataModel.convertToActivityInfo() =
         id = this.id,
         imagePath = this.imagePath,
         name = this.name,
-        time = this.time?.let { DateFormat.format("d MMM, hh:mm", it).toString() },
+        time = this.time?.let { DateFormat.format("d MMM", it).toString() },
         address = this.address,
-        startPrice = this.startPrice,
+        price = this.price,
         location = this.coordinates.convertToLocationInfo(),
         organizationName = this.organizationName
     )

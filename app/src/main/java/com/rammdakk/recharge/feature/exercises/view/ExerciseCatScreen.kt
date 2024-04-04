@@ -53,7 +53,7 @@ fun ExerciseCatScreen(
         })
         LazyRow(
             modifier = Modifier
-                .fillMaxWidth(0.9f)
+                .fillMaxWidth()
                 .padding(vertical = 8.dp), horizontalArrangement = Arrangement.SpaceAround
         ) {
             items(tabs) { exercise ->
@@ -72,7 +72,7 @@ fun ExerciseCatScreen(
 
         LazyVerticalGrid(
             modifier = Modifier
-                .fillMaxWidth(0.9f)
+                .fillMaxWidth()
                 .focusable(),
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(12.dp),

@@ -1,7 +1,6 @@
 package com.rammdakk.recharge.feature.activity.view
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +20,6 @@ import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -43,7 +41,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.theme.HeaderTextPrimary
 import com.rammdakk.recharge.base.theme.HeaderTextPrimaryInverse
@@ -76,7 +73,7 @@ fun ActivityInfoScreen(
     activityInfo: ActivityExtendedInfo,
     onDateChanged: (Date) -> Unit,
     timePadList: State<List<TimePad>>,
-    navigator: DestinationsNavigator
+    onBackPressed: () -> Unit
 ) {
     val state = rememberBottomSheetScaffoldState(
         rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -93,7 +90,6 @@ fun ActivityInfoScreen(
     }
 
     LaunchedEffect(selectedId) {
-        Log.d("Ramil", selectedId.toString())
         if (selectedId == null) {
             state.bottomSheetState.hide()
         } else {
@@ -113,13 +109,15 @@ fun ActivityInfoScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(70.dp)
+                    .background(ReChargeTokens.BackgroundColored.getThemedColor())
+                    .padding(top = 8.dp)
+                    .height(56.dp)
                     .padding(horizontal = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(
                     onClick = {
-                        navigator.popBackStack()
+                        onBackPressed.invoke()
                     }
                 ) {
                     Icon(
@@ -145,6 +143,7 @@ fun ActivityInfoScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .padding(horizontal = 16.dp)
                 .padding(bottom = 15.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -167,7 +166,7 @@ fun ActivityInfoScreen(
             LazyRow(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
-                    .fillMaxWidth(0.9f)
+                    .fillMaxWidth()
                     .padding(top = 10.dp)
             ) {
                 timePadList.value.let { timepad ->
@@ -183,7 +182,7 @@ fun ActivityInfoScreen(
                     text = it,
                     textAlign = TextAlign.Start,
                     modifier = Modifier
-                        .fillMaxWidth(0.9f)
+                        .fillMaxWidth()
                         .padding(vertical = 10.dp)
                         .clip(RoundedCornerShape(roundedCorner))
                         .background(ReChargeTokens.Background.getThemedColor())
@@ -210,6 +209,7 @@ private fun SheetContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 16.dp)
             .height((height * 2 / 3).dp)
             .padding(top = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -250,7 +250,7 @@ private fun SheetContent(
         }
         InputIconTextField(
             modifier = Modifier
-                .fillMaxWidth(0.9f)
+                .fillMaxWidth()
                 .padding(vertical = 8.dp),
             value = userName,
             fontSize = 18.sp,
@@ -261,7 +261,7 @@ private fun SheetContent(
         }
         InputIconTextField(
             modifier = Modifier
-                .fillMaxWidth(0.9f)
+                .fillMaxWidth()
                 .padding(vertical = 8.dp),
             value = phone,
             fontSize = 18.sp,
@@ -273,7 +273,7 @@ private fun SheetContent(
         }
         InputIconTextField(
             modifier = Modifier
-                .fillMaxWidth(0.9f)
+                .fillMaxWidth()
                 .padding(vertical = 8.dp),
             value = email,
             fontSize = 18.sp,
@@ -284,7 +284,7 @@ private fun SheetContent(
         }
         Row(
             modifier = Modifier
-                .fillMaxWidth(0.9f)
+                .fillMaxWidth()
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -296,7 +296,7 @@ private fun SheetContent(
         TextPrimaryLargeThemed(
             text = stringResource(id = R.string.confirm),
             modifier = Modifier
-                .fillMaxWidth(0.9f)
+                .fillMaxWidth()
                 .padding(bottom = 16.dp)
                 .clip(RoundedCornerShape(50))
                 .background(ReChargeTokens.Background.getThemedColor())
@@ -308,22 +308,6 @@ private fun SheetContent(
 
 }
 
-@Preview
-@Composable
-fun test() {
-    Text(
-        text = stringResource(id = R.string.confirm),
-        Modifier
-            .fillMaxWidth(0.9f)
-            .clip(RoundedCornerShape(50))
-            .background(ReChargeTokens.Background.getThemedColor())
-            .padding(vertical = 8.dp),
-        textAlign = TextAlign.Center,
-        color = ReChargeTokens.BackgroundColored.getThemedColor()
-    )
-}
-
-
 @SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
@@ -331,7 +315,7 @@ fun ActivityInfoScreenPreview() {
     val activity = ActivityExtendedDataModel(
         id = 1,
         imagePath = "https://riamo.ru/files/image/04/54/86/gallery!alf.jpg",
-        name = "Pool",
+        name = "Свободное плавание",
         adminPhoneWA = "+7852367821943",
         adminTgUsername = "rammdakk",
         locationName = "Чайка бассейн",
@@ -369,7 +353,11 @@ fun ActivityInfoScreenPreview() {
             Date(System.currentTimeMillis() + delta * 4)
         )
     ).map { it.covertToTimePad { } }
-//    ActivityInfoScreen(activityInfo = activity, {}, timePadList = mutableStateOf(list))
+    ActivityInfoScreen(
+        activityInfo = activity,
+        {},
+        timePadList = mutableStateOf(list),
+        onBackPressed = {})
 }
 
 private val roundedCorner = 20.dp

@@ -13,7 +13,7 @@ fun AuthContent(
 ) {
 
     val uiState by vm.authState
-    Crossfade(targetState = uiState, label = "") { state ->
+    Crossfade(targetState = uiState, label = "AuthContent") { state ->
         if (state is AuthScreenState.Idle) {
             vm.init()
         }

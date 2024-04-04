@@ -31,7 +31,7 @@ fun CategoryRow(categories: List<Category>) {
     LazyRow(
         modifier = Modifier
             .background(ReChargeTokens.Background.getThemedColor())
-            .fillMaxWidth(0.9f)
+            .fillMaxWidth()
             .height(60.dp)
             .padding(bottom = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween

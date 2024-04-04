@@ -29,7 +29,7 @@ fun SearchBox(items: List<String> = emptyList(), onClick: (String) -> Unit) {
     val keyboard = LocalSoftwareKeyboardController.current
     OutlinedTextField(
         modifier = Modifier
-            .fillMaxWidth(0.9f)
+            .fillMaxWidth()
             .border(
                 width = 2.dp,
                 color = ReChargeTokens.BackgroundColored.getThemedColor(),

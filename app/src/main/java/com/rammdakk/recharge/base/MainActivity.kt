@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ReChargeTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     AppContentHandler()
                 }

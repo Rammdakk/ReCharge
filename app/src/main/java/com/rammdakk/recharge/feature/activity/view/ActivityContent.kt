@@ -33,7 +33,8 @@ fun ActivityContent(
     systemUiController.setStatusBarColor(ReChargeTokens.BackgroundColored.getThemedColor())
 
     Crossfade(
-        modifier = Modifier.background(ReChargeTokens.BackgroundColored.getThemedColor()),
+        modifier = Modifier
+            .background(ReChargeTokens.BackgroundColored.getThemedColor()),
         targetState = uiState,
         label = ""
     ) { state ->
@@ -46,7 +47,7 @@ fun ActivityContent(
                     state.activityInfo,
                     viewModel::loadScheduleForDate,
                     state.scheduleInfo,
-                    navigator
+                    navigator::popBackStack
                 )
             }
 

@@ -40,7 +40,7 @@ fun ActivityImage(
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(roundedCorner))
-            .fillMaxWidth(0.9f)
+            .fillMaxWidth()
             .aspectRatio(1.5f)
     ) {
         AsyncImage(

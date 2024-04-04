@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +18,10 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -99,6 +103,7 @@ fun ProfileScreen(
             var isMaleState by remember {
                 mutableStateOf(isMale)
             }
+            var expanded by remember { mutableStateOf(false) }
             var cityState by remember {
                 mutableStateOf(TextFieldValue(city))
             }
@@ -113,7 +118,6 @@ fun ProfileScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val modifier = Modifier
-                    .fillMaxWidth(0.9f)
                     .padding(vertical = 8.dp)
 
                 InputIconTextField(
@@ -163,7 +167,6 @@ fun ProfileScreen(
                             },
                             { visibleCalendar = false })
                     }
-
                     IconText(
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
@@ -174,15 +177,40 @@ fun ProfileScreen(
                         fontSize = 18.sp,
                         iconVector = Icons.Default.DateRange
                     )
-                    InputIconTextField(
+                    Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 4.dp),
-                        value = cityState,
-                        fontSize = 18.sp,
-                        iconVector = Icons.Default.Person
-                    ) { fieldValue ->
-                        cityState = fieldValue
+                            .wrapContentSize()
+                    ) {
+                        IconText(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 4.dp)
+                                .clip(RoundedCornerShape(50))
+                                .clickable { expanded = true },
+                            text = stringResource(id = if (isMaleState) R.string.profile_gender_male else R.string.profile_gender_female),
+                            fontSize = 18.sp,
+                            iconVector = Icons.Default.Person
+                        )
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            modifier = Modifier.background(ReChargeTokens.BackgroundContainer.getThemedColor())
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.profile_gender_male)) },
+                                onClick = {
+                                    isMaleState = true
+                                    expanded = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.profile_gender_female)) },
+                                onClick = {
+                                    isMaleState = false
+                                    expanded = false
+                                }
+                            )
+                        }
                     }
                 }
                 InputIconTextField(
@@ -198,7 +226,7 @@ fun ProfileScreen(
             TextPrimaryLarge(
                 text = stringResource(id = R.string.save),
                 modifier = Modifier
-                    .fillMaxWidth(0.9f)
+                    .fillMaxWidth()
                     .padding(top = 16.dp)
                     .clip(RoundedCornerShape(50))
                     .background(ReChargeTokens.BackgroundColored.getThemedColor())

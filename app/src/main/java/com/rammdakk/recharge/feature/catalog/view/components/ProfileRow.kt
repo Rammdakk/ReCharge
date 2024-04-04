@@ -46,7 +46,7 @@ fun ProfileRow(
         modifier = Modifier
             .padding(top = 20.dp)
             .height(50.dp)
-            .fillMaxWidth(0.9f),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

@@ -27,7 +27,7 @@ fun WarningText(modifier: Modifier = Modifier, text: String) {
     Row(
         modifier = modifier
             .wrapContentHeight()
-            .fillMaxWidth(0.9f)
+            .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
             .background(ReChargeTokens.BackgroundInfo.getThemedColor()),
         verticalAlignment = Alignment.CenterVertically

@@ -3,11 +3,13 @@ package com.rammdakk.recharge.feature.profile.view
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.annotation.Destination
@@ -33,7 +35,9 @@ fun ProfileContent(
     systemUiController.setStatusBarColor(ReChargeTokens.Background.getThemedColor())
 
     Crossfade(
-        modifier = Modifier.background(ReChargeTokens.Background.getThemedColor()),
+        modifier = Modifier
+            .background(ReChargeTokens.Background.getThemedColor())
+            .padding(horizontal = 16.dp),
         targetState = uiState,
         label = ""
     ) { state ->

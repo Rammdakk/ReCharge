@@ -3,17 +3,20 @@ package com.rammdakk.recharge.feature.exercises.view
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.getThemedColor
+import com.rammdakk.recharge.feature.destinations.ActivityListContentDestination
 
 @Destination
 @Composable
@@ -32,7 +35,9 @@ fun ExercisesCatContent(
     systemUiController.setStatusBarColor(ReChargeTokens.Background.getThemedColor())
 
     Crossfade(
-        modifier = Modifier.background(ReChargeTokens.Background.getThemedColor()),
+        modifier = Modifier
+            .background(ReChargeTokens.Background.getThemedColor())
+            .padding(horizontal = 16.dp),
         targetState = uiState,
         label = ""
     ) { state ->
@@ -45,7 +50,9 @@ fun ExercisesCatContent(
                     tabs = state.tabs.value,
                     sportTypeItems = state.items.value,
                     onTabClick = viewModel::onTabSelected,
-                    onCategoryClick = viewModel::onCategorySelected
+                    onCategoryClick = {
+                        navigator.navigate(ActivityListContentDestination(it))
+                    }
                 )
             }
         }

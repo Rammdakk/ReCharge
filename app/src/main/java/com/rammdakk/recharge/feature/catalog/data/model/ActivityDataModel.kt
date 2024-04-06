@@ -10,7 +10,7 @@ data class NextActivityDataModel(
     @JsonProperty("imageUrl") val imagePath: String,
     @JsonProperty("timeMilliseconds") val time: Long?,
     @JsonProperty("locationName") val organizationName: String,
-    @JsonProperty("address") val address: String,
+    @JsonProperty("addressString") val address: String,
     @JsonProperty("coordinates") val coordinates: Coordinates
 )
 
@@ -21,7 +21,7 @@ data class ActivityRecommendationDataModel(
     @JsonProperty("imageUrl") val imagePath: String,
     @JsonProperty("startPrice") val startPrice: Float,
     @JsonProperty("locationName") val organizationName: String,
-    @JsonProperty("address") val address: String,
+    @JsonProperty("addressString") val address: String,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

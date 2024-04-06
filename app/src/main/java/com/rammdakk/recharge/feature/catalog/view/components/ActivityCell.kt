@@ -32,13 +32,13 @@ import com.rammdakk.recharge.base.theme.PlainTextSmallInverse
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryMediumInverse
 import com.rammdakk.recharge.base.theme.getThemedColor
-import com.rammdakk.recharge.feature.catalog.view.model.ActivityInfo
+import com.rammdakk.recharge.feature.catalog.view.model.ActivityRecommendationModel
 import com.rammdakk.recharge.feature.destinations.ActivityContentDestination
 import kotlin.math.roundToInt
 
 @Composable
 fun ActivityCell(
-    activityInfo: ActivityInfo,
+    activityInfo: ActivityRecommendationModel,
     navigator: DestinationsNavigator
 ) {
     Box(

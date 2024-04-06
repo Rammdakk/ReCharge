@@ -1,7 +1,9 @@
 package com.rammdakk.recharge.feature.catalog.view.components
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.text.format.DateUtils
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -36,12 +38,14 @@ import com.rammdakk.recharge.base.theme.PlainTextSmallInverse
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryMediumInverse
 import com.rammdakk.recharge.base.theme.getThemedColor
-import com.rammdakk.recharge.feature.catalog.view.model.ActivityInfo
+import com.rammdakk.recharge.feature.catalog.view.model.NextActivityModel
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 @Composable
 fun NextActivityCell(
-    activityInfo: ActivityInfo,
+    activityInfo: NextActivityModel,
     navigator: DestinationsNavigator,
 ) {
     val launcher =
@@ -78,7 +82,7 @@ fun NextActivityCell(
         ) {
             Column {
                 TextPrimaryMediumInverse(text = activityInfo.name)
-                activityInfo.time?.let { PlainTextSmallInverse(text = it) }
+                activityInfo.time?.let { PlainTextSmallInverse(text = it.formatDate()) }
                 PlainTextSmallInverse(text = activityInfo.address)
             }
 
@@ -103,5 +107,14 @@ fun NextActivityCell(
 
     }
 }
+
+@SuppressLint("SimpleDateFormat")
+fun Long.formatDate(): String =
+    if (DateUtils.isToday(this)) {
+        SimpleDateFormat("'Сегодня', HH:mm")
+    } else {
+        SimpleDateFormat("d MMMM, HH:mm")
+    }.format(Date(this))
+
 
 private val roundedCorner = 20.dp

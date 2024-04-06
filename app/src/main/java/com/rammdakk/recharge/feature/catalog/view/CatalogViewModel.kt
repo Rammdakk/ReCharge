@@ -7,8 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.rammdakk.recharge.feature.catalog.domain.CatalogRepository
-import com.rammdakk.recharge.feature.catalog.view.model.ActivityInfo
+import com.rammdakk.recharge.feature.catalog.view.model.ActivityRecommendationModel
 import com.rammdakk.recharge.feature.catalog.view.model.Category
+import com.rammdakk.recharge.feature.catalog.view.model.NextActivityModel
 import com.rammdakk.recharge.feature.catalog.view.model.ProfileInfo
 import com.rammdakk.recharge.feature.catalog.view.model.convertToActivityInfo
 import com.rammdakk.recharge.feature.catalog.view.model.convertToProfileInfo
@@ -30,9 +31,10 @@ class CatalogViewModel @Inject constructor(
         mutableStateOf(CatalogScreenState.Idle)
 
     private val _profileInfo: MutableState<ProfileInfo?> = mutableStateOf(null)
-    private val _nextActivity: MutableState<ActivityInfo?> = mutableStateOf(null)
+    private val _nextActivity: MutableState<NextActivityModel?> = mutableStateOf(null)
     private val _categories: MutableState<List<Category>> = mutableStateOf(emptyList())
-    private val _activitiesList: MutableState<List<ActivityInfo>> = mutableStateOf(emptyList())
+    private val _activitiesList: MutableState<List<ActivityRecommendationModel>> =
+        mutableStateOf(emptyList())
 
     val screenState: State<CatalogScreenState> = _screenState
 
@@ -59,7 +61,7 @@ class CatalogViewModel @Inject constructor(
     }
 
     private suspend fun loadProfile() = withContext(dispatchers.IO) {
-        val result = catalogRepository.getProfileInfo().convertToProfileInfo()
+        val result = catalogRepository.getProfileInfo().getOrNull()?.convertToProfileInfo()
 
         withContext(dispatchers.Main) {
             _profileInfo.value = result
@@ -67,7 +69,7 @@ class CatalogViewModel @Inject constructor(
     }
 
     private suspend fun loadNextActivity() = withContext(dispatchers.IO) {
-        val result = catalogRepository.getNextActivityInfo()?.convertToActivityInfo()
+        val result = catalogRepository.getNextActivityInfo().getOrNull()?.convertToActivityInfo()
 
         withContext(dispatchers.Main) {
             _nextActivity.value = result
@@ -75,7 +77,7 @@ class CatalogViewModel @Inject constructor(
     }
 
     private suspend fun loadCategories() = withContext(dispatchers.IO) {
-        val result = catalogRepository.getCategories().map { cat ->
+        val result = catalogRepository.getCategories().getOrNull()?.map { cat ->
             Category(imagePath = cat.imagePath) {
                 viewModelScope.launch {
                     loadActivities(cat.id)
@@ -84,16 +86,16 @@ class CatalogViewModel @Inject constructor(
         }
 
         withContext(dispatchers.Main) {
-            _categories.value = result
+            _categories.value = result.orEmpty()
         }
     }
 
-    private suspend fun loadActivities(catId: String? = null) = withContext(dispatchers.IO) {
-        catalogRepository.updateCatalog(catId).map {
+    private suspend fun loadActivities(catId: Int? = null) = withContext(dispatchers.IO) {
+        catalogRepository.updateCatalog(catId).getOrNull()?.map {
             it.convertToActivityInfo()
         }.let { activityList ->
             withContext(dispatchers.Main) {
-                _activitiesList.value = activityList
+                _activitiesList.value = activityList.orEmpty()
             }
         }
     }

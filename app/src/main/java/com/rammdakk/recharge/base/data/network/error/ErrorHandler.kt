@@ -13,7 +13,7 @@ internal interface ErrorHandler {
     fun getErrorType(throwable: Throwable): InternetError
 }
 
-internal object ErrorHandlerImpl : ErrorHandler {
+object ErrorHandlerImpl : ErrorHandler {
     override fun getErrorType(throwable: Throwable): InternetError {
         return when (throwable) {
             is ProtocolException -> InternetError.ProtocolException

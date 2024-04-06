@@ -95,8 +95,4 @@ class ExerciseRepositoryImpl(
     private suspend fun getAccessToken(): String? = withContext(dispatchers.IO) {
         authRepository.getToken()
     }
-
-    companion object {
-        private const val ACCESS_KEY = "AccessKey"
-    }
 }

@@ -25,17 +25,18 @@ import com.rammdakk.recharge.feature.catalog.view.components.ActivityCell
 import com.rammdakk.recharge.feature.catalog.view.components.CategoryRow
 import com.rammdakk.recharge.feature.catalog.view.components.NextActivityCell
 import com.rammdakk.recharge.feature.catalog.view.components.ProfileRow
-import com.rammdakk.recharge.feature.catalog.view.model.ActivityInfo
+import com.rammdakk.recharge.feature.catalog.view.model.ActivityRecommendationModel
 import com.rammdakk.recharge.feature.catalog.view.model.Category
+import com.rammdakk.recharge.feature.catalog.view.model.NextActivityModel
 import com.rammdakk.recharge.feature.catalog.view.model.ProfileInfo
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CatalogScreen(
     profileInfo: State<ProfileInfo?>,
-    nextActivity: State<ActivityInfo?>,
+    nextActivity: State<NextActivityModel?>,
     categories: State<List<Category>>,
-    activities: State<List<ActivityInfo>>,
+    activities: State<List<ActivityRecommendationModel>>,
     navigator: DestinationsNavigator,
 ) {
     Column(

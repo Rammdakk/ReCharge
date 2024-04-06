@@ -1,20 +1,31 @@
 package com.rammdakk.recharge.feature.catalog.data.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class ActivityDataModel(
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class NextActivityDataModel(
     @JsonProperty("id") val id: Int,
-    @JsonProperty("activityName") val name: String,
-    @JsonProperty("id") val imagePath: String,
-    @JsonProperty("id") val time: Long?,
-    @JsonProperty("id") val duration: Long,
-    @JsonProperty("id") val startPrice: Float,
-    @JsonProperty("id") val organizationName: String,
-    @JsonProperty("id") val address: String,
-    @JsonProperty("id") val coordinates: Coordinates
+    @JsonProperty("name") val name: String,
+    @JsonProperty("imageUrl") val imagePath: String,
+    @JsonProperty("timeMilliseconds") val time: Long?,
+    @JsonProperty("locationName") val organizationName: String,
+    @JsonProperty("address") val address: String,
+    @JsonProperty("coordinates") val coordinates: Coordinates
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class ActivityRecommendationDataModel(
+    @JsonProperty("id") val id: Int,
+    @JsonProperty("name") val name: String,
+    @JsonProperty("imageUrl") val imagePath: String,
+    @JsonProperty("startPrice") val startPrice: Float,
+    @JsonProperty("locationName") val organizationName: String,
+    @JsonProperty("address") val address: String,
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class Coordinates(
-    val latitude: Float,
-    val longitude: Float
+    @JsonProperty("latitude") val latitude: Float,
+    @JsonProperty("longitude") val longitude: Float
 )

@@ -1,90 +1,56 @@
 package com.rammdakk.recharge.feature.catalog.data
 
-import com.rammdakk.recharge.feature.catalog.data.model.ActivityDataModel
+import com.rammdakk.recharge.base.data.network.error.InternetError
+import com.rammdakk.recharge.base.data.network.error.NetworkError
+import com.rammdakk.recharge.base.data.network.makeRequest
+import com.rammdakk.recharge.feature.auth.domain.AuthRepository
+import com.rammdakk.recharge.feature.catalog.data.model.ActivityRecommendationDataModel
 import com.rammdakk.recharge.feature.catalog.data.model.CategoryDataModel
-import com.rammdakk.recharge.feature.catalog.data.model.Coordinates
+import com.rammdakk.recharge.feature.catalog.data.model.NextActivityDataModel
 import com.rammdakk.recharge.feature.catalog.data.model.ProfileDataModel
+import com.rammdakk.recharge.feature.catalog.data.network.CatalogApi
 import com.rammdakk.recharge.feature.catalog.domain.CatalogRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
 
 class CatalogRepositoryImp(
+    retrofit: Retrofit,
+    private val authRepository: AuthRepository,
     private val dispatchers: Dispatchers,
 ) : CatalogRepository {
-    override suspend fun getProfileInfo(): ProfileDataModel {
-        return ProfileDataModel(
-            photoPath = "https://fiverr-res.cloudinary.com/videos/t_main1,q_auto,f_auto/ayao3nn9ntatngxnuaf7/create-you-an-3d-animoji-avatar.png",
-            name = "Анна"
-        )
-    }
 
-    override suspend fun getNextActivityInfo(): ActivityDataModel {
-        return ActivityDataModel(
-            id = 3567,
-            imagePath = "https://riamo.ru/files/image/04/54/86/gallery!alf.jpg",
-            name = "ysefugadhius",
-            time = System.currentTimeMillis(),
-            startPrice = 2000f,
-            address = "м.Курская, Земляной вал, 33",
-            organizationName = "Бассейн Чайка",
-            duration = 637,
-            coordinates = Coordinates(55.757113f, 37.659049f)
-        )
-    }
+    private val api = retrofit.create(CatalogApi::class.java)
 
-    override suspend fun getCategories(): List<CategoryDataModel> {
-        return listOf(
-            CategoryDataModel(
-                imagePath = "https://cdn-icons-png.flaticon.com/128/185/185590.png",
-                id = "",
-                name = ""
-            ),
-            CategoryDataModel(
-                imagePath = "https://cdn-icons-png.flaticon.com/128/185/185615.png",
-                id = "",
-                name = ""
-            ),
-            CategoryDataModel(
-                imagePath = "https://cdn-icons-png.flaticon.com/128/185/185616.png",
-                id = "",
-                name = ""
-            ),
-            CategoryDataModel(
-                imagePath = "https://cdn-icons-png.flaticon.com/128/185/185617.png",
-                id = "",
-                name = ""
-            ),
-            CategoryDataModel(
-                imagePath = "https://cdn-icons-png.flaticon.com/128/185/185618.png",
-                id = "",
-                name = ""
-            )
+    override suspend fun getProfileInfo(): Result<ProfileDataModel> =
+        getAccessToken()?.let { makeRequest { api.getProfileInfo(it) } } ?: Result.failure(
+            NetworkError(InternetError.Unauthorized)
         )
-    }
 
-    override suspend fun updateCatalog(selectedCategoryId: String?): List<ActivityDataModel> {
-        val activity = ActivityDataModel(
-            id = 3567,
-            imagePath = "https://riamo.ru/files/image/04/54/86/gallery!alf.jpg",
-            name = "ysefugadhius",
-            time = System.currentTimeMillis(),
-            startPrice = 2000f,
-            address = "м.Курская, Земляной вал, 33",
-            organizationName = "Бассейн Чайка",
-            duration = 637,
-            coordinates = Coordinates(55.76435f, 45.4766f)
+
+    override suspend fun getNextActivityInfo(): Result<NextActivityDataModel> =
+        getAccessToken()?.let { makeRequest { api.getNextActivity(it) } } ?: Result.failure(
+            NetworkError(InternetError.Unauthorized)
         )
-        return listOf(
-            activity,
-            activity,
-            activity,
-            activity,
-            activity,
-            activity,
-            activity,
-            activity,
-            activity,
-            activity,
-            activity, activity, activity, activity,
+
+    override suspend fun getCategories(): Result<List<CategoryDataModel>> =
+        getAccessToken()?.let { makeRequest { api.getCategories(it) } } ?: Result.failure(
+            NetworkError(InternetError.Unauthorized)
         )
+
+    override suspend fun updateCatalog(selectedCategoryId: Int?): Result<List<ActivityRecommendationDataModel>> =
+        getAccessToken()?.let {
+            makeRequest {
+                api.getActivitiesForCategory(
+                    it,
+                    selectedCategoryId
+                )
+            }
+        } ?: Result.failure(
+            NetworkError(InternetError.Unauthorized)
+        )
+
+    private suspend fun getAccessToken(): String? = withContext(dispatchers.IO) {
+        authRepository.getToken()
     }
 }

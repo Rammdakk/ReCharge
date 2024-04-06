@@ -1,6 +1,8 @@
 package com.rammdakk.recharge.feature.catalog.di
 
+import com.rammdakk.recharge.build.isMock
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
+import com.rammdakk.recharge.feature.catalog.data.CatalogRepositoryImp
 import com.rammdakk.recharge.feature.catalog.data.CatalogRepositoryMockkImp
 import com.rammdakk.recharge.feature.catalog.domain.CatalogRepository
 import dagger.Module
@@ -20,7 +22,9 @@ class CatalogModule {
         authRepository: AuthRepository,
         dispatchers: Dispatchers,
     ): CatalogRepository {
-        return CatalogRepositoryMockkImp()
-//        return CatalogRepositoryImp(retrofit, authRepository, dispatchers)
+        if (isMock()) {
+            return CatalogRepositoryMockkImp()
+        }
+        return CatalogRepositoryImp(retrofit, authRepository, dispatchers)
     }
 }

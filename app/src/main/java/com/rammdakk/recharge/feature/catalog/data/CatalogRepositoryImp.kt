@@ -22,33 +22,40 @@ class CatalogRepositoryImp(
 
     private val api = retrofit.create(CatalogApi::class.java)
 
-    override suspend fun getProfileInfo(): Result<ProfileDataModel> =
+    override suspend fun getProfileInfo(): Result<ProfileDataModel> = withContext(dispatchers.IO) {
         getAccessToken()?.let { makeRequest { api.getProfileInfo(it) } } ?: Result.failure(
             NetworkError(InternetError.Unauthorized)
         )
+    }
 
 
     override suspend fun getNextActivityInfo(): Result<NextActivityDataModel> =
-        getAccessToken()?.let { makeRequest { api.getNextActivity(it) } } ?: Result.failure(
-            NetworkError(InternetError.Unauthorized)
-        )
+        withContext(dispatchers.IO) {
+            getAccessToken()?.let { makeRequest { api.getNextActivity(it) } } ?: Result.failure(
+                NetworkError(InternetError.Unauthorized)
+            )
+        }
 
     override suspend fun getCategories(): Result<List<CategoryDataModel>> =
-        getAccessToken()?.let { makeRequest { api.getCategories(it) } } ?: Result.failure(
-            NetworkError(InternetError.Unauthorized)
-        )
+        withContext(dispatchers.IO) {
+            getAccessToken()?.let { makeRequest { api.getCategories(it) } } ?: Result.failure(
+                NetworkError(InternetError.Unauthorized)
+            )
+        }
 
     override suspend fun updateCatalog(selectedCategoryId: Int?): Result<List<ActivityRecommendationDataModel>> =
-        getAccessToken()?.let {
-            makeRequest {
-                api.getActivitiesForCategory(
-                    it,
-                    selectedCategoryId
-                )
-            }
-        } ?: Result.failure(
-            NetworkError(InternetError.Unauthorized)
-        )
+        withContext(dispatchers.IO) {
+            getAccessToken()?.let {
+                makeRequest {
+                    api.getActivitiesForCategory(
+                        it,
+                        selectedCategoryId
+                    )
+                }
+            } ?: Result.failure(
+                NetworkError(InternetError.Unauthorized)
+            )
+        }
 
     private suspend fun getAccessToken(): String? = withContext(dispatchers.IO) {
         authRepository.getToken()

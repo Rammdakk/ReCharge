@@ -33,6 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -143,7 +144,9 @@ fun TextPrimaryMedium(
 fun TextPrimaryMediumInverse(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = 2,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -151,6 +154,8 @@ fun TextPrimaryMediumInverse(
         textAlign = textAlign,
         fontSize = 18.sp,
         lineHeight = 18.sp,
+        maxLines = maxLines,
+        overflow = overflow,
         color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
         fontWeight = FontWeight.SemiBold
     )

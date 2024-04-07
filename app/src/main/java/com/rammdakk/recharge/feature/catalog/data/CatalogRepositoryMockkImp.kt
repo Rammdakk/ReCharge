@@ -23,8 +23,8 @@ class CatalogRepositoryMockkImp : CatalogRepository {
         Result.success(
             NextActivityDataModel(
                 id = 3567,
-                imagePath = "https://riamo.ru/files/image/04/54/86/gallery!alf.jpg",
-                name = "ysefugadhius",
+                imagePath = "https://lrhotel.ru/upload/resize_cache/iblock/688/767_500_2/hys84kpkx508fkmxh77gm3s1ve3afbky.JPG",
+                name = "2-ух часовое занятие с тренером очень интереснг длиныый текст 2-ух часовое занятие с тренером очень интереснг длиныый текст",
                 time = System.currentTimeMillis() + 24 * 60 * 60 * 1000 * 10,
                 address = "м.Курская, Земляной вал, 33",
                 organizationName = "Бассейн Чайка",
@@ -67,8 +67,8 @@ class CatalogRepositoryMockkImp : CatalogRepository {
     override suspend fun updateCatalog(selectedCategoryId: Int?): Result<List<ActivityRecommendationDataModel>> {
         val activity = ActivityRecommendationDataModel(
             id = 3567,
-            imagePath = "https://riamo.ru/files/image/04/54/86/gallery!alf.jpg",
-            name = "ysefugadhius",
+            imagePath = "https://lrhotel.ru/upload/resize_cache/iblock/688/767_500_2/hys84kpkx508fkmxh77gm3s1ve3afbky.JPG",
+            name = "2-ух часовое занятие с тренером очень интереснг длиныый текст 2-ух часовое занятие с тренером очень интереснг длиныый текст",
             startPrice = 2000f,
             address = "м.Курская, Земляной вал, 33",
             organizationName = "Бассейн Чайка",
@@ -76,7 +76,7 @@ class CatalogRepositoryMockkImp : CatalogRepository {
         return Result.success(
             listOf(
                 activity,
-                activity,
+                activity.copy(name = "testu"),
                 activity,
                 activity,
                 activity,

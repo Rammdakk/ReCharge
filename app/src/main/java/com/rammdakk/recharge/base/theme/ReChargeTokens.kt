@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.Color
 
 enum class ReChargeTokens {
     Background,
-    BackgroundInversed,
+    BackgroundInverse,
     BackgroundColored,
     BackgroundContainer,
     BackgroundInfo,
@@ -30,7 +30,7 @@ val LocalTokens: ProvidableCompositionLocal<Map<ReChargeTokens, Color>> =
 
 fun lightThemeTokensMap(): Map<ReChargeTokens, Color> = mapOf(
     ReChargeTokens.Background to Color.White,
-    ReChargeTokens.BackgroundInversed to Color.Black,
+    ReChargeTokens.BackgroundInverse to Color.Black,
     ReChargeTokens.BackgroundColored to Color(0xFFA5B7E4),
     ReChargeTokens.BackgroundContainer to Color(0xFF96AADD),
     ReChargeTokens.BackgroundInfo to Color(0xFFBEBEBE),
@@ -49,7 +49,7 @@ fun lightThemeTokensMap(): Map<ReChargeTokens, Color> = mapOf(
 
 fun darkThemeTokensMap(): Map<ReChargeTokens, Color> = mapOf(
     ReChargeTokens.Background to Color.Black,
-    ReChargeTokens.BackgroundInversed to Color.White,
+    ReChargeTokens.BackgroundInverse to Color.White,
     ReChargeTokens.BackgroundColored to Color(0xFFA5B7E4),
     ReChargeTokens.BackgroundContainer to Color(0xFF96AADD),
     ReChargeTokens.BackgroundInfo to Color(0xFFBEBEBE),

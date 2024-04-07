@@ -5,11 +5,9 @@ import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -21,6 +19,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
@@ -41,16 +41,14 @@ fun ActivityCell(
     activityInfo: ActivityRecommendationModel,
     navigator: DestinationsNavigator
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp)
-            .clip(RoundedCornerShape(roundedCorner))
-            .aspectRatio(2.2f)
-            .clickable {
-                navigator.navigate(ActivityContentDestination(activityInfo.id))
-            }
-    ) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentHeight()
+        .padding(vertical = 10.dp)
+        .clip(RoundedCornerShape(roundedCorner))
+        .clickable {
+            navigator.navigate(ActivityContentDestination(activityInfo.id))
+        }) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(activityInfo.imagePath)
@@ -58,34 +56,56 @@ fun ActivityCell(
                 .build(),
             contentDescription = "",
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
-        Row(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
+                .fillMaxWidth()
+                .aspectRatio(3.2f),
+        )
+        Column(
+            modifier = Modifier
                 .background(ReChargeTokens.BackgroundColored.getThemedColor())
                 .wrapContentHeight()
                 .fillMaxWidth()
                 .padding(horizontal = 15.dp, vertical = 4.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(Modifier.wrapContentHeight()) {
-                TextPrimaryMediumInverse(text = activityInfo.name)
-                PlainTextSmallInverse(text = activityInfo.organizationName)
-                PlainTextSmallInverse(text = activityInfo.address)
-            }
-            PlainTextBold(
-                text = stringResource(
-                    id = R.string.start_price,
-                    activityInfo.startPrice.roundToInt()
-                ),
-                modifier = Modifier
-                    .clip(RoundedCornerShape(50f))
-                    .background(ReChargeTokens.TextPrimaryInverse.getThemedColor())
-                    .padding(horizontal = 6.dp, vertical = 2.dp)
-
+            TextPrimaryMediumInverse(
+                modifier = Modifier.fillMaxWidth(),
+                text = activityInfo.name,
+                textAlign = TextAlign.Start,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
             )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    Modifier
+                        .wrapContentHeight()
+                        .fillMaxWidth(0.65f)
+                ) {
+                    PlainTextSmallInverse(
+                        text = activityInfo.organizationName,
+                        textAlign = TextAlign.Start
+                    )
+                    PlainTextSmallInverse(
+                        text = activityInfo.address,
+                        textAlign = TextAlign.Start
+                    )
+                }
+                PlainTextBold(
+                    text = stringResource(
+                        id = R.string.start_price,
+                        activityInfo.startPrice.roundToInt()
+                    ),
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50f))
+                        .background(ReChargeTokens.TextPrimaryInverse.getThemedColor())
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+
+                )
+            }
         }
     }
 }

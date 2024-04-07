@@ -70,7 +70,7 @@ fun SearchRow(
                 .fillMaxHeight()
                 .padding(10.dp)
                 .aspectRatio(1f, true),
-            ReChargeTokens.BackgroundInversed.getThemedColor()
+            ReChargeTokens.BackgroundInverse.getThemedColor()
         )
     }
 }

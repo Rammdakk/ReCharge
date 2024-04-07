@@ -9,11 +9,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,6 +27,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -39,6 +39,7 @@ import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryMediumInverse
 import com.rammdakk.recharge.base.theme.getThemedColor
 import com.rammdakk.recharge.feature.catalog.view.model.NextActivityModel
+import com.rammdakk.recharge.feature.destinations.ActivityContentDestination
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -51,60 +52,79 @@ fun NextActivityCell(
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(roundedCorner))
-            .aspectRatio(1.8f)
-            .clickable {
-//                navigator.navigate(ActivityContentDestination(activityInfo.id))
-            }
-    ) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentHeight()
+        .padding(vertical = 10.dp)
+        .clip(RoundedCornerShape(roundedCorner))
+        .clickable {
+            navigator.navigate(ActivityContentDestination(activityInfo.id))
+        }) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(activityInfo.imagePath)
                 .crossfade(true)
                 .build(),
-            placeholder = painterResource(R.drawable.navigate_next),
             contentDescription = "",
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
-        Row(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
+                .fillMaxWidth()
+                .aspectRatio(3.2f),
+        )
+        Column(
+            modifier = Modifier
                 .background(ReChargeTokens.BackgroundColored.getThemedColor())
                 .wrapContentHeight()
                 .fillMaxWidth()
                 .padding(horizontal = 15.dp, vertical = 4.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column {
-                TextPrimaryMediumInverse(text = activityInfo.name)
-                activityInfo.time?.let { PlainTextSmallInverse(text = it.formatDate()) }
-                PlainTextSmallInverse(text = activityInfo.address)
-            }
-
-            Icon(
-                painterResource(id = R.drawable.location),
-                "",
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable {
-                        val loc = activityInfo.location
-                        val uri = Uri.parse("geo:${loc.latitude},${loc.longitude}")
-                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                        launcher.launch(intent)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    Modifier
+                        .wrapContentHeight()
+                        .fillMaxWidth(0.85f)
+                ) {
+                    TextPrimaryMediumInverse(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = activityInfo.name,
+                        textAlign = TextAlign.Start,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+                    activityInfo.time?.let {
+                        PlainTextSmallInverse(
+                            text = it.formatDate(),
+                            textAlign = TextAlign.Start
+                        )
                     }
-                    .background(Color.Transparent)
-                    .height(36.dp)
-                    .aspectRatio(1f, true),
-                ReChargeTokens.TextPrimaryInverse.getThemedColor()
-            )
-
+                    PlainTextSmallInverse(
+                        text = activityInfo.address,
+                        textAlign = TextAlign.Start
+                    )
+                }
+                Icon(
+                    painterResource(id = R.drawable.location),
+                    "",
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable {
+                            val loc = activityInfo.location
+                            val uri = Uri.parse("geo:${loc.latitude},${loc.longitude}")
+                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                            launcher.launch(intent)
+                        }
+                        .background(Color.Transparent)
+                        .height(36.dp)
+                        .aspectRatio(1f, true),
+                    ReChargeTokens.TextPrimaryInverse.getThemedColor()
+                )
+            }
         }
-
     }
 }
 

@@ -45,7 +45,7 @@ fun ActivityContent(
             is ActivityScreenState.Loaded -> {
                 ActivityInfoScreen(
                     state.activityInfo,
-                    viewModel::loadScheduleForDate,
+                    { viewModel.loadScheduleForDate(activityId, it) },
                     state.scheduleInfo,
                     navigator::popBackStack
                 )

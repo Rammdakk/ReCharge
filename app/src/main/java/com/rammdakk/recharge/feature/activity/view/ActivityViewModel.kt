@@ -33,18 +33,20 @@ class ActivityViewModel @Inject constructor(
     val screenState: State<ActivityScreenState> = _screenState
 
     fun loadData(activityId: Int) = viewModelScope.launch(dispatchers.IO) {
-        loadScheduleForDate(Date())
-        val activityInfoJob = activityRepository.getActivityInfo(activityId).convertToActivityInfo()
-        withContext(dispatchers.Main)
-        {
+        _screenState.value = ActivityScreenState.Idle
+        loadScheduleForDate(activityId, Date())
+        val activityInfo =
+            activityRepository.getActivityInfo(activityId).getOrNull()?.convertToActivityInfo()
+                ?: return@launch
+        withContext(dispatchers.Main) {
             _screenState.value = ActivityScreenState.Loaded(
-                activityInfo = activityInfoJob,
+                activityInfo = activityInfo,
                 scheduleInfo = _schedule
             )
         }
     }
 
-    fun loadScheduleForDate(date: Date) = viewModelScope.launch {
+    fun loadScheduleForDate(activityId: Int, date: Date) = viewModelScope.launch {
         job?.cancel()
         job = async(dispatchers.IO) {
             date.apply {
@@ -52,15 +54,23 @@ class ActivityViewModel @Inject constructor(
                 minutes = 0
                 seconds = 0
             }
-            val timePad = activityRepository.getActivityTimeTable(date)
-                .map { timePad -> timePad.covertToTimePad { reserveActivity(timePad.id) } }
+            val timePad = activityRepository.getActivityTimeTable(activityId, date.time).getOrNull()
+                ?.map { timePad ->
+                    timePad.covertToTimePad {
+                        reserveActivity(
+                            activityId,
+                            timePad.id
+                        )
+                    }
+                }
+                ?: return@async
             withContext(dispatchers.Main) {
                 _schedule.value = timePad
             }
         }
     }
 
-    private fun reserveActivity(timeId: Int) = viewModelScope.launch {
+    private fun reserveActivity(activityId: Int, timeId: Int) = viewModelScope.launch {
 
     }
 

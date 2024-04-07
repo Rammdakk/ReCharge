@@ -162,17 +162,19 @@ fun ActivityInfoScreen(
                     .fillMaxWidth()
                     .padding(bottom = 10.dp)
             )
-            DateField(initialDate = Date(), onDateChanged = onDateChanged)
-            LazyRow(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp)
-            ) {
-                timePadList.value.let { timepad ->
-                    items(timepad.size) {
-                        TimePad(timePad = timepad[it]) {
-                            selectedId = it
+            if (timePadList.value.isNotEmpty()) {
+                DateField(initialDate = Date(), onDateChanged = onDateChanged)
+                LazyRow(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp)
+                ) {
+                    timePadList.value.let { timepad ->
+                        items(timepad.size) {
+                            TimePad(timePad = timepad[it]) { id ->
+                                selectedId = id
+                            }
                         }
                     }
                 }
@@ -255,7 +257,7 @@ private fun SheetContent(
             value = userName,
             fontSize = 18.sp,
             iconId = R.drawable.account_circle,
-            iconColor = ReChargeTokens.TextPrimaryInverse.getThemedColor()
+            iconColor = ReChargeTokens.TextPrimary.getThemedColor()
         ) { fieldValue ->
             userName = fieldValue
         }
@@ -266,7 +268,7 @@ private fun SheetContent(
             value = phone,
             fontSize = 18.sp,
             iconId = R.drawable.call,
-            iconColor = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+            iconColor = ReChargeTokens.TextPrimary.getThemedColor(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         ) { fieldValue ->
             phone = fieldValue
@@ -278,7 +280,7 @@ private fun SheetContent(
             value = email,
             fontSize = 18.sp,
             iconId = R.drawable.mail,
-            iconColor = ReChargeTokens.TextPrimaryInverse.getThemedColor()
+            iconColor = ReChargeTokens.TextPrimary.getThemedColor()
         ) { fieldValue ->
             email = fieldValue
         }

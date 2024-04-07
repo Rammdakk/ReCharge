@@ -1,59 +1,43 @@
 package com.rammdakk.recharge.feature.activity.data
 
 
+import com.rammdakk.recharge.base.data.network.error.InternetError
+import com.rammdakk.recharge.base.data.network.error.NetworkError
+import com.rammdakk.recharge.base.data.network.makeRequest
+import com.rammdakk.recharge.feature.activity.data.model.ActivityExtendedDataModel
 import com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel
+import com.rammdakk.recharge.feature.activity.data.net.ActivityApi
 import com.rammdakk.recharge.feature.activity.domain.ActivityRepository
+import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.Date
+import retrofit2.Retrofit
 
 class ActivityRepositoryImp(
-    private val dispatchers: Dispatchers,
+    retrofit: Retrofit,
+    private val authRepository: AuthRepository,
+    private val dispatchers: Dispatchers
 ) : ActivityRepository {
-    override suspend fun getActivityInfo(id: Int): com.rammdakk.recharge.feature.activity.data.model.ActivityExtendedDataModel =
-        withContext(dispatchers.IO) {
 
-            return@withContext com.rammdakk.recharge.feature.activity.data.model.ActivityExtendedDataModel(
-                id = 1,
-                imagePath = "https://riamo.ru/files/image/04/54/86/gallery!alf.jpg",
-                name = "Pool",
-                adminPhoneWA = "+7852367821943",
-                adminTgUsername = "rammdakk",
-                locationName = "Чайка бассейн",
-                locationAddress = "Москва, покровскицй бульвар 11",
-                activityDescription = "Очень крутоц бассей",
-                cancellationMessage = "Отмена не менее чем за 12 часов",
-                warning = "Нужна справка"
-            )
+    private val api = retrofit.create(ActivityApi::class.java)
+
+    override suspend fun getActivityInfo(activityId: Int): Result<ActivityExtendedDataModel> =
+        withContext(dispatchers.IO) {
+            getAccessToken()?.let { makeRequest { api.getActivityInfo(it, activityId) } }
+                ?: Result.failure(NetworkError(InternetError.Unauthorized))
         }
 
-    override suspend fun getActivityTimeTable(date: Date): List<TimePadDataModel> {
-        val delta = 60000 * 60
-        return listOf(
-            TimePadDataModel(
-                12,
-                2000.00,
-                Date(System.currentTimeMillis()),
-                Date(System.currentTimeMillis() + delta)
-            ),
-            TimePadDataModel(
-                12,
-                2000.00,
-                Date(System.currentTimeMillis() + delta),
-                Date(System.currentTimeMillis() + delta * 2)
-            ),
-            TimePadDataModel(
-                12,
-                2000.00,
-                Date(System.currentTimeMillis() + delta * 2),
-                Date(System.currentTimeMillis() + delta * 3)
-            ),
-            TimePadDataModel(
-                12,
-                2000.00,
-                Date(System.currentTimeMillis() + delta * 3),
-                Date(System.currentTimeMillis() + delta * 4)
-            )
-        )
+    override suspend fun getActivityTimeTable(
+        activityId: Int,
+        date: Long
+    ): Result<List<TimePadDataModel>> =
+        withContext(dispatchers.IO) {
+            getAccessToken()?.let { makeRequest { api.getActivityTabs(it, activityId, date) } }
+                ?: Result.failure(NetworkError(InternetError.Unauthorized))
+        }
+
+
+    private suspend fun getAccessToken(): String? = withContext(dispatchers.IO) {
+        authRepository.getToken()
     }
 }

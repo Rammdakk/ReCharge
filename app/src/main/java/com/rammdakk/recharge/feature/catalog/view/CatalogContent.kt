@@ -26,7 +26,9 @@ fun CatalogContent(
     val uiState by viewModel.screenState
 
     LaunchedEffect(Unit) {
-        viewModel.loadData()
+        if (uiState is CatalogScreenState.Loaded) {
+            viewModel.updateScreen()
+        }
     }
 
     val systemUiController = rememberSystemUiController()
@@ -42,13 +44,14 @@ fun CatalogContent(
     ) { state ->
         when (state) {
             is CatalogScreenState.Idle -> {
+                viewModel.loadData()
             }
 
             is CatalogScreenState.Loaded -> {
                 CatalogScreen(
                     profileInfo = state.profileInfo,
                     nextActivity = state.nextActivity,
-                    categories = state.categories,
+                    categories = state.categoriesList,
                     activities = state.activitiesList,
                     navigator = navigator,
                 )

@@ -26,7 +26,7 @@ import com.rammdakk.recharge.feature.catalog.view.components.CategoryRow
 import com.rammdakk.recharge.feature.catalog.view.components.NextActivityCell
 import com.rammdakk.recharge.feature.catalog.view.components.ProfileRow
 import com.rammdakk.recharge.feature.catalog.view.model.ActivityRecommendationModel
-import com.rammdakk.recharge.feature.catalog.view.model.Category
+import com.rammdakk.recharge.feature.catalog.view.model.CategoriesList
 import com.rammdakk.recharge.feature.catalog.view.model.NextActivityModel
 import com.rammdakk.recharge.feature.catalog.view.model.ProfileInfo
 
@@ -35,7 +35,7 @@ import com.rammdakk.recharge.feature.catalog.view.model.ProfileInfo
 fun CatalogScreen(
     profileInfo: State<ProfileInfo?>,
     nextActivity: State<NextActivityModel?>,
-    categories: State<List<Category>>,
+    categories: State<CategoriesList>,
     activities: State<List<ActivityRecommendationModel>>,
     navigator: DestinationsNavigator,
 ) {

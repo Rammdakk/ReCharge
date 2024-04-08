@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.rammdakk.recharge.feature.catalog.domain.CatalogRepository
 import com.rammdakk.recharge.feature.catalog.view.model.ActivityRecommendationModel
+import com.rammdakk.recharge.feature.catalog.view.model.CategoriesList
 import com.rammdakk.recharge.feature.catalog.view.model.Category
 import com.rammdakk.recharge.feature.catalog.view.model.NextActivityModel
 import com.rammdakk.recharge.feature.catalog.view.model.ProfileInfo
@@ -32,7 +33,8 @@ class CatalogViewModel @Inject constructor(
 
     private val _profileInfo: MutableState<ProfileInfo?> = mutableStateOf(null)
     private val _nextActivity: MutableState<NextActivityModel?> = mutableStateOf(null)
-    private val _categories: MutableState<List<Category>> = mutableStateOf(emptyList())
+    private val _categoriesList: MutableState<CategoriesList> =
+        mutableStateOf(CategoriesList(emptyList()) {})
     private val _activitiesList: MutableState<List<ActivityRecommendationModel>> =
         mutableStateOf(emptyList())
 
@@ -50,10 +52,18 @@ class CatalogViewModel @Inject constructor(
             _screenState.value = CatalogScreenState.Loaded(
                 profileInfo = _profileInfo,
                 nextActivity = _nextActivity,
-                categories = _categories,
+                categoriesList = _categoriesList,
                 activitiesList = _activitiesList
             )
         }
+    }
+
+    fun updateScreen() = viewModelScope.launch {
+        merge(
+            { loadProfile() },
+            { loadNextActivity() },
+            { loadCategories() },
+        )
     }
 
     private suspend fun merge(vararg func: suspend () -> Unit) = withContext(dispatchers.IO) {
@@ -78,19 +88,18 @@ class CatalogViewModel @Inject constructor(
 
     private suspend fun loadCategories() = withContext(dispatchers.IO) {
         val result = catalogRepository.getCategories().getOrNull()?.map { cat ->
-            Category(imagePath = cat.imagePath) {
-                viewModelScope.launch {
-                    loadActivities(cat.id)
-                }
-            }
+            Category(
+                id = cat.id,
+                imagePath = cat.imagePath
+            )
         }
 
         withContext(dispatchers.Main) {
-            _categories.value = result.orEmpty()
+            _categoriesList.value = CategoriesList(result.orEmpty(), ::loadActivities)
         }
     }
 
-    private suspend fun loadActivities(catId: Int? = null) = withContext(dispatchers.IO) {
+    private fun loadActivities(catId: Int? = null) = viewModelScope.launch(dispatchers.IO) {
         catalogRepository.updateCatalog(catId).getOrNull()?.map {
             it.convertToActivityInfo()
         }.let { activityList ->

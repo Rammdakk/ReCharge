@@ -13,6 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,10 +29,19 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.getThemedColor
+import com.rammdakk.recharge.feature.catalog.view.model.CategoriesList
 import com.rammdakk.recharge.feature.catalog.view.model.Category
 
 @Composable
-fun CategoryRow(categories: List<Category>) {
+fun CategoryRow(categories: CategoriesList) {
+    var selectedId by rememberSaveable {
+        mutableStateOf<Int?>(null)
+    }
+
+    LaunchedEffect(Unit) {
+        categories.onClick.invoke(selectedId)
+    }
+
     LazyRow(
         modifier = Modifier
             .background(ReChargeTokens.Background.getThemedColor())
@@ -36,23 +50,30 @@ fun CategoryRow(categories: List<Category>) {
             .padding(bottom = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        categories.forEach {
+        categories.cats.forEach {
             item {
-                CategoryCell(category = it)
+                CategoryCell(category = it, isSelected = (selectedId == it.id)) {
+                    selectedId = if (selectedId == it.id) {
+                        null
+                    } else {
+                        it.id
+                    }
+                    categories.onClick.invoke(selectedId)
+                }
             }
         }
     }
 }
 
 @Composable
-fun CategoryCell(category: Category) {
+fun CategoryCell(category: Category, isSelected: Boolean, onClick: () -> Unit) {
     Box(modifier = Modifier
         .padding(horizontal = 10.dp)
         .fillMaxHeight()
         .aspectRatio(1f, true)
         .clip(CircleShape)
         .background(ReChargeTokens.BackgroundColored.getThemedColor())
-        .clickable { category.onClick.invoke() }) {
+        .clickable { onClick.invoke() }) {
         AsyncImage(
             modifier = Modifier
                 .fillMaxSize(fraction = 0.65f)
@@ -62,7 +83,7 @@ fun CategoryCell(category: Category) {
                 .crossfade(true)
                 .build(),
             contentDescription = "",
-            colorFilter = ColorFilter.tint(ReChargeTokens.TextPrimaryInverse.getThemedColor()),
+            colorFilter = ColorFilter.tint(if (isSelected) ReChargeTokens.TextPrimary.getThemedColor() else ReChargeTokens.TextPrimaryInverse.getThemedColor()),
             contentScale = ContentScale.Fit,
         )
     }

@@ -42,7 +42,9 @@ import androidx.compose.ui.unit.sp
 fun HeaderTextPrimary(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Start
+    textAlign: TextAlign = TextAlign.Start,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -51,6 +53,8 @@ fun HeaderTextPrimary(
         fontSize = 24.sp,
         lineHeight = 26.sp,
         color = ReChargeTokens.TextPrimary.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -59,7 +63,9 @@ fun HeaderTextPrimary(
 fun HeaderTextPrimaryInverse(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -68,6 +74,8 @@ fun HeaderTextPrimaryInverse(
         fontSize = 22.sp,
         lineHeight = 24.sp,
         color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -76,7 +84,9 @@ fun HeaderTextPrimaryInverse(
 fun TextPrimaryLarge(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -85,6 +95,8 @@ fun TextPrimaryLarge(
         fontSize = 20.sp,
         lineHeight = 20.sp,
         color = ReChargeTokens.TextPrimary.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -93,7 +105,9 @@ fun TextPrimaryLarge(
 fun TextPrimaryLargeInverse(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -102,6 +116,8 @@ fun TextPrimaryLargeInverse(
         fontSize = 20.sp,
         lineHeight = 22.sp,
         color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -110,7 +126,9 @@ fun TextPrimaryLargeInverse(
 fun TextPrimaryLargeThemed(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -119,6 +137,8 @@ fun TextPrimaryLargeThemed(
         fontSize = 20.sp,
         lineHeight = 20.sp,
         color = ReChargeTokens.TextPrimaryColored.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -127,7 +147,9 @@ fun TextPrimaryLargeThemed(
 fun TextPrimaryMedium(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -136,6 +158,8 @@ fun TextPrimaryMedium(
         fontSize = 18.sp,
         lineHeight = 18.sp,
         color = ReChargeTokens.TextPrimary.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -145,7 +169,7 @@ fun TextPrimaryMediumInverse(
     modifier: Modifier = Modifier,
     text: String,
     textAlign: TextAlign = TextAlign.Center,
-    maxLines: Int = 2,
+    maxLines: Int = Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
@@ -154,9 +178,9 @@ fun TextPrimaryMediumInverse(
         textAlign = textAlign,
         fontSize = 18.sp,
         lineHeight = 18.sp,
+        color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
         maxLines = maxLines,
         overflow = overflow,
-        color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -165,7 +189,9 @@ fun TextPrimaryMediumInverse(
 fun TextPrimarySmall(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -174,6 +200,8 @@ fun TextPrimarySmall(
         fontSize = 16.sp,
         lineHeight = 16.sp,
         color = ReChargeTokens.TextPrimary.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -182,7 +210,9 @@ fun TextPrimarySmall(
 fun TextPrimarySmallInverse(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -191,6 +221,8 @@ fun TextPrimarySmallInverse(
         fontSize = 16.sp,
         lineHeight = 16.sp,
         color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -199,7 +231,9 @@ fun TextPrimarySmallInverse(
 fun TextPrimarySmallInverseConstant(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -208,6 +242,8 @@ fun TextPrimarySmallInverseConstant(
         fontSize = 16.sp,
         lineHeight = 16.sp,
         color = ReChargeTokens.TextPrimaryInverseConstant.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -216,7 +252,9 @@ fun TextPrimarySmallInverseConstant(
 fun TextSecondaryLarge(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -225,6 +263,8 @@ fun TextSecondaryLarge(
         fontSize = 18.sp,
         lineHeight = 18.sp,
         color = ReChargeTokens.TextSecondary.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.Normal
     )
 }
@@ -233,7 +273,9 @@ fun TextSecondaryLarge(
 fun TextSecondaryMedium(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -242,6 +284,8 @@ fun TextSecondaryMedium(
         fontSize = 16.sp,
         lineHeight = 16.sp,
         color = ReChargeTokens.TextSecondary.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.Normal
     )
 }
@@ -250,7 +294,9 @@ fun TextSecondaryMedium(
 fun TextSecondarySmall(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -259,6 +305,8 @@ fun TextSecondarySmall(
         fontSize = 14.sp,
         lineHeight = 14.sp,
         color = ReChargeTokens.TextSecondary.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.Normal
     )
 }
@@ -267,7 +315,9 @@ fun TextSecondarySmall(
 fun PlainTextLarge(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -276,6 +326,8 @@ fun PlainTextLarge(
         fontSize = 16.sp,
         lineHeight = 16.sp,
         color = ReChargeTokens.TextPrimary.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.Normal
     )
 }
@@ -284,7 +336,9 @@ fun PlainTextLarge(
 fun PlainTextLargeInverse(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -293,6 +347,8 @@ fun PlainTextLargeInverse(
         fontSize = 16.sp,
         lineHeight = 16.sp,
         color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.Normal
     )
 }
@@ -301,7 +357,9 @@ fun PlainTextLargeInverse(
 fun PlainText(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -310,6 +368,8 @@ fun PlainText(
         fontSize = 14.sp,
         lineHeight = 14.sp,
         color = ReChargeTokens.TextPrimary.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.Normal
     )
 }
@@ -318,7 +378,9 @@ fun PlainText(
 fun PlainTextInverse(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -327,6 +389,8 @@ fun PlainTextInverse(
         fontSize = 14.sp,
         lineHeight = 14.sp,
         color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.Normal
     )
 }
@@ -335,7 +399,9 @@ fun PlainTextInverse(
 fun PlainSmallText(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -344,6 +410,8 @@ fun PlainSmallText(
         fontSize = 12.sp,
         lineHeight = 12.sp,
         color = ReChargeTokens.TextPrimary.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.Normal
     )
 }
@@ -352,7 +420,9 @@ fun PlainSmallText(
 fun PlainTextSmallInverse(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -361,6 +431,8 @@ fun PlainTextSmallInverse(
         fontSize = 12.sp,
         lineHeight = 12.sp,
         color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.Normal
     )
 }
@@ -370,7 +442,9 @@ fun PlainTextSmallInverse(
 fun PlainTextBold(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -379,6 +453,8 @@ fun PlainTextBold(
         fontSize = 14.sp,
         lineHeight = 14.sp,
         color = ReChargeTokens.TextPrimary.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -387,7 +463,9 @@ fun PlainTextBold(
 fun PlainTextBoldInverse(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -396,6 +474,8 @@ fun PlainTextBoldInverse(
         fontSize = 14.sp,
         lineHeight = 14.sp,
         color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.SemiBold
     )
 }
@@ -404,7 +484,9 @@ fun PlainTextBoldInverse(
 fun TextError(
     modifier: Modifier = Modifier,
     text: String,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         modifier = modifier,
@@ -413,6 +495,8 @@ fun TextError(
         fontSize = 14.sp,
         lineHeight = 14.sp,
         color = ReChargeTokens.TextError.getThemedColor(),
+        maxLines = maxLines,
+        overflow = overflow,
         fontWeight = FontWeight.SemiBold
     )
 }

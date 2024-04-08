@@ -1,13 +1,11 @@
 package com.rammdakk.recharge.feature.activity.view
 
-import androidx.activity.ComponentActivity
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.annotation.Destination
@@ -20,7 +18,7 @@ import com.rammdakk.recharge.base.theme.getThemedColor
 fun ActivityContent(
     navigator: DestinationsNavigator,
     activityId: Int,
-    viewModel: ActivityViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    viewModel: ActivityViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.screenState
 

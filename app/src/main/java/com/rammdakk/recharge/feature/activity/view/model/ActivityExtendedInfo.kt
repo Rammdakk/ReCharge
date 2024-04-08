@@ -15,22 +15,17 @@ data class ActivityExtendedInfo(
 
 data class AdminInfo(
     val whatsApp: String?,
-    val onWhatsAppClick: (String) -> Unit = {},
     val telegram: String?,
-    val onTelegramClick: (String) -> Unit = {},
 )
 
-fun ActivityExtendedDataModel.convertToActivityInfo(
-    onWhatsAppClick: (String) -> Unit = {},
-    onTelegramClick: (String) -> Unit = {},
-): ActivityExtendedInfo {
+fun ActivityExtendedDataModel.convertToActivityInfo(): ActivityExtendedInfo? {
     return ActivityExtendedInfo(
-        name = this.name,
+        name = this.name ?: return null,
         imagePath = this.imagePath,
         admin = if (this.adminPhoneWA == null && this.adminTgUsername == null) null
-        else AdminInfo(this.adminPhoneWA, onWhatsAppClick, this.adminTgUsername, onTelegramClick),
-        organizationName = this.locationName,
-        address = this.locationAddress,
+        else AdminInfo(this.adminPhoneWA, this.adminTgUsername?.removePrefix("@")),
+        organizationName = this.locationName ?: return null,
+        address = this.locationAddress ?: return null,
         activityDescription = this.activityDescription,
         warning = this.warning,
         cancellationMessage = this.cancellationMessage,

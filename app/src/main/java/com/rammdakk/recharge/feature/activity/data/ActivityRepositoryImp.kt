@@ -1,8 +1,6 @@
 package com.rammdakk.recharge.feature.activity.data
 
 
-import com.rammdakk.recharge.base.data.network.error.InternetError
-import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.network.makeRequest
 import com.rammdakk.recharge.feature.activity.data.model.ActivityExtendedDataModel
 import com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel
@@ -23,8 +21,7 @@ class ActivityRepositoryImp(
 
     override suspend fun getActivityInfo(activityId: Int): Result<ActivityExtendedDataModel> =
         withContext(dispatchers.IO) {
-            getAccessToken()?.let { makeRequest { api.getActivityInfo(it, activityId) } }
-                ?: Result.failure(NetworkError(InternetError.Unauthorized))
+            makeRequest { api.getActivityInfo(activityId) }
         }
 
     override suspend fun getActivityTimeTable(
@@ -32,8 +29,7 @@ class ActivityRepositoryImp(
         date: Long
     ): Result<List<TimePadDataModel>> =
         withContext(dispatchers.IO) {
-            getAccessToken()?.let { makeRequest { api.getActivityTabs(it, activityId, date) } }
-                ?: Result.failure(NetworkError(InternetError.Unauthorized))
+            makeRequest { api.getActivityTabs(activityId, date) }
         }
 
 

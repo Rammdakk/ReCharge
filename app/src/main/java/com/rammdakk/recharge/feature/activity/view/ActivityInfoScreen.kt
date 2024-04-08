@@ -1,7 +1,10 @@
 package com.rammdakk.recharge.feature.activity.view
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -67,7 +70,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ActivityInfoScreen(
     activityInfo: ActivityExtendedInfo,
@@ -131,7 +134,9 @@ fun ActivityInfoScreen(
                     text = activityInfo.name,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 4.dp)
+                        .basicMarquee(animationMode = MarqueeAnimationMode.Immediately)
+                        .padding(horizontal = 4.dp),
+                    maxLines = 1
                 )
             }
         },
@@ -325,7 +330,7 @@ fun ActivityInfoScreenPreview() {
         activityDescription = "Открытый бассейн «Чайка», который работает круглый год. Тут вам и кафе, и лежаки, и знакомство с фридайвингом, и теплая водичка в холодное время года, и даже соляная пещера. Обратите внимание, что для посещения обязательна справка, но для удобства вы можете получить ее прямо на территории бассейна, если штатный врач будет на месте.",
         cancellationMessage = "Обратите внимание, отмена доступна не позже, чем за 12 часов",
         warning = "Нужна справка"
-    ).convertToActivityInfo()
+    ).convertToActivityInfo()!!
 
     val delta = 60000 * 60
 

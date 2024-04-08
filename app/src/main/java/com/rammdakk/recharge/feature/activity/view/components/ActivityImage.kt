@@ -1,5 +1,9 @@
 package com.rammdakk.recharge.feature.activity.view.components
 
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,6 +41,9 @@ fun ActivityImage(
     imagePath: String?,
     adminInfo: AdminInfo?
 ) {
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(roundedCorner))
@@ -73,7 +80,9 @@ fun ActivityImage(
                             contentDescription = "",
                             colorFilter = ColorFilter.tint(ReChargeTokens.TextPrimaryInverseConstant.getThemedColor()),
                             modifier = Modifier.clickable {
-                                adminInfo.onWhatsAppClick.invoke(it)
+                                val uri = Uri.parse(WA_PREFFIX + it)
+                                val intent = Intent(Intent.ACTION_VIEW, uri)
+                                launcher.launch(intent)
                             }
                         )
                     }
@@ -85,7 +94,9 @@ fun ActivityImage(
                             modifier = Modifier
                                 .padding(start = 10.dp)
                                 .clickable {
-                                    adminInfo.onTelegramClick.invoke(it)
+                                    val uri = Uri.parse(TG_PREFFIX + it)
+                                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                                    launcher.launch(intent)
                                 }
                         )
                     }
@@ -96,3 +107,5 @@ fun ActivityImage(
 }
 
 private val roundedCorner = 20.dp
+private const val WA_PREFFIX = "https://wa.me/"
+private const val TG_PREFFIX = "https://t.me/"

@@ -4,20 +4,18 @@ import com.rammdakk.recharge.feature.activity.data.model.ActivityExtendedDataMod
 import com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface ActivityApi {
 
-    @GET()
-    fun getActivityInfo(
-        @Header("accessToken") accessToken: String,
-        @Query("activity_id") activityId: Int
+    @GET("/api/Activity/GetActivityView")
+    suspend fun getActivityInfo(
+        @Query("id") activityId: Int
     ): Response<ActivityExtendedDataModel>
 
-    fun getActivityTabs(
-        @Header("accessToken") accessToken: String,
-        @Query("activity_id") activityId: Int,
+    @GET("/api/Slot/GetActivityViewSlots")
+    suspend fun getActivityTabs(
+        @Query("activityId") activityId: Int,
         @Query("date") date: Long
     ): Response<List<TimePadDataModel>>
 

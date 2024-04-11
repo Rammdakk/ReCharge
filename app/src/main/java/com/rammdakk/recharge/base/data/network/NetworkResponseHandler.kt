@@ -7,9 +7,7 @@ import com.rammdakk.recharge.base.data.network.error.NetworkError
 import retrofit2.Response
 
 inline fun <T> makeRequest(requestFunc: () -> Response<T>): Result<T> {
-    val response = runCatching {
-        requestFunc.invoke()
-    }.getOrNull()
+    val response = runCatching { requestFunc.invoke() }.getOrNull()
         ?: return Result.failure(
             NetworkError(
                 code = InternetError.Unknown,

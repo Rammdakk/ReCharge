@@ -8,7 +8,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 class EncryptedSharedPreferences(
     @ApplicationContext context: Context
 ) {
-
     private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
     val sharedPreferences = EncryptedSharedPreferences.create(
@@ -18,4 +17,9 @@ class EncryptedSharedPreferences(
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
+
+    companion object {
+        const val ACCESS_KEY = "AccessKey"
+    }
+
 }

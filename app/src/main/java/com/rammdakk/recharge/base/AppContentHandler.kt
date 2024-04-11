@@ -52,6 +52,7 @@ import com.rammdakk.recharge.feature.destinations.DirectionDestination
 import com.rammdakk.recharge.feature.destinations.ExercisesCatContentDestination
 import com.rammdakk.recharge.feature.destinations.MapContentDestination
 import com.rammdakk.recharge.feature.destinations.ProfileContentDestination
+import com.rammdakk.recharge.feature.destinations.ReservationContentDestination
 
 @Composable
 fun AppContentHandler() {
@@ -190,4 +191,6 @@ sealed class BottomNavItem(
 }
 
 
-private val Destination.shouldShowScaffoldElements get() = this !is AuthContentDestination && this !is ActivityContentDestination
+private val Destination.shouldShowScaffoldElements
+    get() =
+        this !is AuthContentDestination && this !is ActivityContentDestination && this !is ReservationContentDestination

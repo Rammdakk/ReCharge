@@ -32,7 +32,7 @@ fun lightThemeTokensMap(): Map<ReChargeTokens, Color> = mapOf(
     ReChargeTokens.Background to Color.White,
     ReChargeTokens.BackgroundInverse to Color.Black,
     ReChargeTokens.BackgroundColored to Color(0xFFA5B7E4),
-    ReChargeTokens.BackgroundContainer to Color(0xFF96AADD),
+    ReChargeTokens.BackgroundContainer to Color(0xFF8EA5E1),
     ReChargeTokens.BackgroundInfo to Color(0xFFBEBEBE),
     ReChargeTokens.TextPrimary to Color.Black,
     ReChargeTokens.TextPrimaryConstant to Color.Black,

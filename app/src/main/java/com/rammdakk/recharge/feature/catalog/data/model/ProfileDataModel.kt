@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ProfileDataModel(
-    @JsonProperty("photoUrl") val photoPath: String,
-    @JsonProperty("name") val name: String
+    @JsonProperty("photoUrl") val photoPath: String?,
+    @JsonProperty("name") val name: String?
 )

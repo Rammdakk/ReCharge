@@ -16,7 +16,7 @@ interface CatalogApi {
         @Header("accessToken") accessToken: String
     ): Response<ProfileDataModel>
 
-    @GET("/api/Activity/GetNextActivity")
+    @GET("/api/Reservations/GetNextReservation")
     suspend fun getNextActivity(
         @Header("accessToken") accessToken: String
     ): Response<NextActivityDataModel>

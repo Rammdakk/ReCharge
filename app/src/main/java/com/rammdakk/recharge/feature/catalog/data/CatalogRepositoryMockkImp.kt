@@ -6,6 +6,7 @@ import com.rammdakk.recharge.feature.catalog.data.model.Coordinates
 import com.rammdakk.recharge.feature.catalog.data.model.NextActivityDataModel
 import com.rammdakk.recharge.feature.catalog.data.model.ProfileDataModel
 import com.rammdakk.recharge.feature.catalog.domain.CatalogRepository
+import java.util.Date
 
 class CatalogRepositoryMockkImp : CatalogRepository {
 
@@ -25,7 +26,7 @@ class CatalogRepositoryMockkImp : CatalogRepository {
                 id = 3567,
                 imagePath = "https://lrhotel.ru/upload/resize_cache/iblock/688/767_500_2/hys84kpkx508fkmxh77gm3s1ve3afbky.JPG",
                 name = "2-ух часовое занятие с тренером очень интереснг длиныый текст 2-ух часовое занятие с тренером очень интереснг длиныый текст",
-                time = System.currentTimeMillis() + 24 * 60 * 60 * 1000 * 10,
+                time = Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000 * 10),
                 address = "м.Курская, Земляной вал, 33",
                 organizationName = "Бассейн Чайка",
                 coordinates = Coordinates(55.757114f, 37.65905f)

@@ -8,15 +8,15 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface ExerciseApi {
-    @GET("/api/Activities/Tabs")
+    @GET("/api/Category/GetCategoryTabs")
     suspend fun getTabs(
         @Header("accessToken") accessToken: String,
     ): Response<List<ExerciseTabDataModel>>
 
-    @GET("/api/Activities/Activities")
-    suspend fun getActivities(
+    @GET("/api/Category/GetCategoriesByTabId")
+    suspend fun getActivitiesCats(
         @Header("accessToken") accessToken: String,
-        @Query("activityId") activityId: Int,
+        @Query("tabId") activityId: Int,
     ): Response<List<SportTypeDataModel>>
 
 }

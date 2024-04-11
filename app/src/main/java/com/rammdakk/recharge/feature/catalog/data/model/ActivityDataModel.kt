@@ -2,13 +2,14 @@ package com.rammdakk.recharge.feature.catalog.data.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Date
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class NextActivityDataModel(
     @JsonProperty("id") val id: Int,
     @JsonProperty("name") val name: String,
     @JsonProperty("imageUrl") val imagePath: String,
-    @JsonProperty("timeMilliseconds") val time: Long?,
+    @JsonProperty("dateTime") val time: Date,
     @JsonProperty("locationName") val organizationName: String,
     @JsonProperty("addressString") val address: String,
     @JsonProperty("coordinates") val coordinates: Coordinates

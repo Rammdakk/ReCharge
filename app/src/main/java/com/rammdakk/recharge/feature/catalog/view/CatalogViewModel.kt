@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-
+import com.rammdakk.recharge.base.extensions.merge
 import com.rammdakk.recharge.feature.catalog.domain.CatalogRepository
 import com.rammdakk.recharge.feature.catalog.view.model.ActivityRecommendationModel
 import com.rammdakk.recharge.feature.catalog.view.model.CategoriesList
@@ -16,8 +16,6 @@ import com.rammdakk.recharge.feature.catalog.view.model.convertToActivityInfo
 import com.rammdakk.recharge.feature.catalog.view.model.convertToProfileInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -42,6 +40,7 @@ class CatalogViewModel @Inject constructor(
 
     fun loadData() = viewModelScope.launch {
         merge(
+            dispatchers.IO,
             { loadProfile() },
             { loadNextActivity() },
             { loadCategories() },
@@ -60,14 +59,11 @@ class CatalogViewModel @Inject constructor(
 
     fun updateScreen() = viewModelScope.launch {
         merge(
+            dispatchers.IO,
             { loadProfile() },
             { loadNextActivity() },
             { loadCategories() },
         )
-    }
-
-    private suspend fun merge(vararg func: suspend () -> Unit) = withContext(dispatchers.IO) {
-        func.map { async { it.invoke() } }.awaitAll()
     }
 
     private suspend fun loadProfile() = withContext(dispatchers.IO) {

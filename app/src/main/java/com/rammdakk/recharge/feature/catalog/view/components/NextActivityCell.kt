@@ -39,7 +39,7 @@ import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryMediumInverse
 import com.rammdakk.recharge.base.theme.getThemedColor
 import com.rammdakk.recharge.feature.catalog.view.model.NextActivityModel
-import com.rammdakk.recharge.feature.destinations.ActivityContentDestination
+import com.rammdakk.recharge.feature.destinations.ReservationContentDestination
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -58,7 +58,7 @@ fun NextActivityCell(
         .padding(vertical = 10.dp)
         .clip(RoundedCornerShape(roundedCorner))
         .clickable {
-            navigator.navigate(ActivityContentDestination(activityInfo.id))
+            navigator.navigate(ReservationContentDestination(activityInfo.id))
         }) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -98,7 +98,7 @@ fun NextActivityCell(
                     )
                     activityInfo.time?.let {
                         PlainTextSmallInverse(
-                            text = it.formatDate(),
+                            text = it.time.formatDate(),
                             textAlign = TextAlign.Start
                         )
                     }

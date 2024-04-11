@@ -3,6 +3,7 @@ package com.rammdakk.recharge.feature.catalog.view.model
 import com.rammdakk.recharge.feature.catalog.data.model.ActivityRecommendationDataModel
 import com.rammdakk.recharge.feature.catalog.data.model.Coordinates
 import com.rammdakk.recharge.feature.catalog.data.model.NextActivityDataModel
+import java.util.Date
 
 data class ActivityRecommendationModel(
     val id: Int,
@@ -18,7 +19,7 @@ data class NextActivityModel(
     val imagePath: String,
     val name: String,
     val organizationName: String,
-    val time: Long?,
+    val time: Date?,
     val address: String,
     val location: LocationInfo,
 )

@@ -16,6 +16,8 @@ fun TimePadDataModel.covertToTimePad(onClick: (Int) -> Unit): TimePad =
         id = id,
         price = price,
         startTime = startTime,
-        endTime = endTime,
+        endTime = Date(startTime.time + duration * oneMinInMillis),
         onClick = onClick
     )
+
+private const val oneMinInMillis = 60000

@@ -10,6 +10,7 @@ sealed interface ActivityScreenState {
     data class Loaded(
         val activityInfo: ActivityExtendedInfo,
         val scheduleInfo: State<List<TimePad>>,
+        val usersMaxNumber: State<Int?>
     ) : ActivityScreenState
 }
 

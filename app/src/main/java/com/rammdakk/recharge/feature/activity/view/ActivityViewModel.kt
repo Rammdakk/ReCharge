@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rammdakk.recharge.feature.activity.domain.ActivityRepository
 import com.rammdakk.recharge.feature.activity.view.model.TimePad
+import com.rammdakk.recharge.feature.activity.view.model.UserBookingInfo
 import com.rammdakk.recharge.feature.activity.view.model.convertToActivityInfo
+import com.rammdakk.recharge.feature.activity.view.model.covertToDataModel
 import com.rammdakk.recharge.feature.activity.view.model.covertToTimePad
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -27,13 +29,13 @@ class ActivityViewModel @Inject constructor(
     private val _screenState: MutableState<ActivityScreenState> =
         mutableStateOf(ActivityScreenState.Idle)
     private val _schedule: MutableState<List<TimePad>> = mutableStateOf(emptyList())
+    private var _userNumber: MutableState<Int?> = mutableStateOf(null)
 
     private var job: Job? = null
 
     val screenState: State<ActivityScreenState> = _screenState
 
     fun loadData(activityId: Int) = viewModelScope.launch(dispatchers.IO) {
-        _screenState.value = ActivityScreenState.Idle
         loadScheduleForDate(activityId, Date())
         val activityInfo =
             activityRepository.getActivityInfo(activityId).getOrNull()?.convertToActivityInfo()
@@ -41,7 +43,8 @@ class ActivityViewModel @Inject constructor(
         withContext(dispatchers.Main) {
             _screenState.value = ActivityScreenState.Loaded(
                 activityInfo = activityInfo,
-                scheduleInfo = _schedule
+                scheduleInfo = _schedule,
+                usersMaxNumber = _userNumber
             )
         }
     }
@@ -54,13 +57,10 @@ class ActivityViewModel @Inject constructor(
                 minutes = 0
                 seconds = 0
             }
-            val timePad = activityRepository.getActivityTimeTable(activityId, date.time).getOrNull()
+            val timePad = activityRepository.getActivityTimeTable(activityId, date).getOrNull()
                 ?.map { timePad ->
                     timePad.covertToTimePad {
-                        reserveActivity(
-                            activityId,
-                            timePad.id
-                        )
+                        getMaxUsersNumber(timePad.id)
                     }
                 }
                 ?: return@async
@@ -70,8 +70,15 @@ class ActivityViewModel @Inject constructor(
         }
     }
 
-    private fun reserveActivity(activityId: Int, timeId: Int) = viewModelScope.launch {
+    private fun getMaxUsersNumber(timeId: Int) = viewModelScope.launch {
+        _userNumber.value = null
+        activityRepository.getUsersMaxNumber(tabId = timeId).getOrNull()?.let {
+            _userNumber.value = it
+        }
+    }
 
+    fun reserve(timeId: Int, userBookingInfo: UserBookingInfo) = viewModelScope.launch {
+        activityRepository.reserveActivity(timeId, userBookingInfo.covertToDataModel())
     }
 
 }

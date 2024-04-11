@@ -1,15 +1,21 @@
 package com.rammdakk.recharge.feature.activity.data
 
 
+import com.rammdakk.recharge.base.data.network.error.InternetError
+import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.network.makeRequest
 import com.rammdakk.recharge.feature.activity.data.model.ActivityExtendedDataModel
 import com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel
+import com.rammdakk.recharge.feature.activity.data.model.UserBookingDataModel
 import com.rammdakk.recharge.feature.activity.data.net.ActivityApi
 import com.rammdakk.recharge.feature.activity.domain.ActivityRepository
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ActivityRepositoryImp(
     retrofit: Retrofit,
@@ -26,10 +32,32 @@ class ActivityRepositoryImp(
 
     override suspend fun getActivityTimeTable(
         activityId: Int,
-        date: Long
+        date: Date
     ): Result<List<TimePadDataModel>> =
         withContext(dispatchers.IO) {
-            makeRequest { api.getActivityTabs(activityId, date) }
+            val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
+            makeRequest { api.getActivityTabs(activityId, dateString) }
+        }
+
+    override suspend fun getUsersMaxNumber(tabId: Int): Result<Int> =
+        withContext(dispatchers.IO) {
+            makeRequest { api.getUsersMaxNumber(tabId) }.map { it.freeSpots }
+        }
+
+    override suspend fun reserveActivity(tabId: Int, userBookingInfo: UserBookingDataModel) =
+        withContext(dispatchers.IO) {
+            getAccessToken()?.let {
+                makeRequest {
+                    api.reserveActivity(
+                        it,
+                        tabId,
+                        userBookingInfo
+                    )
+                }
+            }
+                ?: Result.failure(
+                    NetworkError(InternetError.Unauthorized)
+                )
         }
 
 

@@ -20,12 +20,12 @@ data class AdminInfo(
 
 fun ActivityExtendedDataModel.convertToActivityInfo(): ActivityExtendedInfo? {
     return ActivityExtendedInfo(
-        name = this.name ?: return null,
+        name = this.name ?: "",
         imagePath = this.imagePath,
         admin = if (this.adminPhoneWA == null && this.adminTgUsername == null) null
         else AdminInfo(this.adminPhoneWA, this.adminTgUsername?.removePrefix("@")),
-        organizationName = this.locationName ?: return null,
-        address = this.locationAddress ?: return null,
+        organizationName = this.locationName ?: "",
+        address = this.locationAddress ?: "",
         activityDescription = this.activityDescription,
         warning = this.warning,
         cancellationMessage = this.cancellationMessage,

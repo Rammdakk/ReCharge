@@ -45,7 +45,9 @@ fun ActivityContent(
                     state.activityInfo,
                     { viewModel.loadScheduleForDate(activityId, it) },
                     state.scheduleInfo,
-                    navigator::popBackStack
+                    state.usersMaxNumber,
+                    viewModel::reserve,
+                    navigator::popBackStack,
                 )
             }
 

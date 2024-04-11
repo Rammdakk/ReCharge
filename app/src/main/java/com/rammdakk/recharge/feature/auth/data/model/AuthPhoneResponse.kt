@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.auth.data.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -13,9 +14,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param conditionalInfo информация об условиях пользования,оферте
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class AuthPhoneResponse(
-    @JsonProperty("isSuccess")
-    val isSuccess: Boolean,
     @JsonProperty("errorText")
     val errorText: String? = null,
     @JsonProperty("sessionId")

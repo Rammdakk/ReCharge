@@ -73,7 +73,8 @@ class AuthViewModel @Inject constructor(
         result: AuthPhoneResponse,
         phoneNumber: String
     ) {
-        if (result.isSuccess) {
+//        TODO("Поправить")
+        if (true) {
             sessionId = result.sessionId
             _authState.value = AuthScreenState.RequestCode(
                 greetingText = result.titleText

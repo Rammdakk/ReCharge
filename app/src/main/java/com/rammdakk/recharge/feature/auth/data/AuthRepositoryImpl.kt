@@ -5,6 +5,7 @@ import com.rammdakk.recharge.base.data.network.error.HttpException
 import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.sp.EncryptedSharedPreferences
+import com.rammdakk.recharge.base.data.sp.EncryptedSharedPreferences.Companion.ACCESS_KEY
 import com.rammdakk.recharge.feature.auth.data.model.AuthCodeRequest
 import com.rammdakk.recharge.feature.auth.data.model.AuthPhoneRequest
 import com.rammdakk.recharge.feature.auth.data.model.AuthPhoneResponse
@@ -77,7 +78,7 @@ class AuthRepositoryImpl(
         return@withContext response.body()!!.let {
             encryptedSharedPreferences.sharedPreferences.edit()
                 .putString(ACCESS_KEY, it.accessToken).apply()
-            Result.success(it)
+            Result.success(it.copy(isSuccess = true))
         }
     }
 
@@ -101,7 +102,4 @@ class AuthRepositoryImpl(
         encryptedSharedPreferences.sharedPreferences.edit().remove(ACCESS_KEY).apply()
     }
 
-    companion object {
-        private const val ACCESS_KEY = "AccessKey"
-    }
 }

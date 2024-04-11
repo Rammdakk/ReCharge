@@ -21,6 +21,8 @@ class ActivityListViewModel @Inject constructor(
 
     private val _screenState: MutableState<ActivityListScreenState> =
         mutableStateOf(ActivityListScreenState.Idle)
+    private var _selectedDate = mutableStateOf(Date())
+
     val screenState: State<ActivityListScreenState> = _screenState
 
     fun loadData(activityCatId: Int, date: Date) = viewModelScope.launch {
@@ -29,10 +31,12 @@ class ActivityListViewModel @Inject constructor(
             minutes = 0
             seconds = 0
         }
+        _selectedDate.value = date
 
-        activityListRepository.getActivities(activityCatId, date.time).getOrNull()?.let {
+        activityListRepository.getActivities(activityCatId, date).getOrNull()?.let {
             _screenState.value = ActivityListScreenState.Loaded(
                 title = it.activityName,
+                date = _selectedDate,
                 activities = it.activityList.map { it.convertToActivityInfo() }
             )
         }

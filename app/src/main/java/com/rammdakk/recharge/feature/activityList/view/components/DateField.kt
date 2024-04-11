@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.activityList.view.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,10 +12,10 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,10 +29,10 @@ import java.util.Locale
 
 @Composable
 fun DateField(
-    initialDate: Date,
+    initialDate: State<Date>,
     onDateChanged: (Date) -> Unit
 ) {
-    var date by remember { mutableStateOf(initialDate) }
+    val date by remember { initialDate }
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -40,13 +41,12 @@ fun DateField(
     ) {
         IconButton(
             onClick = {
-                date = Calendar.getInstance().apply {
+                Calendar.getInstance().apply {
                     time = date
                     if (date > Date()) {
                         add(Calendar.DATE, -1)
                     }
-                }.time
-                onDateChanged(date)
+                }.time.let(onDateChanged)
             }
         ) {
             Icon(
@@ -66,11 +66,10 @@ fun DateField(
 
         IconButton(
             onClick = {
-                date = Calendar.getInstance().apply {
+                Calendar.getInstance().apply {
                     time = date
                     add(Calendar.DATE, 1)
-                }.time
-                onDateChanged(date)
+                }.time.let(onDateChanged)
             }
         ) {
             Icon(
@@ -83,8 +82,9 @@ fun DateField(
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
 fun DatePreview() {
-    DateField(initialDate = Date(), onDateChanged = {})
+    DateField(initialDate = mutableStateOf(Date()), onDateChanged = {})
 }

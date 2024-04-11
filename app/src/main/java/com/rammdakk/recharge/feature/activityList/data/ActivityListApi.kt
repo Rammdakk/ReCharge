@@ -7,11 +7,11 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface ActivityListApi {
-    @GET("/api/Activities/List")
+    @GET("/api/Slot/GetSlotsByCategoryIdAndTime")
     suspend fun getActivities(
         @Header("accessToken") accessToken: String,
-        @Query("activityCatId") activityCatId: Int,
-        @Query("date") date: Long
+        @Query("categoryId") activityCatId: Int,
+        @Query("dateTime") date: String
     ): Response<ActivityListDataModel>
 
 }

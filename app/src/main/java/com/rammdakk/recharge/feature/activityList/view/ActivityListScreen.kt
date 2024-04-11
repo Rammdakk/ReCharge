@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -17,6 +18,7 @@ import java.util.Date
 @Composable
 fun ActivityListScreen(
     title: String,
+    date: State<Date>,
     activities: List<ActivityInfo>,
     updateDate: (Date) -> Unit,
     navigator: DestinationsNavigator
@@ -32,7 +34,7 @@ fun ActivityListScreen(
                 .padding(horizontal = 16.dp)
         ) {
             item {
-                DateField(Date()) {
+                DateField(date) {
                     updateDate.invoke(it)
                 }
             }

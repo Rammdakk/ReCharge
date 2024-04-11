@@ -1,25 +1,29 @@
 package com.rammdakk.recharge.feature.activityList.data.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Date
 
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class ActivityListDataModel(
-    @JsonProperty("activity_name") val activityName: String,
-    @JsonProperty("activity_list") val activityList: List<ActivityDataModel>
+    @JsonProperty("categoryName") val activityName: String,
+    @JsonProperty("slots") val activityList: List<ActivityDataModel> = emptyList()
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class ActivityDataModel(
-    @JsonProperty("id") val id: Int,
+    @JsonProperty("activityId") val id: Int,
     @JsonProperty("activityName") val name: String,
-    @JsonProperty("imagePath") val imagePath: String,
-    @JsonProperty("time") val time: Long?,
-    @JsonProperty("duration") val duration: Long,
+    @JsonProperty("imageUrl") val imagePath: String,
+    @JsonProperty("dateTime") val time: Date?,
+    @JsonProperty("lengthMinutes") val duration: Long,
     @JsonProperty("price") val price: Float,
-    @JsonProperty("organizationName") val organizationName: String,
+    @JsonProperty("locationName") val organizationName: String,
     @JsonProperty("address") val address: String,
     @JsonProperty("coordinates") val coordinates: Coordinates
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class Coordinates(
     @JsonProperty("latitude") val latitude: Float,
     @JsonProperty("longitude") val longitude: Float

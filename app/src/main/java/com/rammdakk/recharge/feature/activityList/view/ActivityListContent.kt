@@ -1,11 +1,9 @@
 package com.rammdakk.recharge.feature.activityList.view
 
-import androidx.activity.ComponentActivity
 import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -16,7 +14,7 @@ import java.util.Date
 fun ActivityListContent(
     navigator: DestinationsNavigator,
     activityCatId: Int,
-    viewModel: ActivityListViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    viewModel: ActivityListViewModel = hiltViewModel()
 ) {
 
     LaunchedEffect(Unit) {
@@ -30,6 +28,7 @@ fun ActivityListContent(
             is ActivityListScreenState.Loaded -> {
                 ActivityListScreen(
                     title = state.title,
+                    date = state.date,
                     activities = state.activities,
                     updateDate = { date -> viewModel.loadData(activityCatId, date) },
                     navigator = navigator

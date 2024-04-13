@@ -18,5 +18,5 @@ object RechargeRetrofitModule {
             .build()
     }
 
-    private const val BASE_URL = "https://recharge.free.beeceptor.com"
+    private const val BASE_URL = "http://158.160.159.158:8080"
 }

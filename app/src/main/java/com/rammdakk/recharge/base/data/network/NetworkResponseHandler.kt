@@ -19,7 +19,7 @@ inline fun <T> makeRequest(requestFunc: () -> Response<T>): Result<T> {
         return Result.failure(
             NetworkError(
                 ErrorHandlerImpl.getErrorType(HttpException(response.code())),
-                response.message()
+                response.errorBody()?.string() ?: response.message()
             )
         )
     }

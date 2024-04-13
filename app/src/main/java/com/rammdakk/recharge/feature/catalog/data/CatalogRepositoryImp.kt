@@ -46,15 +46,8 @@ class CatalogRepositoryImp(
     override suspend fun updateCatalog(selectedCategoryId: Int?): Result<List<ActivityRecommendationDataModel>> =
         withContext(dispatchers.IO) {
             getAccessToken()?.let {
-                makeRequest {
-                    api.getActivitiesForCategory(
-                        it,
-                        selectedCategoryId
-                    )
-                }
-            } ?: Result.failure(
-                NetworkError(InternetError.Unauthorized)
-            )
+                makeRequest { api.getActivitiesForCategory(it, selectedCategoryId) }
+            } ?: Result.failure(NetworkError(InternetError.Unauthorized))
         }
 
     private suspend fun getAccessToken(): String? = withContext(dispatchers.IO) {

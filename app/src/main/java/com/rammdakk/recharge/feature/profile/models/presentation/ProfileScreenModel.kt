@@ -7,7 +7,7 @@ data class ProfileScreenModel(
     val secondName: String,
     val phone: String,
     val email: String,
-    val birthDay: Long,
+    val birthDay: Long?,
     val gender: Gender,
     val city: String
 )

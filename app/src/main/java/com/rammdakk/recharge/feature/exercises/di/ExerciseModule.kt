@@ -1,7 +1,6 @@
 package com.rammdakk.recharge.feature.exercises.di
 
 import com.rammdakk.recharge.build.isMock
-import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.exercises.data.ExerciseRepositoryImpl
 import com.rammdakk.recharge.feature.exercises.data.ExerciseRepositoryMockImpl
 import com.rammdakk.recharge.feature.exercises.domain.ExerciseRepository
@@ -19,12 +18,11 @@ class ExerciseModule {
     @Provides
     fun provideExerciseRepository(
         dispatchers: Dispatchers,
-        authRepository: AuthRepository,
         retrofit: Retrofit,
     ): ExerciseRepository {
         if (isMock()) {
             return ExerciseRepositoryMockImpl()
         }
-        return ExerciseRepositoryImpl(retrofit, authRepository, dispatchers)
+        return ExerciseRepositoryImpl(retrofit, dispatchers)
     }
 }

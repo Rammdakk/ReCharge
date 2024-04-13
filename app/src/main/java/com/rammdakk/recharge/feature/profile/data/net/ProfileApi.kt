@@ -9,7 +9,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface ProfileApi {
-    @GET("/api/User/GetUserByNumber")
+    @GET("/api/User/GetUserByAccessToken")
     suspend fun getUserInfo(
         @Header("accessToken") accessToken: String,
     ): Response<ProfileInfo>
@@ -23,5 +23,5 @@ interface ProfileApi {
     suspend fun updateUser(
         @Header("accessToken") accessToken: String,
         @Body profileInfo: ProfileInfo
-    )
+    ): Response<Unit>
 }

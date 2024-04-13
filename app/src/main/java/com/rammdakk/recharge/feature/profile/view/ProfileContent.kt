@@ -1,6 +1,6 @@
 package com.rammdakk.recharge.feature.profile.view
 
-import androidx.activity.ComponentActivity
+import android.content.Intent
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
@@ -10,29 +10,36 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.getThemedColor
+import com.rammdakk.recharge.base.view.component.error.Error
+import com.rammdakk.recharge.feature.auth.view.AuthActivity
 
 @Destination
 @Composable
 fun ProfileContent(
     navigator: DestinationsNavigator,
-    viewModel: ProfileViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    viewModel: ProfileViewModel = hiltViewModel()
 ) {
-
-    LaunchedEffect(Unit) {
-        viewModel.loadData()
-    }
-
     val uiState by viewModel.profileState
 
     val systemUiController = rememberSystemUiController()
     systemUiController.setNavigationBarColor(ReChargeTokens.Background.getThemedColor())
     systemUiController.setStatusBarColor(ReChargeTokens.Background.getThemedColor())
+
+    val context = LocalContext.current
+
+    LaunchedEffect(viewModel.isLoggedOut) {
+        if (viewModel.isLoggedOut.value) {
+            val intent = Intent(context, AuthActivity::class.java)
+            ContextCompat.startActivity(context, intent, null)
+        }
+    }
 
     Crossfade(
         modifier = Modifier
@@ -43,7 +50,7 @@ fun ProfileContent(
     ) { state ->
         when (state) {
             is ProfileScreenState.Idle -> {
-
+                viewModel.loadData()
             }
 
             is ProfileScreenState.Loaded -> {
@@ -52,7 +59,7 @@ fun ProfileContent(
                     secondName = state.secondName,
                     phone = state.phone,
                     email = state.email,
-                    birthDay = state.birthDay.time,
+                    birthDay = state.birthDay?.time,
                     isMale = state.isMale,
                     city = state.city,
                     onSaveClick = viewModel::updateData,
@@ -61,4 +68,6 @@ fun ProfileContent(
             }
         }
     }
+    Error(errorState = viewModel.errorState)
 }
+

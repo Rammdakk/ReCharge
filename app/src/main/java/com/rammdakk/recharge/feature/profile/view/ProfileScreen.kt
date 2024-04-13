@@ -24,7 +24,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -56,7 +55,7 @@ fun ProfileScreen(
     secondName: String,
     phone: String,
     email: String,
-    birthDay: Long,
+    birthDay: Long?,
     isMale: Boolean,
     city: String,
     onSaveClick: (ProfileScreenModel) -> Unit,
@@ -98,7 +97,7 @@ fun ProfileScreen(
             }
 
             var birthDateState by remember {
-                mutableLongStateOf(birthDay)
+                mutableStateOf(birthDay)
             }
             var isMaleState by remember {
                 mutableStateOf(isMale)
@@ -173,7 +172,7 @@ fun ProfileScreen(
                             .padding(end = 4.dp)
                             .clip(RoundedCornerShape(50))
                             .clickable { visibleCalendar = true },
-                        text = birthDateState.convertMillisToDate(),
+                        text = birthDateState?.convertMillisToDate() ?: "",
                         fontSize = 18.sp,
                         iconVector = Icons.Default.DateRange
                     )

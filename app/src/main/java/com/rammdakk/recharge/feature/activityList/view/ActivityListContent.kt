@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.rammdakk.recharge.base.view.component.error.Error
 import java.util.Date
 
 @Destination
@@ -36,4 +37,5 @@ fun ActivityListContent(
             }
         }
     }
+    Error(errorState = viewModel.errorState)
 }

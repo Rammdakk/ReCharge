@@ -5,11 +5,16 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rammdakk.recharge.base.view.component.error.ErrorState
 import com.rammdakk.recharge.feature.activityList.domain.ActivityListRepository
 import com.rammdakk.recharge.feature.activityList.view.model.convertToActivityInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Date
 import javax.inject.Inject
 
@@ -19,11 +24,15 @@ class ActivityListViewModel @Inject constructor(
     private val dispatchers: Dispatchers
 ) : ViewModel() {
 
+    private var errorJob: Job? = null
+
     private val _screenState: MutableState<ActivityListScreenState> =
         mutableStateOf(ActivityListScreenState.Idle)
     private var _selectedDate = mutableStateOf(Date())
+    private var _errorState = mutableStateOf<ErrorState>(ErrorState.Idle)
 
     val screenState: State<ActivityListScreenState> = _screenState
+    val errorState: State<ErrorState> = _errorState
 
     fun loadData(activityCatId: Int, date: Date) = viewModelScope.launch {
         date.apply {
@@ -33,13 +42,24 @@ class ActivityListViewModel @Inject constructor(
         }
         _selectedDate.value = date
 
-        activityListRepository.getActivities(activityCatId, date).getOrNull()?.let {
-            _screenState.value = ActivityListScreenState.Loaded(
-                title = it.activityName,
-                date = _selectedDate,
-                activities = it.activityList.map { it.convertToActivityInfo() }
-            )
+        activityListRepository.getActivities(activityCatId, date).getOrElse { handleError(it) }
+            ?.let {
+                _screenState.value = ActivityListScreenState.Loaded(
+                    title = it.activityName,
+                    date = _selectedDate,
+                    activities = it.activityList.map { it.convertToActivityInfo() },
+                )
+            }
+    }
+
+    private suspend fun handleError(throwable: Throwable) = withContext(dispatchers.Main) {
+        errorJob?.cancel()
+        _errorState.value = ErrorState.Error(throwable.message.toString())
+        errorJob = async {
+            delay(2000)
+            _errorState.value = ErrorState.Idle
         }
+        null
     }
 
 }

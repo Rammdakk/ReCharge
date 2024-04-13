@@ -15,28 +15,31 @@ import java.util.TimeZone
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ProfileInfo(
-    @JsonProperty("firstName")
-    @get:JsonProperty("firstName")
-    val firstName: String,
-    @JsonProperty("lastName")
-    @get:JsonProperty("lastName")
-    val secondName: String,
-    @JsonProperty("phone")
-    @get:JsonProperty("phone")
-    val phone: String,
+    @JsonProperty("name")
+    @get:JsonProperty("name")
+    val firstName: String? = "",
+    @JsonProperty("surname")
+    @get:JsonProperty("surname")
+    val secondName: String? = "",
+    @JsonProperty("phoneNumber")
+    @get:JsonProperty("phoneNumber")
+    val phone: String? = "",
     @JsonProperty("email")
     @get:JsonProperty("email")
-    val email: String,
+    val email: String? = "",
     @JsonSerialize(using = DateSerializer::class)
     @JsonProperty("birthDate")
     @get:JsonProperty("birthDate")
-    val birthDay: Date,
+    val birthDay: Date? = null,
     @JsonProperty("gender")
     @get:JsonProperty("gender")
-    val gender: Gender,
+    val gender: Gender? = null,
     @JsonProperty("city")
     @get:JsonProperty("city")
-    val city: String
+    val city: String? = null,
+    @JsonProperty("imageUrl")
+    @get:JsonProperty("imageUrl")
+    val imageUrl: String? = null
 )
 
 

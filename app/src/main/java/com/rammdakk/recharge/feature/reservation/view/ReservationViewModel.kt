@@ -5,12 +5,16 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rammdakk.recharge.base.view.component.error.ErrorState
 import com.rammdakk.recharge.feature.activity.domain.ActivityRepository
 import com.rammdakk.recharge.feature.activity.view.model.convertToActivityInfo
 import com.rammdakk.recharge.feature.reservation.domain.ReservationRepository
 import com.rammdakk.recharge.feature.reservation.view.model.convertToReservationInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -22,18 +26,25 @@ class ReservationViewModel @Inject constructor(
     private val dispatchers: Dispatchers,
 ) : ViewModel() {
 
+    private var errorJob: Job? = null
+
     private val _screenState: MutableState<ReservationScreenState> =
         mutableStateOf(ReservationScreenState.Idle)
+    private val _errorState: MutableState<ErrorState> = mutableStateOf(ErrorState.Idle)
 
     val screenState: State<ReservationScreenState> = _screenState
+    val errorState: State<ErrorState> = _errorState
 
     fun loadData(reservationId: Int) = viewModelScope.launch(dispatchers.IO) {
         val reservationInfo =
-            reservationRepository.getReservationInfo(reservationId = reservationId).getOrNull()
+            reservationRepository.getReservationInfo(reservationId = reservationId)
+                .getOrElse { error -> handleError(error) }
                 ?: return@launch
 
         val activityInfo =
-            reservationInfo.activityId?.let { activityRepository.getActivityInfo(it).getOrNull() }
+            reservationInfo.activityId?.let {
+                activityRepository.getActivityInfo(it).getOrElse { error -> handleError(error) }
+            }
                 ?.convertToActivityInfo()
                 ?: return@launch
 
@@ -45,4 +56,13 @@ class ReservationViewModel @Inject constructor(
         }
     }
 
+    private suspend fun handleError(throwable: Throwable) = withContext(dispatchers.Main) {
+        errorJob?.cancel()
+        _errorState.value = ErrorState.Error(throwable.message.toString())
+        errorJob = async {
+            delay(2000)
+            _errorState.value = ErrorState.Idle
+        }
+        null
+    }
 }

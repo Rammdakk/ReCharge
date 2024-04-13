@@ -24,16 +24,8 @@ class ActivityListRepositoryImpl(
         withContext(dispatchers.IO) {
             val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
             getAccessToken()?.let {
-                makeRequest {
-                    api.getActivities(
-                        it,
-                        activityCatId,
-                        dateString
-                    )
-                }
-            } ?: Result.failure(
-                NetworkError(InternetError.Unauthorized)
-            )
+                makeRequest { api.getActivities(it, activityCatId, dateString) }
+            } ?: Result.failure(NetworkError(InternetError.Unauthorized))
         }
 
     private suspend fun getAccessToken(): String? = withContext(dispatchers.IO) {

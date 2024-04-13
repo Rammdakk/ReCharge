@@ -16,6 +16,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.getThemedColor
+import com.rammdakk.recharge.base.view.component.error.Error
 
 @Destination(start = true)
 @Composable
@@ -58,4 +59,5 @@ fun CatalogContent(
             }
         }
     }
+    Error(errorState = viewModel.errorState)
 }

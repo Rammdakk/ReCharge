@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rammdakk.recharge.base.extensions.merge
+import com.rammdakk.recharge.base.view.component.error.ErrorState
 import com.rammdakk.recharge.feature.catalog.domain.CatalogRepository
 import com.rammdakk.recharge.feature.catalog.view.model.ActivityRecommendationModel
 import com.rammdakk.recharge.feature.catalog.view.model.CategoriesList
@@ -16,6 +17,9 @@ import com.rammdakk.recharge.feature.catalog.view.model.convertToActivityInfo
 import com.rammdakk.recharge.feature.catalog.view.model.convertToProfileInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -26,17 +30,20 @@ class CatalogViewModel @Inject constructor(
     private val dispatchers: Dispatchers,
 ) : ViewModel() {
 
+    private var errorJob: Job? = null
+
     private val _screenState: MutableState<CatalogScreenState> =
         mutableStateOf(CatalogScreenState.Idle)
-
     private val _profileInfo: MutableState<ProfileInfo?> = mutableStateOf(null)
     private val _nextActivity: MutableState<NextActivityModel?> = mutableStateOf(null)
     private val _categoriesList: MutableState<CategoriesList> =
         mutableStateOf(CategoriesList(emptyList()) {})
     private val _activitiesList: MutableState<List<ActivityRecommendationModel>> =
         mutableStateOf(emptyList())
+    private var _errorState = mutableStateOf<ErrorState>(ErrorState.Idle)
 
     val screenState: State<CatalogScreenState> = _screenState
+    val errorState: State<ErrorState> = _errorState
 
     fun loadData() = viewModelScope.launch {
         merge(
@@ -52,7 +59,7 @@ class CatalogViewModel @Inject constructor(
                 profileInfo = _profileInfo,
                 nextActivity = _nextActivity,
                 categoriesList = _categoriesList,
-                activitiesList = _activitiesList
+                activitiesList = _activitiesList,
             )
         }
     }
@@ -67,15 +74,16 @@ class CatalogViewModel @Inject constructor(
     }
 
     private suspend fun loadProfile() = withContext(dispatchers.IO) {
-        val result = catalogRepository.getProfileInfo().getOrNull()?.convertToProfileInfo()
-
+        val result =
+            catalogRepository.getProfileInfo().getOrElse { handleError(it) }?.convertToProfileInfo()
         withContext(dispatchers.Main) {
             _profileInfo.value = result
         }
     }
 
     private suspend fun loadNextActivity() = withContext(dispatchers.IO) {
-        val result = catalogRepository.getNextActivityInfo().getOrNull()?.convertToActivityInfo()
+        val result = catalogRepository.getNextActivityInfo().getOrElse { handleError(it) }
+            ?.convertToActivityInfo()
 
         withContext(dispatchers.Main) {
             _nextActivity.value = result
@@ -83,7 +91,7 @@ class CatalogViewModel @Inject constructor(
     }
 
     private suspend fun loadCategories() = withContext(dispatchers.IO) {
-        val result = catalogRepository.getCategories().getOrNull()?.map { cat ->
+        val result = catalogRepository.getCategories().getOrElse { handleError(it) }?.map { cat ->
             Category(
                 id = cat.id,
                 imagePath = cat.imagePath
@@ -96,12 +104,22 @@ class CatalogViewModel @Inject constructor(
     }
 
     private fun loadActivities(catId: Int? = null) = viewModelScope.launch(dispatchers.IO) {
-        catalogRepository.updateCatalog(catId).getOrNull()?.map {
+        catalogRepository.updateCatalog(catId).getOrElse { handleError(it) }?.map {
             it.convertToActivityInfo()
         }.let { activityList ->
             withContext(dispatchers.Main) {
                 _activitiesList.value = activityList.orEmpty()
             }
         }
+    }
+
+    private suspend fun handleError(throwable: Throwable) = withContext(dispatchers.Main) {
+        errorJob?.cancel()
+        _errorState.value = ErrorState.Error(throwable.message.toString())
+        errorJob = async {
+            delay(2000)
+            _errorState.value = ErrorState.Idle
+        }
+        null
     }
 }

@@ -100,7 +100,6 @@ class AuthViewModel @Inject constructor(
             authRepository.validateCode(code, it, phoneNumber).fold(
                 onSuccess = {
                     _isLoggedIn.value = true
-
                 },
                 onFailure = {
                     _errorMessage.value = it.message

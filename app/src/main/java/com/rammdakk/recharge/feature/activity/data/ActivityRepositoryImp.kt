@@ -47,17 +47,8 @@ class ActivityRepositoryImp(
     override suspend fun reserveActivity(tabId: Int, userBookingInfo: UserBookingDataModel) =
         withContext(dispatchers.IO) {
             getAccessToken()?.let {
-                makeRequest {
-                    api.reserveActivity(
-                        it,
-                        tabId,
-                        userBookingInfo
-                    )
-                }
-            }
-                ?: Result.failure(
-                    NetworkError(InternetError.Unauthorized)
-                )
+                makeRequest { api.reserveActivity(it, tabId, userBookingInfo) }
+            } ?: Result.failure(NetworkError(InternetError.Unauthorized))
         }
 
 

@@ -6,6 +6,7 @@ import com.rammdakk.recharge.feature.auth.data.model.AuthPhoneResponse
 import com.rammdakk.recharge.feature.auth.data.model.AuthResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthApi {
@@ -14,4 +15,7 @@ interface AuthApi {
 
     @POST("/api/Authorization/Auth")
     suspend fun sendCode(@Body authCodeRequest: AuthCodeRequest): Response<AuthResponse>
+
+    @POST("/api/User/LogOut")
+    suspend fun logOut(@Header("accessToken") accessToken: String): Response<Unit>
 }

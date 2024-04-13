@@ -34,5 +34,5 @@ interface AuthRepository {
     /**
      * Удаление данных пользователя
      */
-    suspend fun logOut()
+    suspend fun logOut(): Boolean
 }

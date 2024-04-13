@@ -62,7 +62,9 @@ class AuthViewModel @Inject constructor(
                 onSuccess = { result ->
                     updateState(result, phoneNumber)
                 },
-                onFailure = {}
+                onFailure = {
+                    _errorMessage.value = it.message
+                }
             )
 
 
@@ -73,43 +75,36 @@ class AuthViewModel @Inject constructor(
         result: AuthPhoneResponse,
         phoneNumber: String
     ) {
-//        TODO("Поправить")
-        if (true) {
-            sessionId = result.sessionId
-            _authState.value = AuthScreenState.RequestCode(
-                greetingText = result.titleText
-                    ?: resources.getString(R.string.request_code_title),
-                codeSize = result.codeSize ?: 0,
-                onBackPressed = this@AuthViewModel::init,
-                onSubmitClick = { validateCode(it, phoneNumber) },
-                onRequestCodeClick = { requestCode(phoneNumber) },
-                errorMessage = _errorMessage,
-                bottomInfo = mutableStateOf(
-                    result.conditionalInfo?.let { info ->
-                        BottomInfo(info.message) {
-                            _openLink.value = info.url
-                        }
+        sessionId = result.sessionId
+        _authState.value = AuthScreenState.RequestCode(
+            greetingText = result.titleText
+                ?: resources.getString(R.string.request_code_title),
+            codeSize = result.codeSize ?: 0,
+            onBackPressed = this@AuthViewModel::init,
+            onSubmitClick = { validateCode(it, phoneNumber) },
+            onRequestCodeClick = { requestCode(phoneNumber) },
+            errorMessage = _errorMessage,
+            bottomInfo = mutableStateOf(
+                result.conditionalInfo?.let { info ->
+                    BottomInfo(info.message) {
+                        _openLink.value = info.url
                     }
-                )
+                }
             )
-        } else {
-            _errorMessage.value = result.errorText
-        }
+        )
     }
 
 
     private fun validateCode(code: String, phoneNumber: String) = viewModelScope.launch {
         sessionId?.let {
             authRepository.validateCode(code, it, phoneNumber).fold(
-                onSuccess = { result ->
-                    if (result.isSuccess) {
-                        _isLoggedIn.value = true
-                    } else {
-                        _errorMessage.value = result.message
-                    }
+                onSuccess = {
+                    _isLoggedIn.value = true
 
                 },
-                onFailure = {}
+                onFailure = {
+                    _errorMessage.value = it.message
+                }
             )
         } ?: init()
     }

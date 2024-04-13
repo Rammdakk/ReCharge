@@ -11,10 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class AuthResponse(
-    @JsonProperty("isSuccess")
-    val isSuccess: Boolean = false,
     @JsonProperty("accessToken")
-    val accessToken: String? = null,
-    @JsonProperty("statusMessage")
-    val message: String? = null,
+    val accessToken: String,
 )

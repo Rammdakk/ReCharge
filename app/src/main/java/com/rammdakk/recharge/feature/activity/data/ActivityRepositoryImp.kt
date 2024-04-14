@@ -36,7 +36,7 @@ class ActivityRepositoryImp(
     ): Result<List<TimePadDataModel>> =
         withContext(dispatchers.IO) {
             val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
-            makeRequest { api.getActivityTabs(activityId, dateString) }
+            makeRequest { api.getActivityTabs(activityId, dateString) }.map { it.slots }
         }
 
     override suspend fun getUsersMaxNumber(tabId: Int): Result<Int> =

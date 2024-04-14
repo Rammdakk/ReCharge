@@ -2,7 +2,7 @@ package com.rammdakk.recharge.feature.activity.data.net
 
 import com.rammdakk.recharge.feature.activity.data.model.ActivityExtendedDataModel
 import com.rammdakk.recharge.feature.activity.data.model.FreeSpotsDataModel
-import com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel
+import com.rammdakk.recharge.feature.activity.data.model.ListTimePadModel
 import com.rammdakk.recharge.feature.activity.data.model.UserBookingDataModel
 import retrofit2.Response
 import retrofit2.http.Body
@@ -22,7 +22,7 @@ interface ActivityApi {
     suspend fun getActivityTabs(
         @Query("activityId") activityId: Int,
         @Query("date") date: String
-    ): Response<List<TimePadDataModel>>
+    ): Response<ListTimePadModel>
 
     @GET("/api/Slot/GetSlotFreeSpots")
     suspend fun getUsersMaxNumber(

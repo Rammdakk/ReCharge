@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 
-class CatalogRepositoryImp(
+class CatalogRepositoryImpl(
     retrofit: Retrofit,
     private val authRepository: AuthRepository,
     private val dispatchers: Dispatchers,

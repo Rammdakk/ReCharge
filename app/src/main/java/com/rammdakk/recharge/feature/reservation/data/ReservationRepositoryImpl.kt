@@ -4,7 +4,7 @@ import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.network.makeRequest
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
-import com.rammdakk.recharge.feature.reservation.data.model.ReservationDataModel
+import com.rammdakk.recharge.feature.reservation.data.model.ReservationMetaDataModel
 import com.rammdakk.recharge.feature.reservation.data.net.ReservationApi
 import com.rammdakk.recharge.feature.reservation.domain.ReservationRepository
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +19,7 @@ class ReservationRepositoryImpl(
 
     private val api = retrofit.create(ReservationApi::class.java)
 
-    override suspend fun getReservationInfo(reservationId: Int): Result<ReservationDataModel> =
+    override suspend fun getReservationInfo(reservationId: Int): Result<ReservationMetaDataModel> =
         withContext(dispatchers.IO) {
             getAccessToken()?.let {
                 makeRequest {

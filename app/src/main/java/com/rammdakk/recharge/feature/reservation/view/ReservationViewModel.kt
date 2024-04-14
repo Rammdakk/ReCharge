@@ -35,23 +35,21 @@ class ReservationViewModel @Inject constructor(
     val screenState: State<ReservationScreenState> = _screenState
     val errorState: State<ErrorState> = _errorState
 
-    fun loadData(reservationId: Int) = viewModelScope.launch(dispatchers.IO) {
-        val reservationInfo =
+    fun loadData(reservationId: Int, activityId: Int) = viewModelScope.launch(dispatchers.IO) {
+        val reservationDeferred = async {
             reservationRepository.getReservationInfo(reservationId = reservationId)
-                .getOrElse { error -> handleError(error) }
-                ?: return@launch
+                .getOrElse { error -> handleError(error) }?.convertToReservationInfo()
+        }
 
-        val activityInfo =
-            reservationInfo.activityId?.let {
-                activityRepository.getActivityInfo(it).getOrElse { error -> handleError(error) }
-            }
-                ?.convertToActivityInfo()
-                ?: return@launch
+        val activityInfoDeferred = async {
+            activityRepository.getActivityInfo(activityId)
+                .getOrElse { error -> handleError(error) }?.convertToActivityInfo()
+        }
 
         withContext(dispatchers.Main) {
             _screenState.value = ReservationScreenState.Loaded(
-                activityInfo = activityInfo,
-                reservationInfo = reservationInfo.convertToReservationInfo()
+                activityInfo = activityInfoDeferred.await() ?: return@withContext,
+                reservationInfo = reservationDeferred.await() ?: return@withContext
             )
         }
     }

@@ -1,6 +1,6 @@
 package com.rammdakk.recharge.feature.reservation.data.net
 
-import com.rammdakk.recharge.feature.reservation.data.model.ReservationDataModel
+import com.rammdakk.recharge.feature.reservation.data.model.ReservationMetaDataModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -12,5 +12,5 @@ interface ReservationApi {
     fun getReservationInfo(
         @Header("accessToken") accessToken: String,
         @Query("reservation_id") reservationId: Int
-    ): Response<ReservationDataModel>
+    ): Response<ReservationMetaDataModel>
 }

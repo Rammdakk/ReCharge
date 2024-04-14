@@ -15,7 +15,8 @@ data class ActivityRecommendationModel(
 )
 
 data class NextActivityModel(
-    val id: Int,
+    val activityId: Int,
+    val reservationId: Int,
     val imagePath: String,
     val name: String,
     val organizationName: String,
@@ -41,7 +42,8 @@ fun ActivityRecommendationDataModel.convertToActivityInfo() =
 
 fun NextActivityDataModel.convertToActivityInfo() =
     NextActivityModel(
-        id = this.id,
+        activityId = this.activityId,
+        reservationId = this.reservationId,
         imagePath = this.imagePath,
         name = this.name,
         organizationName = this.organizationName,

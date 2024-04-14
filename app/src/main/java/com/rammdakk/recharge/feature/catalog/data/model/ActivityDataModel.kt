@@ -6,7 +6,8 @@ import java.util.Date
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class NextActivityDataModel(
-    @JsonProperty("id") val id: Int,
+    @JsonProperty("activityId") val activityId: Int,
+    @JsonProperty("reservationId") val reservationId: Int,
     @JsonProperty("name") val name: String,
     @JsonProperty("imageUrl") val imagePath: String,
     @JsonProperty("dateTime") val time: Date,

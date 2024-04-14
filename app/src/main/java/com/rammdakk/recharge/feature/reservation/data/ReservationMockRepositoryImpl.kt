@@ -1,6 +1,6 @@
 package com.rammdakk.recharge.feature.reservation.data
 
-import com.rammdakk.recharge.feature.reservation.data.model.ReservationDataModel
+import com.rammdakk.recharge.feature.reservation.data.model.ReservationMetaDataModel
 import com.rammdakk.recharge.feature.reservation.domain.ReservationRepository
 
 class ReservationMockRepositoryImpl : ReservationRepository {
@@ -21,9 +21,9 @@ class ReservationMockRepositoryImpl : ReservationRepository {
 //        )
 //    }
 
-    override suspend fun getReservationInfo(reservationId: Int): Result<ReservationDataModel> {
+    override suspend fun getReservationInfo(reservationId: Int): Result<ReservationMetaDataModel> {
         return Result.success(
-            ReservationDataModel(
+            ReservationMetaDataModel(
                 reservationId = 1367,
                 activityId = 2,
                 time = System.currentTimeMillis(),

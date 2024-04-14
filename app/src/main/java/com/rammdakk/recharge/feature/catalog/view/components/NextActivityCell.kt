@@ -58,7 +58,14 @@ fun NextActivityCell(
         .padding(vertical = 10.dp)
         .clip(RoundedCornerShape(roundedCorner))
         .clickable {
-            navigator.navigate(ReservationContentDestination(activityInfo.id))
+            navigator.navigate(
+                ReservationContentDestination(
+                    ReservationContentDestination.NavArgs(
+                        activityId = activityInfo.activityId,
+                        reservationId = activityInfo.reservationId
+                    )
+                )
+            )
         }) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)

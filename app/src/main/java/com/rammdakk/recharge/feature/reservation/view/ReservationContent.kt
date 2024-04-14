@@ -17,6 +17,7 @@ import com.rammdakk.recharge.base.view.component.error.Error
 @Composable
 fun ReservationContent(
     navigator: DestinationsNavigator,
+    activityId: Int,
     reservationId: Int,
     viewModel: ReservationViewModel = hiltViewModel()
 ) {
@@ -34,7 +35,7 @@ fun ReservationContent(
     ) { state ->
         when (state) {
             is ReservationScreenState.Idle -> {
-                viewModel.loadData(reservationId = reservationId)
+                viewModel.loadData(reservationId = reservationId, activityId = activityId)
             }
 
             is ReservationScreenState.Loaded -> {

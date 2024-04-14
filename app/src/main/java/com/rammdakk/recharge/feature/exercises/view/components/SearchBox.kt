@@ -18,13 +18,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.getThemedColor
 
 @Composable
-fun SearchBox(items: List<String> = emptyList(), onClick: (String) -> Unit) {
+fun SearchBox(onClick: (String) -> Unit) {
     var searchQuery by remember { mutableStateOf("") }
     val keyboard = LocalSoftwareKeyboardController.current
     OutlinedTextField(
@@ -51,9 +53,8 @@ fun SearchBox(items: List<String> = emptyList(), onClick: (String) -> Unit) {
             searchQuery = it
             onClick(it.lowercase())
         },
-        placeholder = { Text(text = "Search here") },
+        placeholder = { Text(text = stringResource(id = R.string.exercise_search)) },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-//        keyboardActions = KeyboardActions.Default.onSearch,
         keyboardActions = KeyboardActions(onSearch = {
             onClick(searchQuery.lowercase())
             keyboard?.hide()

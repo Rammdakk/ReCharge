@@ -26,4 +26,6 @@
     <string name="profile_gender_male">Мужской</string>
     <string name="profile_gender_female">Женский</string>
     <string name="reservation_header">Ваше занятие</string>
+    <string name="calendar_header">Календарь</string>
+    <string name="calendar_current_month">В этом месяце:</string>
 </resources>

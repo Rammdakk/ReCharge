@@ -1,18 +1,17 @@
 package com.rammdakk.recharge.feature.calendar.data.network
 
-import com.rammdakk.recharge.feature.calendar.data.model.ReservationDataModel
+import com.rammdakk.recharge.feature.calendar.data.model.ReservationResponseModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
-import java.util.Date
 
 interface CalendarReservationApi {
 
-    @GET()
-    suspend fun getProfileInfo(
+    @GET("api/Reservations/GetReservations")
+    suspend fun getReservationList(
         @Header("accessToken") accessToken: String,
-        @Query("start_date") startDate: Date,
-        @Query("end_date") endDate: Date,
-    ): Response<List<ReservationDataModel>>
+        @Query("startDate") startDate: String,
+        @Query("endDate") endDate: String,
+    ): Response<ReservationResponseModel>
 }

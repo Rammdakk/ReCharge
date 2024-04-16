@@ -75,15 +75,14 @@ class CatalogViewModel @Inject constructor(
 
     private suspend fun loadProfile() = withContext(dispatchers.IO) {
         val result =
-            catalogRepository.getProfileInfo().getOrElse { handleError(it) }?.convertToProfileInfo()
+            catalogRepository.getProfileInfo().getOrNull()?.convertToProfileInfo()
         withContext(dispatchers.Main) {
             _profileInfo.value = result
         }
     }
 
     private suspend fun loadNextActivity() = withContext(dispatchers.IO) {
-        val result = catalogRepository.getNextActivityInfo().getOrElse { handleError(it) }
-            ?.convertToActivityInfo()
+        val result = catalogRepository.getNextActivityInfo().getOrNull()?.convertToActivityInfo()
 
         withContext(dispatchers.Main) {
             _nextActivity.value = result

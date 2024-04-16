@@ -3,6 +3,7 @@ package com.rammdakk.recharge.feature.calendar.data
 import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.network.makeRequest
+import com.rammdakk.recharge.base.extensions.format
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.calendar.data.model.ReservationDataModel
 import com.rammdakk.recharge.feature.calendar.data.network.CalendarReservationApi
@@ -24,7 +25,13 @@ class CalendarRepositoryImpl(
         endDate: Date
     ): Result<List<ReservationDataModel>> = withContext(dispatchers.IO) {
         getAccessToken()?.let {
-            makeRequest { api.getProfileInfo(it, startDate, endDate) }
+            makeRequest {
+                api.getReservationList(
+                    it,
+                    startDate.format(),
+                    endDate.format()
+                )
+            }.map { it.reservations }
         } ?: Result.failure(NetworkError(InternetError.Unauthorized))
     }
 

@@ -114,29 +114,30 @@ fun ReservationCell(
                         textAlign = TextAlign.Start
                     )
                 }
-                Icon(
-                    painterResource(id = R.drawable.location),
-                    "",
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable {
-                            val loc = activityInfo.location
-                            val uri = Uri.parse("geo:${loc.latitude},${loc.longitude}")
-                            val intent = Intent(Intent.ACTION_VIEW, uri)
-                            launcher.launch(intent)
-                        }
-                        .background(Color.Transparent)
-                        .height(36.dp)
-                        .aspectRatio(1f, true),
-                    ReChargeTokens.TextPrimaryInverse.getThemedColor()
-                )
+                activityInfo.location?.let { loc ->
+                    Icon(
+                        painterResource(id = R.drawable.location),
+                        "",
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickable {
+                                val uri = Uri.parse("geo:${loc.latitude},${loc.longitude}")
+                                val intent = Intent(Intent.ACTION_VIEW, uri)
+                                launcher.launch(intent)
+                            }
+                            .background(Color.Transparent)
+                            .height(36.dp)
+                            .aspectRatio(1f, true),
+                        ReChargeTokens.TextPrimaryInverse.getThemedColor()
+                    )
+                }
             }
         }
     }
 }
 
 @SuppressLint("SimpleDateFormat")
-fun Long.formatDate(): String =
+private fun Long.formatDate(): String =
     if (DateUtils.isToday(this)) {
         SimpleDateFormat("'Сегодня', HH:mm")
     } else {

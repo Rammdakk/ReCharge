@@ -5,15 +5,22 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Date
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+data class ReservationResponseModel(
+    @JsonProperty("selectedDateTimeStart") val startDate: Date,
+    @JsonProperty("selectedDateTimeEnd") val endDate: Date,
+    @JsonProperty("reservations") val reservations: List<ReservationDataModel>,
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class ReservationDataModel(
     @JsonProperty("activityId") val activityId: Int,
     @JsonProperty("reservationId") val reservationId: Int,
-    @JsonProperty("name") val name: String,
+    @JsonProperty("activityName") val name: String,
     @JsonProperty("imageUrl") val imagePath: String,
     @JsonProperty("dateTime") val time: Date,
     @JsonProperty("locationName") val organizationName: String,
-    @JsonProperty("addressString") val address: String,
-    @JsonProperty("coordinates") val coordinates: Coordinates
+    @JsonProperty("address") val address: String,
+    @JsonProperty("coordinates") val coordinates: Coordinates?
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

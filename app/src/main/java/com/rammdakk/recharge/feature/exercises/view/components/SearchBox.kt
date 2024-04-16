@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.rammdakk.recharge.R
+import com.rammdakk.recharge.base.theme.PlainText
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.getThemedColor
 
@@ -29,6 +29,7 @@ import com.rammdakk.recharge.base.theme.getThemedColor
 fun SearchBox(onClick: (String) -> Unit) {
     var searchQuery by remember { mutableStateOf("") }
     val keyboard = LocalSoftwareKeyboardController.current
+
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,7 +54,7 @@ fun SearchBox(onClick: (String) -> Unit) {
             searchQuery = it
             onClick(it.lowercase())
         },
-        placeholder = { Text(text = stringResource(id = R.string.exercise_search)) },
+        placeholder = { PlainText(text = stringResource(id = R.string.exercise_search)) },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = {
             onClick(searchQuery.lowercase())

@@ -2,13 +2,19 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="Calendar">
+        <State />
+      </entry>
+      <entry key="CalendarPreview2">
+        <State />
+      </entry>
+      <entry key="ErrorPreview">
+        <State />
+      </entry>
+      <entry key="ProfileScreenPreview">
+        <State />
+      </entry>
       <entry key="ReCharge">
-        <State />
-      </entry>
-      <entry key="TabCellPreview">
-        <State />
-      </entry>
-      <entry key="datePickerPreview">
         <State />
       </entry>
     </value>

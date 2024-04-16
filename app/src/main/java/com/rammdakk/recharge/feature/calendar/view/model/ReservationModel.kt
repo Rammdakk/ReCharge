@@ -13,7 +13,7 @@ data class ReservationModel(
     val organizationName: String,
     val time: Date?,
     val address: String,
-    val location: LocationInfo,
+    val location: LocationInfo?,
 )
 
 data class LocationInfo(
@@ -31,7 +31,7 @@ fun ReservationDataModel.convertToReservationModel() =
         organizationName = this.organizationName,
         time = this.time,
         address = this.address,
-        location = this.coordinates.convertToLocationInfo()
+        location = this.coordinates?.convertToLocationInfo()
     )
 
 fun Coordinates.convertToLocationInfo(): LocationInfo {

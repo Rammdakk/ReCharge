@@ -2,6 +2,7 @@ package com.rammdakk.recharge.feature.reservation.data
 
 import com.rammdakk.recharge.feature.reservation.data.model.ReservationMetaDataModel
 import com.rammdakk.recharge.feature.reservation.domain.ReservationRepository
+import java.util.Date
 
 class ReservationMockRepositoryImpl : ReservationRepository {
 //    override suspend fun getActivityInfo(id: Int): Result<ActivityExtendedDataModel> {
@@ -26,7 +27,7 @@ class ReservationMockRepositoryImpl : ReservationRepository {
             ReservationMetaDataModel(
                 reservationId = 1367,
                 activityId = 2,
-                time = System.currentTimeMillis(),
+                date = Date(),
                 accessCode = "gszdhkaetquyef1267euqiwehcbadk"
             )
         )

@@ -7,11 +7,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.getThemedColor
+import com.rammdakk.recharge.base.theme.setSystemBarsColors
 import com.rammdakk.recharge.base.view.component.error.Error
 
 @Destination
@@ -26,10 +26,10 @@ fun ActivityContent(
     LaunchedEffect(Unit) {
         viewModel.loadData(activityId)
     }
-
-    val systemUiController = rememberSystemUiController()
-    systemUiController.setNavigationBarColor(ReChargeTokens.BackgroundColored.getThemedColor())
-    systemUiController.setStatusBarColor(ReChargeTokens.BackgroundColored.getThemedColor())
+    setSystemBarsColors(
+        statusBarColor = ReChargeTokens.BackgroundColored.getThemedColor(),
+        navBarColor = ReChargeTokens.BackgroundColored.getThemedColor()
+    )
 
     Crossfade(
         modifier = Modifier

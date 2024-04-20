@@ -1,12 +1,16 @@
 package com.rammdakk.recharge.feature.reservation.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -14,25 +18,30 @@ import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.theme.HeaderTextPrimary
 import com.rammdakk.recharge.base.theme.PlainText
+import com.rammdakk.recharge.base.theme.PlainTextLarge
 import com.rammdakk.recharge.base.theme.ReChargeTokens
+import com.rammdakk.recharge.base.theme.TextPrimaryLarge
 import com.rammdakk.recharge.base.theme.TextPrimaryMedium
 import com.rammdakk.recharge.base.theme.TextPrimarySmall
 import com.rammdakk.recharge.base.theme.getThemedColor
@@ -40,6 +49,7 @@ import com.rammdakk.recharge.feature.activity.view.components.ActivityImage
 import com.rammdakk.recharge.feature.activity.view.components.WarningText
 import com.rammdakk.recharge.feature.activity.view.model.ActivityExtendedInfo
 import com.rammdakk.recharge.feature.reservation.view.model.ReservationInfo
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,33 +59,85 @@ fun ReservationInfoScreen(
     onBackPressed: () -> Unit
 ) {
     val state = rememberBottomSheetScaffoldState(
-        rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        rememberModalBottomSheetState(confirmValueChange = { sheetValue -> sheetValue != SheetValue.Hidden })
     )
-
-    var selectedId: Int? by remember {
-        mutableStateOf(null)
+    LaunchedEffect(Unit) {
+        state.bottomSheetState.partialExpand()
     }
 
-    LaunchedEffect(state.bottomSheetState.isVisible) {
-        if (!state.bottomSheetState.isVisible) {
-            selectedId = null
-        }
-    }
-
-    LaunchedEffect(selectedId) {
-        if (selectedId == null) {
-            state.bottomSheetState.hide()
-        } else {
-            state.bottomSheetState.expand()
-        }
-    }
-
-    val height = LocalConfiguration.current.screenHeightDp
-
+    val scope = rememberCoroutineScope()
 
     BottomSheetScaffold(
         scaffoldState = state,
+        sheetPeekHeight = with(LocalDensity.current) {
+            26.sp.toDp()
+        } + 40.dp,
         sheetContent = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable(enabled = state.bottomSheetState.currentValue == SheetValue.PartiallyExpanded) {
+                        scope.launch {
+                            state.bottomSheetState.expand()
+                        }
+                    },
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                HeaderTextPrimary(
+                    text = stringResource(id = R.string.reservation_code_header),
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp, vertical = 20.dp),
+                    textAlign = TextAlign.Center
+                )
+                PlainTextLarge(
+                    text = stringResource(id = R.string.reservation_code_text),
+                    modifier = Modifier.padding(top = 80.dp),
+                    textAlign = TextAlign.Center,
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(40.dp)
+                        .background(
+                            ReChargeTokens.Background.getThemedColor(),
+                            shape = RoundedCornerShape(24.dp)
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    TextPrimaryLarge(
+                        text = activityInfo.organizationName + "test",
+                        modifier = Modifier.padding(top = 20.dp)
+                    )
+                    reservationInfo.time?.let {
+                        TextPrimarySmall(
+                            text = it,
+                            modifier = Modifier.padding(top = 12.dp)
+                        )
+                    }
+                    TextPrimarySmall(
+                        text = stringResource(
+                            id = R.string.reservation_code_codetext,
+                            reservationInfo.accessCode
+                        ),
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                    AsyncImage(
+                        modifier = Modifier
+                            .fillMaxWidth(0.5f)
+                            .padding(top = 16.dp, bottom = 20.dp)
+                            .aspectRatio(1f),
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data("$QrUrl${reservationInfo.accessCode}")
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = reservationInfo.accessCode,
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
+
         },
         topBar = {
             Row(
@@ -163,3 +225,4 @@ fun ReservationInfoScreen(
 }
 
 private val roundedCorner = 20.dp
+private const val QrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="

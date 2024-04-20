@@ -11,6 +11,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.getThemedColor
+import com.rammdakk.recharge.base.theme.setSystemBarsColors
 import com.rammdakk.recharge.base.view.component.error.Error
 
 @Destination
@@ -20,6 +21,10 @@ fun CalendarContent(
     viewModel: CalendarScreenViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.screenState
+    setSystemBarsColors(
+        statusBarColor = ReChargeTokens.Background.getThemedColor(),
+        navBarColor = ReChargeTokens.Background.getThemedColor()
+    )
 
     Crossfade(
         targetState = uiState, label = "CalendarContent",

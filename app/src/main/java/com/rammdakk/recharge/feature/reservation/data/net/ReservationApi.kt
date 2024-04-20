@@ -8,9 +8,9 @@ import retrofit2.http.Query
 
 interface ReservationApi {
 
-    @GET()
-    fun getReservationInfo(
+    @GET("/api/Reservations/GetReservation")
+    suspend fun getReservationInfo(
         @Header("accessToken") accessToken: String,
-        @Query("reservation_id") reservationId: Int
+        @Query("reservationId") reservationId: Int
     ): Response<ReservationMetaDataModel>
 }

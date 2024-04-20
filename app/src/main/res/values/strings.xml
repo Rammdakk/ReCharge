@@ -27,6 +27,9 @@
     <string name="profile_gender_male">Мужской</string>
     <string name="profile_gender_female">Женский</string>
     <string name="reservation_header">Ваше занятие</string>
+    <string name="reservation_code_header">Код доступа</string>
+    <string name="reservation_code_text">Для подтверждения записи\nпредъявите данный код\nадминистратору</string>
+    <string name="reservation_code_codetext">Код: %1$s</string>
     <string name="calendar_header">Календарь</string>
     <string name="calendar_current_month">В этом месяце:</string>
 </resources>

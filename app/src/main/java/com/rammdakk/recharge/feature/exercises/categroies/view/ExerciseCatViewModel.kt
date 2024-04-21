@@ -1,6 +1,5 @@
 package com.rammdakk.recharge.feature.exercises.categroies.view
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
@@ -41,12 +40,16 @@ class ExerciseCatViewModel @Inject constructor(
     val errorState: State<ErrorState> = _errorState
 
     fun loadData() = viewModelScope.launch {
-        loadTabs()
-        _screenState.value = ExercisesCatScreenState.Loaded(
-            selectedId = _selectedId,
-            tabs = _tabs,
-            items = _sportTypes,
-        )
+        if (_screenState.value == ExercisesCatScreenState.Idle) {
+            loadTabs()
+            _screenState.value = ExercisesCatScreenState.Loaded(
+                selectedId = _selectedId,
+                tabs = _tabs,
+                items = _sportTypes,
+            )
+        } else {
+            loadActivities(_selectedId.intValue)
+        }
     }
 
     fun onTabSelected(id: Int) = viewModelScope.launch {
@@ -58,7 +61,6 @@ class ExerciseCatViewModel @Inject constructor(
             exerciseRepository.getTabsCategories().getOrElse { handleError(it) }
                 ?.map { it.covertToScreenModel() }
                 ?: return@withContext
-        Log.d("Ramil", tabs.toString())
         val sports = tabs.first().let { exercisesTab ->
             exerciseRepository.getSports(exercisesTab.id).getOrElse { handleError(it) }
                 ?.map { it.covertToScreenModel() }
@@ -72,8 +74,10 @@ class ExerciseCatViewModel @Inject constructor(
 
     private suspend fun loadActivities(id: Int) = withContext(dispatchers.IO) {
         withContext(dispatchers.Main) {
-            _selectedId.intValue = id
-            _sportTypes.value = emptyList()
+            if (_selectedId.intValue != id) {
+                _sportTypes.value = emptyList()
+                _selectedId.intValue = id
+            }
         }
         exerciseRepository.getSports(id).getOrElse { handleError(it) }
             ?.map { it.covertToScreenModel() }?.let {

@@ -1,6 +1,7 @@
 package com.rammdakk.recharge.feature.profile.view
 
 import android.content.Intent
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
@@ -24,7 +25,7 @@ import com.rammdakk.recharge.feature.auth.view.AuthActivity
 @Composable
 fun ProfileContent(
     navigator: DestinationsNavigator,
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val uiState by viewModel.profileState
 

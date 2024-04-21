@@ -1,11 +1,14 @@
 package com.rammdakk.recharge.feature.calendar.view
 
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -18,13 +21,17 @@ import com.rammdakk.recharge.base.view.component.error.Error
 @Composable
 fun CalendarContent(
     navigator: DestinationsNavigator,
-    viewModel: CalendarScreenViewModel = hiltViewModel()
+    viewModel: CalendarScreenViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val uiState by viewModel.screenState
     setSystemBarsColors(
         statusBarColor = ReChargeTokens.Background.getThemedColor(),
         navBarColor = ReChargeTokens.Background.getThemedColor()
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.loadData()
+    }
 
     Crossfade(
         targetState = uiState, label = "CalendarContent",
@@ -34,7 +41,7 @@ fun CalendarContent(
     ) { state ->
         when (state) {
             is CalendarScreenState.Idle -> {
-                viewModel.loadData()
+//                viewModel.loadData()
             }
 
             is CalendarScreenState.Loaded -> {

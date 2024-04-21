@@ -1,7 +1,6 @@
 package com.rammdakk.recharge.base
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -110,7 +109,6 @@ fun NavBar(navController: NavHostController) {
     }
 
     LaunchedEffect(navController.currentDestination) {
-        Log.d("Ramil", navController.currentDestination.toString())
         items.indexOfFirst { it.destination.route == navController.currentDestination?.route }.let {
             if (it > -1) {
                 currentIndex = it
@@ -156,7 +154,9 @@ fun NavBar(navController: NavHostController) {
                         .clip(RoundedCornerShape(18.dp))
                         .background(bgColor.value)
                         .clickable {
-                            navController.navigate(item.destination)
+                            if (navController.currentDestination?.route != item.destination.route) {
+                                navController.navigate(item.destination)
+                            }
                         },
                 ) {
                     Icon(

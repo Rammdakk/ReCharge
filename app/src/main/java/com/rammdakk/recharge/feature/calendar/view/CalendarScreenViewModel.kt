@@ -51,14 +51,16 @@ class CalendarScreenViewModel @Inject constructor(
 
     private fun onMonthChanged(newMonth: YearMonth) = viewModelScope.launch {
         updateJob?.cancel()
-        _calendarState.value = newMonth
+        if (newMonth != _calendarState.value) {
+            _reservationList.value = emptyList()
+            _calendarState.value = newMonth
+        }
         updateJob = async(dispatchers.Main) {
             updateReservations(newMonth)
         }
     }
 
     private suspend fun updateReservations(newMonth: YearMonth) {
-//        _reservationList.value = emptyList()
         val date = withContext(dispatchers.IO) {
             calendarRepository.loadReservations(
                 newMonth.atDay(1).toDate(),

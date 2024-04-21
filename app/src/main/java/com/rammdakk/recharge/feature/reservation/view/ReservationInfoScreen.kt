@@ -107,7 +107,7 @@ fun ReservationInfoScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     TextPrimaryLarge(
-                        text = activityInfo.organizationName + "test",
+                        text = activityInfo.organizationName,
                         modifier = Modifier.padding(top = 20.dp)
                     )
                     reservationInfo.time?.let {

@@ -34,21 +34,25 @@ class ActivityListViewModel @Inject constructor(
     val screenState: State<ActivityListScreenState> = _screenState
     val errorState: State<ErrorState> = _errorState
 
-    fun loadData(activityCatId: Int, date: Date) = viewModelScope.launch {
-        date.apply {
-            hours = 0
-            minutes = 0
-            seconds = 0
-        }
-        _selectedDate.value = date
 
-        activityListRepository.getActivities(activityCatId, date).getOrElse { handleError(it) }
-            ?.let {
-                _screenState.value = ActivityListScreenState.Loaded(
-                    title = it.activityName,
-                    date = _selectedDate,
-                    activities = it.activityList.map { it.convertToActivityInfo() },
-                )
+    fun loadActivitiesData(activityCatId: Int, date: Date = _selectedDate.value) =
+        viewModelScope.launch {
+            date.apply {
+                hours = 0
+                minutes = 0
+                seconds = 0
+            }
+            _selectedDate.value = date
+
+            activityListRepository.getActivities(activityCatId, _selectedDate.value)
+                .getOrElse { handleError(it) }
+                ?.let {
+                    _screenState.value = ActivityListScreenState.Loaded(
+                        title = it.activityName,
+                        date = _selectedDate,
+                        activities = it.activityList.map { it.convertToActivityInfo() }
+                            .filterNotNull(),
+                    )
             }
     }
 
@@ -60,6 +64,11 @@ class ActivityListViewModel @Inject constructor(
             _errorState.value = ErrorState.Idle
         }
         null
+    }
+
+    fun resetDate() {
+        _screenState.value = ActivityListScreenState.Idle
+        _selectedDate.value = Date()
     }
 
 }

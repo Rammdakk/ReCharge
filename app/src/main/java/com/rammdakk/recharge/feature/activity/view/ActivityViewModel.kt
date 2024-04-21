@@ -1,10 +1,13 @@
 package com.rammdakk.recharge.feature.activity.view
 
+import android.content.res.Resources
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.view.component.error.ErrorState
 import com.rammdakk.recharge.feature.activity.domain.ActivityRepository
 import com.rammdakk.recharge.feature.activity.view.model.TimePad
@@ -26,6 +29,7 @@ import javax.inject.Inject
 class ActivityViewModel @Inject constructor(
     private val activityRepository: ActivityRepository,
     private val dispatchers: Dispatchers,
+    private val resources: Resources
 ) : ViewModel() {
 
     private var errorJob: Job? = null
@@ -41,8 +45,8 @@ class ActivityViewModel @Inject constructor(
     val screenState: State<ActivityScreenState> = _screenState
     val errorState: State<ErrorState> = _errorState
 
-    fun loadData(activityId: Int) = viewModelScope.launch(dispatchers.IO) {
-        loadScheduleForDate(activityId, Date())
+    fun loadData(activityId: Int, date: Date = Date()) = viewModelScope.launch(dispatchers.IO) {
+        loadScheduleForDate(activityId, date)
         val activityInfo =
             activityRepository.getActivityInfo(activityId).getOrElse { handleError(it) }
                 ?.convertToActivityInfo()
@@ -57,6 +61,7 @@ class ActivityViewModel @Inject constructor(
     }
 
     fun loadScheduleForDate(activityId: Int, date: Date) = viewModelScope.launch {
+        Log.d("Ramil loadScheduleForDate", date.toString())
         job?.cancel()
         job = async(dispatchers.IO) {
             date.apply {
@@ -87,7 +92,17 @@ class ActivityViewModel @Inject constructor(
 
     fun reserve(timeId: Int, userBookingInfo: UserBookingInfo) = viewModelScope.launch {
         activityRepository.reserveActivity(timeId, userBookingInfo.covertToDataModel())
-            .getOrElse { handleError(it) }
+            .getOrElse {
+                handleError(it)
+                null
+            }?.let {
+                _errorState.value =
+                    ErrorState.Success(resources.getString(R.string.reservation_success))
+                errorJob = async {
+                    delay(2000)
+                    _errorState.value = ErrorState.Idle
+                }
+            }
     }
 
     private suspend fun handleError(throwable: Throwable) = withContext(dispatchers.Main) {

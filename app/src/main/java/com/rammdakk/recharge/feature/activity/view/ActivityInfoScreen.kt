@@ -84,6 +84,7 @@ import java.util.Locale
 @Composable
 fun ActivityInfoScreen(
     activityInfo: ActivityExtendedInfo,
+    initialDate: Date,
     onDateChanged: (Date) -> Unit,
     timePadList: State<List<TimePad>>,
     maxUserNumber: State<Int?>,
@@ -130,9 +131,11 @@ fun ActivityInfoScreen(
                 selectedId,
                 timePadList.value,
                 maxUserNumber,
-                activityInfo,
-                onReserve
-            )
+                activityInfo
+            ) { id, usiderInfo ->
+                onReserve.invoke(id, usiderInfo)
+                selectedId = null
+            }
         },
         topBar = {
             Row(
@@ -193,7 +196,7 @@ fun ActivityInfoScreen(
                     .fillMaxWidth()
                     .padding(bottom = 10.dp)
             )
-            DateField(initialDate = Date(), onDateChanged = onDateChanged)
+            DateField(initialDate = initialDate, onDateChanged = onDateChanged)
             if (timePadList.value.isNotEmpty()) {
 
                 LazyRow(
@@ -344,7 +347,6 @@ private fun SheetContent(
                     onNumberChanged = { guestNum = it })
 
             }
-//        Spacer(modifier = Modifier.weight(1f))
             TextPrimaryLargeThemed(
                 text = stringResource(id = R.string.confirm),
                 modifier = Modifier
@@ -418,6 +420,7 @@ fun ActivityInfoScreenPreview() {
     ).map { it.covertToTimePad { } }
     ActivityInfoScreen(
         activityInfo = activity,
+        initialDate = Date(),
         {},
         timePadList = mutableStateOf(list),
         maxUserNumber = mutableStateOf(0),

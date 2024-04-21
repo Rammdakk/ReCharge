@@ -21,6 +21,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
@@ -28,6 +30,7 @@ import coil.request.ImageRequest
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.theme.PlainTextBold
+import com.rammdakk.recharge.base.theme.PlainTextInverse
 import com.rammdakk.recharge.base.theme.PlainTextSmallInverse
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryMediumInverse
@@ -48,7 +51,7 @@ fun ActivityCell(
             .clip(RoundedCornerShape(roundedCorner))
             .aspectRatio(2.2f)
             .clickable {
-                navigator.navigate(ActivityContentDestination(activityInfo.id))
+                navigator.navigate(ActivityContentDestination(activityInfo.id, activityInfo.date))
             }
     ) {
         AsyncImage(
@@ -70,22 +73,48 @@ fun ActivityCell(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(Modifier.wrapContentHeight()) {
-                TextPrimaryMediumInverse(text = activityInfo.name)
-                PlainTextSmallInverse(text = activityInfo.organizationName)
-                PlainTextSmallInverse(text = activityInfo.address)
+            Column(
+                Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth(0.75f)) {
+                TextPrimaryMediumInverse(
+                    text = activityInfo.name,
+                    maxLines = 2,
+                    textAlign = TextAlign.Start,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                PlainTextSmallInverse(
+                    text = activityInfo.organizationName,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                PlainTextSmallInverse(
+                    text = activityInfo.address,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
-            PlainTextBold(
-                text = stringResource(
-                    id = R.string.price,
-                    activityInfo.price.roundToInt()
-                ),
-                modifier = Modifier
-                    .clip(RoundedCornerShape(50f))
-                    .background(ReChargeTokens.TextPrimaryInverse.getThemedColor())
-                    .padding(horizontal = 6.dp, vertical = 2.dp)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                activityInfo.time?.let {
+                    PlainTextInverse(
+                        text = it,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                }
+                PlainTextBold(
+                    text = stringResource(
+                        id = R.string.price,
+                        activityInfo.price.roundToInt()
+                    ),
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50f))
+                        .background(ReChargeTokens.TextPrimaryInverse.getThemedColor())
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
 
-            )
+                )
+            }
         }
     }
 }

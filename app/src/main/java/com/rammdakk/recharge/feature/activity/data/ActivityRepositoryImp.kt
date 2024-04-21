@@ -35,6 +35,12 @@ class ActivityRepositoryImp(
         date: Date
     ): Result<List<TimePadDataModel>> =
         withContext(dispatchers.IO) {
+//            val utc = TimeZone.getTimeZone("UTC");
+//            val dateString =
+//                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).apply {
+//                    timeZone = TimeZone.getTimeZone("UTC");
+//                }.format(date)
+//            Log.d("Ramil", dateString.toString())
             val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
             makeRequest { api.getActivityTabs(activityId, dateString) }.map { it.slots }
         }

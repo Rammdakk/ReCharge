@@ -43,9 +43,9 @@ fun DateField(
             onClick = {
                 Calendar.getInstance().apply {
                     time = date
-                    if (date > Date()) {
+//                    if (date > Date()) {
                         add(Calendar.DATE, -1)
-                    }
+//                    }
                 }.time.let(onDateChanged)
             }
         ) {

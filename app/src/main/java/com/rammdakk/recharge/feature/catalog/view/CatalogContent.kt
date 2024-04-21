@@ -56,6 +56,7 @@ fun CatalogContent(
                     categories = state.categoriesList,
                     activities = state.activitiesList,
                     navigator = navigator,
+                    onSearch = viewModel::filterActivities
                 )
             }
         }

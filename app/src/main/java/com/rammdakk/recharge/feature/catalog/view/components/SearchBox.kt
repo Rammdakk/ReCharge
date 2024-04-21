@@ -30,7 +30,7 @@ import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.getThemedColor
 
 @Composable
-fun SearchBox(modifier: Modifier, onClick: (String) -> Unit, onClose: () -> Unit) {
+fun SearchBox(modifier: Modifier, onSearch: (String) -> Unit, onClose: () -> Unit) {
     var searchQuery by remember { mutableStateOf("") }
     val keyboard = LocalSoftwareKeyboardController.current
     OutlinedTextField(
@@ -57,9 +57,11 @@ fun SearchBox(modifier: Modifier, onClick: (String) -> Unit, onClose: () -> Unit
                 onClick = {
                     if (searchQuery.isNotEmpty()) {
                         searchQuery = ""
+                        onSearch.invoke("")
                     } else {
                         onClose.invoke()
                     }
+
                 }
             ) { Icon(Icons.Filled.Close, "Close") }
         },
@@ -68,12 +70,12 @@ fun SearchBox(modifier: Modifier, onClick: (String) -> Unit, onClose: () -> Unit
         value = searchQuery,
         onValueChange = {
             searchQuery = it
-            onClick(it.lowercase())
+            onSearch(it.lowercase())
         },
         placeholder = { PlainText(text = stringResource(id = R.string.exercise_search)) },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = {
-            onClick(searchQuery.lowercase())
+            onSearch(searchQuery.lowercase())
             keyboard?.hide()
         }),
     )

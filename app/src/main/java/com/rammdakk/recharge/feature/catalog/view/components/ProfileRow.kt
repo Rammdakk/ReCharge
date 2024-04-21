@@ -52,7 +52,8 @@ import java.util.Date
 @Composable
 fun ProfileRow(
     profileInfo: State<ProfileInfo?>,
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    onSearch: (String) -> Unit,
 ) {
     val profile = profileInfo.value
     var isSearchBarVisible by remember {
@@ -149,7 +150,7 @@ fun ProfileRow(
         ) {
             val focusRequester = remember { FocusRequester() }
             val modifier = Modifier.focusRequester(focusRequester)
-            SearchBox(modifier, onClick = {}) {
+            SearchBox(modifier, onSearch = onSearch) {
                 isSearchBarVisible = false
             }
             LaunchedEffect(Unit) {

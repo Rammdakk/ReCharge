@@ -36,13 +36,14 @@ class AuthActivity : ComponentActivity() {
             }
         }
         setUpObservers()
-//        Log.d("Ramil", authViewModel.authState.value.toString())
     }
 
     private fun setUpObservers() {
         authViewModel.isLoggedIn.observe(this) {
             if (it) {
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
                 startActivity(intent)
             }
         }

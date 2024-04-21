@@ -5,19 +5,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import com.ramcosta.composedestinations.annotation.Destination
+import com.rammdakk.recharge.base.theme.ReChargeTokens
+import com.rammdakk.recharge.base.theme.getThemedColor
+import com.rammdakk.recharge.base.theme.setSystemBarsColors
 
 @Destination
 @Composable
 fun AuthContent(
     vm: AuthViewModel
 ) {
-
     val uiState by vm.authState
     Crossfade(targetState = uiState, label = "AuthContent") { state ->
         if (state is AuthScreenState.Idle) {
             vm.init()
         }
         if (state is AuthScreenState.RequestPhone) {
+            setSystemBarsColors(
+                statusBarColor = ReChargeTokens.BackgroundColored.getThemedColor(),
+                navBarColor = ReChargeTokens.BackgroundColored.getThemedColor()
+            )
             AuthPhoneScreen(
                 greetingText = stringResource(id = state.greetingText),
                 hintText = state.hintText?.let { stringResource(id = it) },
@@ -26,6 +32,10 @@ fun AuthContent(
             )
         }
         if (state is AuthScreenState.RequestCode) {
+            setSystemBarsColors(
+                statusBarColor = ReChargeTokens.BackgroundColored.getThemedColor(),
+                navBarColor = ReChargeTokens.BackgroundColored.getThemedColor()
+            )
             AuthCodeValidationScreen(
                 greetingText = state.greetingText,
                 codeSize = state.codeSize,

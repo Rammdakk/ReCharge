@@ -20,10 +20,15 @@
     <string name="exercise_search">Найти занятие</string>
     <string name="profile_header">Профиль</string>
     <string name="profile_calendar_error_dialog_title">Некорректный возвраст</string>
-    <string name="profile_calendar_error_dialog_text">Ваш возвраст меньше минимального</string>
+    <string name="profile_calendar_error_dialog_text">Ваш возвраст меньше минимального.\nМинимальный возраст %1$d лет.</string>
     <string name="profile_calendar_error_dialog_confirm">ОК</string>
     <string name="profile_calendar_confirm">ОК</string>
     <string name="profile_calendar_cancel">Отменить</string>
+    <string name="profile_name">Имя</string>
+    <string name="profile_surname">Фамилия</string>
+    <string name="profile_email">Эл. почта</string>
+    <string name="profile_birthday">Дата рождения</string>
+    <string name="profile_city">Город</string>
     <string name="profile_gender_male">Мужской</string>
     <string name="profile_gender_female">Женский</string>
     <string name="profile_gender_unkown">Не указан</string>

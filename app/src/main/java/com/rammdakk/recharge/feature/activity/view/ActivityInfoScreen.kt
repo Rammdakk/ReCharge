@@ -108,7 +108,7 @@ fun ActivityInfoScreen(
     }
 
     BackHandler {
-        if (state.bottomSheetState.isVisible) {
+        if (selectedId != null) {
             coroutineScope.launch { state.bottomSheetState.hide() }
         } else {
             onBackPressed.invoke()

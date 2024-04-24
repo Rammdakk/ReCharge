@@ -77,7 +77,8 @@ fun ProfileScreen(
                     textAlign = TextAlign.Center
                 )
             }
-        }
+        },
+        containerColor = ReChargeTokens.Background.getThemedColor()
     ) { padding ->
         Column(
             modifier = Modifier
@@ -122,6 +123,8 @@ fun ProfileScreen(
                 InputIconTextField(
                     modifier = modifier,
                     value = firstNameState,
+                    iconVector = Icons.Default.Person,
+                    hint = stringResource(id = R.string.profile_name),
                     fontSize = 18.sp,
                 ) { fieldValue ->
                     firstNameState = fieldValue
@@ -129,6 +132,8 @@ fun ProfileScreen(
                 InputIconTextField(
                     modifier = modifier,
                     value = secondNameState,
+                    hint = stringResource(id = R.string.profile_surname),
+                    iconVector = Icons.Default.Person,
                     fontSize = 18.sp,
                 ) { fieldValue ->
                     secondNameState = fieldValue
@@ -143,6 +148,7 @@ fun ProfileScreen(
                     modifier = modifier,
                     value = emailState,
                     fontSize = 18.sp,
+                    hint = stringResource(id = R.string.profile_email),
                     iconVector = Icons.Default.Email
                 ) { fieldValue ->
                     emailState = fieldValue
@@ -158,7 +164,7 @@ fun ProfileScreen(
 
                     if (visibleCalendar) {
                         DatePickerDialog(
-                            0,
+                            18,
                             initialVale = birthDateState,
                             {
                                 birthDateState = it
@@ -174,6 +180,7 @@ fun ProfileScreen(
                             .clickable { visibleCalendar = true },
                         text = birthDateState?.convertMillisToDate() ?: "",
                         fontSize = 18.sp,
+                        hint = stringResource(id = R.string.profile_birthday),
                         iconVector = Icons.Default.DateRange
                     )
                     Box(
@@ -241,7 +248,7 @@ fun ProfileScreen(
                             gender = isMaleState?.let { if (it) Gender.MALE else Gender.FEMALE }
                         ).let(onSaveClick)
                     }
-                    .padding(vertical = 10.dp),
+                    .padding(vertical = 12.dp),
                 textAlign = TextAlign.Center,
             )
             TextPrimaryLarge(
@@ -251,7 +258,7 @@ fun ProfileScreen(
                     .clickable {
                         onLogOutClick.invoke()
                     }
-                    .padding(vertical = 10.dp, horizontal = 10.dp),
+                    .padding(vertical = 12.dp, horizontal = 10.dp),
                 textAlign = TextAlign.Center,
             )
         }

@@ -1,5 +1,7 @@
 package com.rammdakk.recharge.feature.profile.view.components
 
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -15,9 +17,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.rammdakk.recharge.R
+import com.rammdakk.recharge.base.theme.HeaderTextPrimary
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.getThemedColor
 import java.util.Calendar
@@ -25,7 +30,7 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerDialog(
-    minAge: Int = 0,
+    minAge: Int = 18,
     initialVale: Long?,
     onDateSelected: (Long) -> Unit,
     onDismiss: () -> Unit
@@ -55,7 +60,7 @@ fun DatePickerDialog(
             text = {
                 Text(
                     text = stringResource(
-                        id = R.string.profile_calendar_error_dialog_text,
+                        id = R.string.profile_calendar_error_dialog_text, minAge
                     ),
                     textAlign = TextAlign.Center
                 )
@@ -118,6 +123,15 @@ fun DatePickerDialog(
     ) {
         DatePicker(
             state = datePickerState,
+            title = {
+                HeaderTextPrimary(
+                    text = stringResource(id = R.string.profile_birthday),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 20.dp),
+                    textAlign = TextAlign.Center
+                )
+            },
             colors = DatePickerDefaults.colors(
                 selectedDayContainerColor = ReChargeTokens.BackgroundColored.getThemedColor(),
                 selectedYearContainerColor = ReChargeTokens.BackgroundColored.getThemedColor(),

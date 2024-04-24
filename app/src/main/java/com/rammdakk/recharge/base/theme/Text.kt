@@ -16,16 +16,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -508,6 +503,7 @@ fun IconText(
     @DrawableRes iconId: Int? = null,
     iconVector: ImageVector? = null,
     iconColor: Color = ReChargeTokens.TextPrimary.getThemedColor(),
+    maxLines: Int = 1,
     text: String,
     hint: String? = null,
     fontSize: TextUnit,
@@ -517,22 +513,16 @@ fun IconText(
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        var height by remember {
-            mutableIntStateOf(0)
-        }
+        val height = 30.dp
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .onSizeChanged {
-                    if (height == 0) {
-                        height = it.height
-                    }
-                }
                 .background(
                     ReChargeTokens.TextPrimaryInverse.getThemedColor(),
                     shape = RoundedCornerShape(50)
-                )
+                ),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             iconId?.let {
                 Icon(
@@ -542,7 +532,7 @@ fun IconText(
                         .padding(2.dp)
                         .clip(RoundedCornerShape(50))
                         .background(Color(0xFFA5B7E4))
-                        .height(height = (height).pxToDp() - 4.dp)
+                        .height(height = height - 4.dp)
                         .padding(3.dp),
                     iconColor
                 )
@@ -551,10 +541,11 @@ fun IconText(
                     imageVector = it,
                     "",
                     modifier = Modifier
-                        .padding(2.dp)
+                        .padding(4.dp)
                         .clip(RoundedCornerShape(50))
                         .background(Color(0xFFA5B7E4))
-                        .height(height = (height).pxToDp() - 4.dp)
+                        .height(height = height + 4.dp)
+                        .aspectRatio(1f, matchHeightConstraintsFirst = true)
                         .padding(3.dp),
                     iconColor
                 )
@@ -569,7 +560,8 @@ fun IconText(
                         Text(
                             it,
                             fontSize = fontSize,
-                            color = ReChargeTokens.TextTertiary.getThemedColor()
+                            color = ReChargeTokens.TextTertiary.getThemedColor(),
+                            maxLines = maxLines,
                         )
                     }
                 }
@@ -577,8 +569,9 @@ fun IconText(
                     text = text,
                     style = TextStyle.Default.copy(
                         fontSize = fontSize,
-                        fontWeight = FontWeight.Normal
-                    )
+                        fontWeight = FontWeight.Normal,
+                    ),
+                    maxLines = maxLines,
                 )
             }
         }
@@ -588,6 +581,7 @@ fun IconText(
 @Composable
 fun InputIconTextField(
     modifier: Modifier = Modifier,
+    maxLines: Int = 1,
     @DrawableRes iconId: Int? = null,
     iconVector: ImageVector? = null,
     iconColor: Color = ReChargeTokens.TextPrimary.getThemedColor(),
@@ -605,9 +599,7 @@ fun InputIconTextField(
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        var height by remember {
-            mutableIntStateOf(0)
-        }
+        val height = 30.dp
         BasicTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -616,14 +608,10 @@ fun InputIconTextField(
                     ReChargeTokens.TextPrimaryInverse.getThemedColor(),
                     shape = RoundedCornerShape(50)
                 )
-                .onSizeChanged {
-                    if (height == 0) {
-                        height = it.height
-                    }
-                }
                 .align(Alignment.CenterStart),
             value = value,
             readOnly = readOnly,
+            maxLines = maxLines,
             onValueChange = onValueChange,
             textStyle = TextStyle.Default.copy(fontSize = fontSize, fontWeight = FontWeight.Normal),
             keyboardOptions = keyboardOptions,
@@ -647,7 +635,7 @@ fun InputIconTextField(
                             .padding(4.dp)
                             .clip(RoundedCornerShape(50))
                             .background(Color(0xFFA5B7E4))
-                            .height(height = (height).pxToDp() + 4.dp)
+                            .height(height = (height) + 4.dp)
                             .padding(3.dp)
                             .aspectRatio(1f, true),
                         iconColor
@@ -660,7 +648,7 @@ fun InputIconTextField(
                             .padding(4.dp)
                             .clip(RoundedCornerShape(50))
                             .background(Color(0xFFA5B7E4))
-                            .height(height = (height).pxToDp() + 4.dp)
+                            .height(height = (height) + 4.dp)
                             .padding(3.dp)
                             .aspectRatio(1f, true),
                         iconColor
@@ -672,11 +660,14 @@ fun InputIconTextField(
                             Text(
                                 it,
                                 fontSize = fontSize,
-                                color = ReChargeTokens.TextTertiary.getThemedColor()
+                                color = ReChargeTokens.TextTertiary.getThemedColor(),
+                                modifier = Modifier.fillMaxWidth(),
+                                maxLines = maxLines
                             )
                         }
+                    } else {
+                        innerTextField()
                     }
-                    innerTextField()
                 }
             }
         }

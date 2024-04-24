@@ -1,11 +1,14 @@
 package com.rammdakk.recharge.feature.profile.models.data
 
-import android.util.Log
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -31,6 +34,7 @@ data class ProfileInfo(
     @JsonProperty("birthDate")
     @get:JsonProperty("birthDate")
     val birthDay: Date? = null,
+    @JsonDeserialize(using = GenderSerializer::class)
     @JsonProperty("gender")
     @get:JsonProperty("gender")
     val gender: Gender? = null,
@@ -48,7 +52,6 @@ class DateSerializer @JvmOverloads constructor(t: Class<Date?>? = null) :
     override fun serialize(
         value: Date, jgen: JsonGenerator, provider: SerializerProvider
     ) {
-        Log.d("Ramil", "ser")
         jgen.writeString(formatDateToCustomFormat(value))
     }
 
@@ -61,6 +64,19 @@ class DateSerializer @JvmOverloads constructor(t: Class<Date?>? = null) :
             return formatter.format(date)
         }
     }
+}
+
+class GenderSerializer @JvmOverloads constructor(t: Class<Gender?>? = null) :
+    StdDeserializer<Gender?>(t) {
+
+    override fun deserialize(p: JsonParser?, ctxt: DeserializationContext?): Gender? =
+        when (p?.valueAsString?.uppercase()) {
+            Gender.MALE.name -> Gender.MALE
+            Gender.FEMALE.name -> Gender.FEMALE
+            else -> null
+        }
+
+
 }
 
 enum class Gender { MALE, FEMALE }

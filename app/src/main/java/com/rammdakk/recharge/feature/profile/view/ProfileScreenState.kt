@@ -6,6 +6,7 @@ import java.util.Date
 
 sealed interface ProfileScreenState {
     data object Idle : ProfileScreenState
+    data object Error : ProfileScreenState
 
     data class Loaded(
         val firstName: String,
@@ -13,7 +14,7 @@ sealed interface ProfileScreenState {
         val phone: String,
         val email: String,
         val birthDay: Date?,
-        val isMale: Boolean,
+        val isMale: Boolean?,
         val city: String,
         val errorState: State<ErrorState>
     ) : ProfileScreenState

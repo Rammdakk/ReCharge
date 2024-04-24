@@ -56,7 +56,7 @@ fun ProfileScreen(
     phone: String,
     email: String,
     birthDay: Long?,
-    isMale: Boolean,
+    isMale: Boolean?,
     city: String,
     onSaveClick: (ProfileScreenModel) -> Unit,
     onLogOutClick: () -> Unit
@@ -186,7 +186,8 @@ fun ProfileScreen(
                                 .padding(end = 4.dp)
                                 .clip(RoundedCornerShape(50))
                                 .clickable { expanded = true },
-                            text = stringResource(id = if (isMaleState) R.string.profile_gender_male else R.string.profile_gender_female),
+                            text = stringResource(id = isMaleState?.let { if (it) R.string.profile_gender_male else R.string.profile_gender_female }
+                                ?: R.string.profile_gender_unkown),
                             fontSize = 18.sp,
                             iconVector = Icons.Default.Person
                         )
@@ -237,9 +238,8 @@ fun ProfileScreen(
                             email = emailState.text,
                             birthDay = birthDateState,
                             city = cityState.text,
-                            gender = if (isMaleState) Gender.MALE else Gender.FEMALE
+                            gender = isMaleState?.let { if (it) Gender.MALE else Gender.FEMALE }
                         ).let(onSaveClick)
-//                        onSaveClick.invoke(model)
                     }
                     .padding(vertical = 10.dp),
                 textAlign = TextAlign.Center,

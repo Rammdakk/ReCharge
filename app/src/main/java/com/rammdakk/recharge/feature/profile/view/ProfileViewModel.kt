@@ -32,27 +32,30 @@ class ProfileViewModel @Inject constructor(
 
     private val _profileState: MutableState<ProfileScreenState> =
         mutableStateOf(ProfileScreenState.Idle)
-    private val _isLoggedOut: MutableState<Boolean> =
-        mutableStateOf(false)
+    private val _isLoggedOut: MutableState<LogOutState> =
+        mutableStateOf(LogOutState.LOGIN)
     private var _errorState = mutableStateOf<ErrorState>(ErrorState.Idle)
 
+    private var profile: ProfileInfo? = null
+
     val profileState: State<ProfileScreenState> = _profileState
-    val isLoggedOut: State<Boolean> = _isLoggedOut
+    val isLoggedOut: State<LogOutState> = _isLoggedOut
     val errorState: State<ErrorState> = _errorState
 
     fun loadData() = viewModelScope.launch {
-        val profile = profileRepository.getProfile().getOrElse { handleError(it) } ?: return@launch
-        withContext(dispatchers.Main) {
-            _profileState.value = ProfileScreenState.Loaded(
-                firstName = profile.firstName.orEmpty(),
-                secondName = profile.secondName.orEmpty(),
-                phone = profile.phone.orEmpty(),
-                email = profile.email.orEmpty(),
-                birthDay = profile.birthDay,
-                isMale = (profile.gender == Gender.MALE),
-                city = profile.city.orEmpty(),
-                errorState = _errorState
-            )
+        if (profile != null) {
+            updateScreenValues()
+        }
+        val newProfile = profileRepository.getProfile().getOrElse { handleError(it) }
+        if (newProfile == null) {
+            if (_profileState.value is ProfileScreenState.Idle) {
+                _profileState.value = ProfileScreenState.Error
+                return@launch
+            }
+        }
+        if (newProfile != profile) {
+            profile = newProfile
+            updateScreenValues()
         }
     }
 
@@ -60,7 +63,26 @@ class ProfileViewModel @Inject constructor(
         profileScreenModel: ProfileScreenModel
     ) = viewModelScope.launch(dispatchers.IO) {
         profileScreenModel.covertToProfileInfo()
-            .let { profileRepository.updateProfile(it).getOrElse { handleError(it) } }
+            .let {
+                profile = it
+                profileRepository.updateProfile(it).getOrElse { handleError(it) }
+            }
+
+    }
+
+    private suspend fun updateScreenValues() {
+        withContext(dispatchers.Main) {
+            _profileState.value = ProfileScreenState.Loaded(
+                firstName = profile?.firstName.orEmpty(),
+                secondName = profile?.secondName.orEmpty(),
+                phone = profile?.phone.orEmpty(),
+                email = profile?.email.orEmpty(),
+                birthDay = profile?.birthDay,
+                isMale = profile?.gender?.let { it == Gender.MALE },
+                city = profile?.city.orEmpty(),
+                errorState = _errorState
+            )
+        }
     }
 
     private fun ProfileScreenModel.covertToProfileInfo(): ProfileInfo = ProfileInfo(
@@ -71,9 +93,11 @@ class ProfileViewModel @Inject constructor(
         city
     )
 
-    fun logOut() = viewModelScope.launch {
+    fun logOut(onLogOutSuccess: () -> Unit) = viewModelScope.launch {
+        _isLoggedOut.value = LogOutState.IN_PROGRESS
         authRepository.logOut().let {
-            _isLoggedOut.value = it
+            _isLoggedOut.value = LogOutState.LOGOUT
+            onLogOutSuccess.invoke()
         }
     }
 
@@ -87,3 +111,5 @@ class ProfileViewModel @Inject constructor(
         null
     }
 }
+
+public enum class LogOutState { LOGIN, IN_PROGRESS, LOGOUT }

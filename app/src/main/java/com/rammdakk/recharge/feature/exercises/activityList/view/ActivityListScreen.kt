@@ -12,14 +12,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.getThemedColor
 import com.rammdakk.recharge.feature.exercises.activityList.view.components.ActivityCell
+import com.rammdakk.recharge.feature.exercises.activityList.view.components.AppBar
 import com.rammdakk.recharge.feature.exercises.activityList.view.components.DateField
-import com.rammdakk.recharge.feature.exercises.activityList.view.components.SearchRow
 import com.rammdakk.recharge.feature.exercises.activityList.view.model.ActivityInfo
 import java.util.Date
 
@@ -33,10 +37,13 @@ fun ActivityListScreen(
     navigator: DestinationsNavigator,
     onBackPressed: () -> Unit
 ) {
+    var searchText by remember {
+        mutableStateOf("")
+    }
     Scaffold(
         containerColor = ReChargeTokens.Background.getThemedColor(),
         topBar = {
-            SearchRow(title = title, onBackPressed = onBackPressed)
+            AppBar(title = title, onSearch = { searchText = it }, onBackPressed = onBackPressed)
         }
     ) { paddingValues ->
         LazyColumn(
@@ -55,7 +62,10 @@ fun ActivityListScreen(
                     }
                 }
             }
-            items(activities) { activity ->
+            items(activities.filter {
+                it.name.lowercase().startsWith(searchText) || it.organizationName.lowercase()
+                    .startsWith(searchText)
+            }) { activity ->
                 ActivityCell(activityInfo = activity, navigator = navigator)
             }
             item {

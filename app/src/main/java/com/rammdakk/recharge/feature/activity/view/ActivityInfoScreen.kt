@@ -1,7 +1,7 @@
 package com.rammdakk.recharge.feature.activity.view
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.util.Patterns
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.MarqueeAnimationMode
@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -29,6 +28,7 @@ import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -43,7 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -51,18 +50,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.theme.HeaderTextPrimary
 import com.rammdakk.recharge.base.theme.HeaderTextPrimaryInverse
 import com.rammdakk.recharge.base.theme.InputIconTextField
 import com.rammdakk.recharge.base.theme.PlainText
-import com.rammdakk.recharge.base.theme.PlainTextLarge
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryLargeInverse
 import com.rammdakk.recharge.base.theme.TextPrimaryLargeThemed
+import com.rammdakk.recharge.base.theme.TextPrimaryMedium
 import com.rammdakk.recharge.base.theme.TextPrimarySmall
 import com.rammdakk.recharge.base.theme.getThemedColor
-import com.rammdakk.recharge.base.theme.pxToDp
 import com.rammdakk.recharge.feature.activity.data.model.ActivityExtendedDataModel
 import com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel
 import com.rammdakk.recharge.feature.activity.view.components.ActivityImage
@@ -75,6 +74,7 @@ import com.rammdakk.recharge.feature.activity.view.model.TimePad
 import com.rammdakk.recharge.feature.activity.view.model.UserBookingInfo
 import com.rammdakk.recharge.feature.activity.view.model.convertToActivityInfo
 import com.rammdakk.recharge.feature.activity.view.model.covertToTimePad
+import com.rammdakk.recharge.feature.auth.view.PhoneNumberVisualTransformation
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -94,15 +94,15 @@ fun ActivityInfoScreen(
     val coroutineScope = rememberCoroutineScope()
 
     val state = rememberBottomSheetScaffoldState(
-        rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        rememberModalBottomSheetState()
     )
 
     var selectedId: Int? by remember {
         mutableStateOf(null)
     }
 
-    LaunchedEffect(state.bottomSheetState.isVisible) {
-        if (!state.bottomSheetState.isVisible) {
+    LaunchedEffect(state.bottomSheetState.currentValue) {
+        if (state.bottomSheetState.currentValue != SheetValue.Expanded) {
             selectedId = null
         }
     }
@@ -126,6 +126,7 @@ fun ActivityInfoScreen(
 
     BottomSheetScaffold(
         scaffoldState = state,
+        sheetPeekHeight = 0.dp,
         sheetContent = {
             SheetContent(
                 selectedId,
@@ -243,16 +244,12 @@ private fun SheetContent(
     activityInfo: ActivityExtendedInfo,
     onSuccess: (Int, UserBookingInfo) -> Unit
 ) {
-    var height by remember {
-        mutableIntStateOf(10000)
-    }
     val bottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .padding(top = 32.dp, bottom = bottomPadding)
-            .height(height.pxToDp())
     ) {
         val id = selectedId ?: 0
         val timePad = runCatching { timePadList.first { it.id == id } }.getOrNull()
@@ -273,14 +270,7 @@ private fun SheetContent(
             mutableIntStateOf(1)
         }
         val format = SimpleDateFormat("HH:mm", Locale.getDefault())
-        Column(modifier = Modifier
-            .wrapContentHeight()
-            .onSizeChanged {
-                if (height == 10000) {
-                    Log.d("Ramil", it.height.toString())
-                    height = it.height
-                }
-            }) {
+        Column {
             HeaderTextPrimaryInverse(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
@@ -291,7 +281,7 @@ private fun SheetContent(
             TextPrimaryLargeInverse(
                 text = "${format.format(timePad.startTime)}-${format.format(timePad.endTime)}, ${timePad.price}₽",
                 modifier = Modifier
-                    .padding(bottom = 8.dp, top = 4.dp)
+                    .padding(bottom = 30.dp, top = 4.dp)
                     .fillMaxWidth(),
             )
             activityInfo.cancellationMessage?.let { text ->
@@ -319,7 +309,8 @@ private fun SheetContent(
                 fontSize = 18.sp,
                 iconId = R.drawable.call,
                 iconColor = ReChargeTokens.TextPrimary.getThemedColor(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                visualTransformation = PhoneNumberVisualTransformation(),
             ) { fieldValue ->
                 phone = fieldValue
             }
@@ -337,11 +328,11 @@ private fun SheetContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .padding(top = 8.dp, bottom = 8.dp, start = 4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                PlainTextLarge(text = stringResource(id = R.string.number_of_visitors))
+                TextPrimaryMedium(text = stringResource(id = R.string.number_of_visitors))
                 NumberField(
                     maxValue = maxUserNumber.value ?: 1,
                     onNumberChanged = { guestNum = it })
@@ -350,11 +341,21 @@ private fun SheetContent(
             TextPrimaryLargeThemed(
                 text = stringResource(id = R.string.confirm),
                 modifier = Modifier
+
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                    .padding(bottom = 16.dp, top = 8.dp)
                     .clip(RoundedCornerShape(50))
                     .background(ReChargeTokens.Background.getThemedColor())
-                    .clickable {
+                    .clickable(
+                        enabled = userName.text.isNotEmpty() &&
+                                Patterns.EMAIL_ADDRESS
+                                    .matcher(email.text)
+                                    .matches() &&
+                                PhoneNumberUtil
+                                    .getInstance()
+                                    .isPossibleNumber(phone.text, LOCALE)
+
+                    ) {
                         onSuccess.invoke(
                             id,
                             UserBookingInfo(
@@ -365,7 +366,7 @@ private fun SheetContent(
                             )
                         )
                     }
-                    .padding(vertical = 8.dp),
+                    .padding(vertical = 12.dp),
                 textAlign = TextAlign.Center,
             )
         }
@@ -428,3 +429,4 @@ fun ActivityInfoScreenPreview() {
 }
 
 private val roundedCorner = 20.dp
+private const val LOCALE = "RU"

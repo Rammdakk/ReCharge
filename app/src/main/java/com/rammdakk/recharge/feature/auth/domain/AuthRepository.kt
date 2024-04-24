@@ -29,7 +29,7 @@ interface AuthRepository {
     /**
      * Запрос на получение токена
      */
-    suspend fun getToken(): String?
+    suspend fun getToken(logoutOnError: Boolean = true): String?
 
     /**
      * Удаление данных пользователя

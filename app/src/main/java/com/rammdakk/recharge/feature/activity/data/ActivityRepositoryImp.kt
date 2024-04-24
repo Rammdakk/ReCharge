@@ -4,6 +4,7 @@ package com.rammdakk.recharge.feature.activity.data
 import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.network.makeRequest
+import com.rammdakk.recharge.base.extensions.formatToUtcString
 import com.rammdakk.recharge.feature.activity.data.model.ActivityExtendedDataModel
 import com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel
 import com.rammdakk.recharge.feature.activity.data.model.UserBookingDataModel
@@ -13,9 +14,7 @@ import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 
 class ActivityRepositoryImp(
     retrofit: Retrofit,
@@ -35,14 +34,12 @@ class ActivityRepositoryImp(
         date: Date
     ): Result<List<TimePadDataModel>> =
         withContext(dispatchers.IO) {
-//            val utc = TimeZone.getTimeZone("UTC");
-//            val dateString =
-//                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).apply {
-//                    timeZone = TimeZone.getTimeZone("UTC");
-//                }.format(date)
-//            Log.d("Ramil", dateString.toString())
-            val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
-            makeRequest { api.getActivityTabs(activityId, dateString) }.map { it.slots }
+            makeRequest {
+                api.getActivityTabs(
+                    activityId,
+                    date.formatToUtcString()
+                )
+            }.map { it.slots }
         }
 
     override suspend fun getUsersMaxNumber(tabId: Int): Result<Int> =

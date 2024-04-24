@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -99,7 +100,7 @@ fun NavBar(navController: NavHostController) {
     val items = listOf(
         BottomNavItem.Home,
         BottomNavItem.Exercise,
-        BottomNavItem.Map,
+//        BottomNavItem.Map,
         BottomNavItem.Calendar,
         BottomNavItem.Profile
     )
@@ -120,12 +121,13 @@ fun NavBar(navController: NavHostController) {
         modifier = Modifier
             .windowInsetsPadding(NavigationBarDefaults.windowInsets)
             .padding(bottom = 10.dp)
+            .height(80.dp)
             .fillMaxWidth()
-            .aspectRatio(5f)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize(0.9f)
+                .aspectRatio(4f, matchHeightConstraintsFirst = true)
                 .align(Alignment.Center)
                 .clip(RoundedCornerShape(20.dp))
                 .background(Color.Black),

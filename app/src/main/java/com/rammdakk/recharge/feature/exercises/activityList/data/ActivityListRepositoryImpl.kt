@@ -3,14 +3,13 @@ package com.rammdakk.recharge.feature.exercises.activityList.data
 import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.network.makeRequest
+import com.rammdakk.recharge.base.extensions.formatToUtcString
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.exercises.activityList.domain.ActivityListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 
 class ActivityListRepositoryImpl(
     retrofit: Retrofit,
@@ -22,9 +21,8 @@ class ActivityListRepositoryImpl(
 
     override suspend fun getActivities(activityCatId: Int, date: Date) =
         withContext(dispatchers.IO) {
-            val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
             getAccessToken()?.let {
-                makeRequest { api.getActivities(it, activityCatId, dateString) }
+                makeRequest { api.getActivities(it, activityCatId, date.formatToUtcString()) }
             } ?: Result.failure(NetworkError(InternetError.Unauthorized))
         }
 

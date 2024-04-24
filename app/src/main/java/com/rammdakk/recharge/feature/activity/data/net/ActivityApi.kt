@@ -21,7 +21,7 @@ interface ActivityApi {
     @GET("/api/Slot/GetActivityViewSlots")
     suspend fun getActivityTabs(
         @Query("activityId") activityId: Int,
-        @Query("date") date: String
+        @Query("dateTime") date: String
     ): Response<ListTimePadModel>
 
     @GET("/api/Slot/GetSlotFreeSpots")

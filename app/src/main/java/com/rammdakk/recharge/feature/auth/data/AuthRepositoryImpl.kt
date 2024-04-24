@@ -47,18 +47,18 @@ class AuthRepositoryImpl(
         }
 
 
-    override suspend fun getToken(): String? =
+    override suspend fun getToken(logoutOnError: Boolean): String? =
         withContext(dispatchers.IO) {
             val value = encryptedSharedPreferences.sharedPreferences.getString(ACCESS_KEY, null)
-            if (value.isNullOrBlank()) logOut()
+            if (value.isNullOrBlank() && logoutOnError) logOut()
             return@withContext value
         }
 
 
     override suspend fun logOut(): Boolean = withContext(dispatchers.IO) {
-        getToken()?.let { makeRequest { api.logOut(it) } } ?: return@withContext true
+        getToken(logoutOnError = false)?.let { makeRequest { api.logOut(it) } }
         encryptedSharedPreferences.sharedPreferences.edit().remove(ACCESS_KEY).apply()
-        return@withContext getToken().isNullOrBlank()
+        return@withContext getToken(logoutOnError = false).isNullOrBlank()
     }
 
 }

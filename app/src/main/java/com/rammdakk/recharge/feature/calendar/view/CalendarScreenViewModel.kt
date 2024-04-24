@@ -64,7 +64,7 @@ class CalendarScreenViewModel @Inject constructor(
         val date = withContext(dispatchers.IO) {
             calendarRepository.loadReservations(
                 newMonth.atDay(1).toDate(),
-                newMonth.atEndOfMonth().toDate()
+                newMonth.plusMonths(1).atDay(1).toDate(),
             ).getOrElse { handleError(it) }?.map { it.convertToReservationModel() }
         }.orEmpty()
         _reservationList.value = date

@@ -13,7 +13,7 @@ data class ActivityExtendedDataModel(
     @JsonProperty("locationName") val locationName: String? = null,
     @JsonProperty("locationAddress") val locationAddress: String? = null,
     @JsonProperty("activityDescription") val activityDescription: String? = null,
-    @JsonProperty("warning") val warning: String? = null,
+    @JsonProperty("warningText") val warning: String? = null,
     @JsonProperty("cancellationMessage") val cancellationMessage: String? = null
 )
 

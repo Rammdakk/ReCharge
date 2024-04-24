@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
@@ -595,7 +596,8 @@ fun InputIconTextField(
     fontSize: TextUnit,
     readOnly: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    onValueChange: (TextFieldValue) -> Unit
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    onValueChange: (TextFieldValue) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Box(
@@ -626,6 +628,7 @@ fun InputIconTextField(
             textStyle = TextStyle.Default.copy(fontSize = fontSize, fontWeight = FontWeight.Normal),
             keyboardOptions = keyboardOptions,
             singleLine = true,
+            visualTransformation = visualTransformation,
             keyboardActions = KeyboardActions(onDone = {
                 keyboardController?.hide()
             }),
@@ -633,17 +636,18 @@ fun InputIconTextField(
         { innerTextField ->
             Row(
                 Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 iconId?.let {
                     Icon(
                         painterResource(id = it),
                         "",
                         modifier = Modifier
-                            .padding(2.dp)
+                            .padding(4.dp)
                             .clip(RoundedCornerShape(50))
                             .background(Color(0xFFA5B7E4))
-                            .height(height = (height).pxToDp() - 4.dp)
+                            .height(height = (height).pxToDp() + 4.dp)
                             .padding(3.dp)
                             .aspectRatio(1f, true),
                         iconColor
@@ -653,10 +657,10 @@ fun InputIconTextField(
                         imageVector = it,
                         "",
                         modifier = Modifier
-                            .padding(2.dp)
+                            .padding(4.dp)
                             .clip(RoundedCornerShape(50))
                             .background(Color(0xFFA5B7E4))
-                            .height(height = (height).pxToDp() - 4.dp)
+                            .height(height = (height).pxToDp() + 4.dp)
                             .padding(3.dp)
                             .aspectRatio(1f, true),
                         iconColor

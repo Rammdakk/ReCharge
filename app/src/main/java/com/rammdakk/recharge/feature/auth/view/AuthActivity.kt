@@ -50,7 +50,10 @@ class AuthActivity : ComponentActivity() {
 
         authViewModel.openLink.observe(this) {
             if (it == null) return@observe
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
+            val url = if (!it.startsWith("http://") && !it.startsWith("https://")) {
+                "http://$it"
+            } else it
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             ContextCompat.startActivity(this, browserIntent, null)
         }
     }

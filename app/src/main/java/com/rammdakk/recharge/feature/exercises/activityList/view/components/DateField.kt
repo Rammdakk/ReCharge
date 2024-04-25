@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -43,14 +43,14 @@ fun DateField(
             onClick = {
                 Calendar.getInstance().apply {
                     time = date
-//                    if (date > Date()) {
+                    if (date > Date()) {
                         add(Calendar.DATE, -1)
-//                    }
+                    }
                 }.time.let(onDateChanged)
             }
         ) {
             Icon(
-                imageVector = Icons.Default.KeyboardArrowLeft,
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                 contentDescription = "Previous Day",
                 tint = Color.Black,
                 modifier = Modifier.fillMaxSize(0.8f)
@@ -73,7 +73,7 @@ fun DateField(
             }
         ) {
             Icon(
-                imageVector = Icons.Default.KeyboardArrowRight,
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = "Next Day",
                 tint = Color.Black,
                 modifier = Modifier.fillMaxSize(0.8f)

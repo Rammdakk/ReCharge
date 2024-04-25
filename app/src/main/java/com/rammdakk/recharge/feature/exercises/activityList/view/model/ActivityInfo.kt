@@ -8,6 +8,7 @@ import java.util.Date
 
 data class ActivityInfo(
     val id: Int,
+    val slotId: Int,
     val imagePath: String,
     val name: String,
     val organizationName: String,
@@ -26,6 +27,7 @@ data class LocationInfo(
 fun ActivityDataModel.convertToActivityInfo(): ActivityInfo? {
     return ActivityInfo(
         id = this.id,
+        slotId = this.slotId,
         imagePath = this.imagePath,
         name = this.name,
         date = this.time ?: return null,

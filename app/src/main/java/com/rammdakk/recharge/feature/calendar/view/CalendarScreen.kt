@@ -2,6 +2,7 @@ package com.rammdakk.recharge.feature.calendar.view
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,12 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -32,6 +35,7 @@ import com.rammdakk.recharge.feature.calendar.view.components.calendar.CalendarS
 import com.rammdakk.recharge.feature.calendar.view.components.calendar.CalendarWidget
 import com.rammdakk.recharge.feature.calendar.view.components.reservation.ReservationCell
 import com.rammdakk.recharge.feature.calendar.view.model.ReservationModel
+import com.rammdakk.recharge.feature.destinations.ExercisesCatContentDestination
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -90,21 +94,49 @@ fun CalendarScreen(
                     calendarState = calendarState,
                     modifier = Modifier.padding(top = 0.dp, bottom = 20.dp),
                 )
-                stickyHeader(key = 123) {
-                    TextPrimaryLarge(
-                        text = stringResource(id = R.string.calendar_current_month),
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(ReChargeTokens.Background.getThemedColor())
-                            .padding(bottom = 4.dp, start = 4.dp)
-                    )
-                }
-                items(reservationList.value) {
-                    ReservationCell(it, navigator)
-                }
-                item {
-                    Spacer(modifier = Modifier.height(100.dp))
+                if (reservationList.value.isNotEmpty()) {
+                    stickyHeader {
+                        TextPrimaryLarge(
+                            text = stringResource(id = R.string.calendar_current_month),
+                            textAlign = TextAlign.Start,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(ReChargeTokens.Background.getThemedColor())
+                                .padding(bottom = 4.dp, start = 4.dp)
+                        )
+                    }
+                    items(reservationList.value) {
+                        ReservationCell(it, navigator)
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(100.dp))
+                    }
+                } else {
+                    item {
+                        TextPrimaryLarge(
+                            text = stringResource(id = R.string.calendar_no_activities),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(ReChargeTokens.Background.getThemedColor())
+                                .padding(bottom = 4.dp, start = 4.dp)
+                        )
+                    }
+                    item {
+                        TextPrimaryLarge(
+                            text = stringResource(id = R.string.calendar_book),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp)
+                                .clip(RoundedCornerShape(50))
+                                .background(ReChargeTokens.BackgroundColored.getThemedColor())
+                                .clickable {
+                                    navigator.navigate(ExercisesCatContentDestination)
+                                }
+                                .padding(vertical = 12.dp),
+                            textAlign = TextAlign.Center,
+                        )
+                    }
                 }
             }
         }

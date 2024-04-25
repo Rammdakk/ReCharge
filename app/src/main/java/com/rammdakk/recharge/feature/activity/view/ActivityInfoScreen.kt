@@ -85,6 +85,7 @@ import java.util.Locale
 fun ActivityInfoScreen(
     activityInfo: ActivityExtendedInfo,
     initialDate: Date,
+    preSelectedId: Int? = null,
     onDateChanged: (Date) -> Unit,
     timePadList: State<List<TimePad>>,
     maxUserNumber: State<Int?>,
@@ -422,6 +423,7 @@ fun ActivityInfoScreenPreview() {
     ActivityInfoScreen(
         activityInfo = activity,
         initialDate = Date(),
+        preSelectedId = null,
         {},
         timePadList = mutableStateOf(list),
         maxUserNumber = mutableStateOf(0),

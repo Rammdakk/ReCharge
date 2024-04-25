@@ -20,6 +20,7 @@ fun ActivityContent(
     navigator: DestinationsNavigator,
     activityId: Int,
     date: Date = Date(),
+    preselectedTabId: Int? = null,
     viewModel: ActivityViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.screenState
@@ -44,6 +45,7 @@ fun ActivityContent(
                 ActivityInfoScreen(
                     state.activityInfo,
                     date,
+                    preselectedTabId,
                     { viewModel.loadScheduleForDate(activityId, it) },
                     state.scheduleInfo,
                     state.usersMaxNumber,

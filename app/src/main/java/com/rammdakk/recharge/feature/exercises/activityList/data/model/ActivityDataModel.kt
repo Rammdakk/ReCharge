@@ -13,6 +13,7 @@ data class ActivityListDataModel(
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ActivityDataModel(
     @JsonProperty("activityId") val id: Int,
+    @JsonProperty("slotId") val slotId: Int,
     @JsonProperty("activityName") val name: String,
     @JsonProperty("imageUrl") val imagePath: String,
     @JsonProperty("dateTime") val time: Date?,

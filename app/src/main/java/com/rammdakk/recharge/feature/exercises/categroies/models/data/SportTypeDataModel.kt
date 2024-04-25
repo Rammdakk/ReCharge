@@ -9,6 +9,6 @@ data class SportTypeDataModel(
     val id: Int,
     @JsonProperty("name")
     val name: String,
-    @JsonProperty("image")
+    @JsonProperty("fullImageUrl")
     val imageUrl: String
 )

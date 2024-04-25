@@ -39,4 +39,6 @@
     <string name="reservation_code_codetext">Код: %1$s</string>
     <string name="calendar_header">Календарь</string>
     <string name="calendar_current_month">В этом месяце:</string>
+    <string name="calendar_no_activities">В этом месяце\nнет забронированных занятий</string>
+    <string name="calendar_book">Забронировать</string>
 </resources>

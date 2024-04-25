@@ -51,7 +51,13 @@ fun ActivityCell(
             .clip(RoundedCornerShape(roundedCorner))
             .aspectRatio(2.2f)
             .clickable {
-                navigator.navigate(ActivityContentDestination(activityInfo.id, activityInfo.date))
+                navigator.navigate(
+                    ActivityContentDestination(
+                        activityInfo.id,
+                        activityInfo.date,
+                        activityInfo.slotId
+                    )
+                )
             }
     ) {
         AsyncImage(
@@ -97,12 +103,10 @@ fun ActivityCell(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                activityInfo.time?.let {
-                    PlainTextInverse(
-                        text = it,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                }
+                PlainTextInverse(
+                    text = activityInfo.time,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
                 PlainTextBold(
                     text = stringResource(
                         id = R.string.price,

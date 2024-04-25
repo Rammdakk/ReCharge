@@ -8,5 +8,5 @@ data class ProfileInfo(
 )
 
 fun ProfileDataModel.convertToProfileInfo(): ProfileInfo {
-    return ProfileInfo(name = this.name, photoPath = this.photoPath)
+    return ProfileInfo(name = this.name.takeIf { !it.isNullOrEmpty() }, photoPath = this.photoPath)
 }

@@ -13,7 +13,7 @@ data class ReservationInfo(
 fun ReservationMetaDataModel.convertToReservationInfo() =
     ReservationInfo(
         reservationId = this.reservationId,
-        time = this.date?.time?.formatDate() ?: throw IllegalArgumentException(),
-        accessCode = this.accessCode ?: throw IllegalArgumentException(),
+        time = this.date?.time?.formatDate().orEmpty(),
+        accessCode = this.accessCode.orEmpty(),
         activityId = this.activityId
     )

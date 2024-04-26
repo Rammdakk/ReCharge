@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rammdakk.recharge.base.view.component.error.ErrorState
 import com.rammdakk.recharge.feature.exercises.activityList.domain.ActivityListRepository
+import com.rammdakk.recharge.feature.exercises.activityList.view.model.ActivityInfo
 import com.rammdakk.recharge.feature.exercises.activityList.view.model.convertToActivityInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -28,12 +29,22 @@ class ActivityListViewModel @Inject constructor(
 
     private val _screenState: MutableState<ActivityListScreenState> =
         mutableStateOf(ActivityListScreenState.Idle)
+    private var _activityName = mutableStateOf("")
     private var _selectedDate = mutableStateOf(Date())
+    private var _listOfActivities = mutableStateOf<List<ActivityInfo>>(emptyList())
     private var _errorState = mutableStateOf<ErrorState>(ErrorState.Idle)
 
     val screenState: State<ActivityListScreenState> = _screenState
     val errorState: State<ErrorState> = _errorState
 
+    fun loadData(activityCatId: Int) {
+        loadActivitiesData(activityCatId, _selectedDate.value)
+        _screenState.value = ActivityListScreenState.Loaded(
+            title = _activityName,
+            date = _selectedDate,
+            activities = _listOfActivities
+        )
+    }
 
     fun loadActivitiesData(activityCatId: Int, date: Date = _selectedDate.value) =
         viewModelScope.launch {
@@ -47,14 +58,11 @@ class ActivityListViewModel @Inject constructor(
             activityListRepository.getActivities(activityCatId, _selectedDate.value)
                 .getOrElse { handleError(it) }
                 ?.let {
-                    _screenState.value = ActivityListScreenState.Loaded(
-                        title = it.activityName,
-                        date = _selectedDate,
-                        activities = it.activityList.map { it.convertToActivityInfo() }
-                            .filterNotNull(),
-                    )
-            }
-    }
+                    _listOfActivities.value =
+                        it.activityList.mapNotNull { activity -> activity.convertToActivityInfo() }
+                    _activityName.value = it.activityName
+                }
+        }
 
     private suspend fun handleError(throwable: Throwable) = withContext(dispatchers.Main) {
         errorJob?.cancel()

@@ -32,7 +32,7 @@ fun ActivityListContent(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.loadActivitiesData(activityCatId)
+        viewModel.loadData(activityCatId)
     }
     val uiState by viewModel.screenState
 
@@ -43,7 +43,7 @@ fun ActivityListContent(
             is ActivityListScreenState.Idle -> {}
             is ActivityListScreenState.Loaded -> {
                 ActivityListScreen(
-                    title = state.title,
+                    title = state.title.value,
                     date = state.date,
                     activities = state.activities,
                     updateDate = { date -> viewModel.loadActivitiesData(activityCatId, date) },

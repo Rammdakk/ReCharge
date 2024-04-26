@@ -32,7 +32,7 @@ import java.util.Date
 fun ActivityListScreen(
     title: String,
     date: State<Date>,
-    activities: List<ActivityInfo>,
+    activities: State<List<ActivityInfo>>,
     updateDate: (Date) -> Unit,
     navigator: DestinationsNavigator,
     onBackPressed: () -> Unit
@@ -62,7 +62,7 @@ fun ActivityListScreen(
                     }
                 }
             }
-            items(activities.filter {
+            items(activities.value.filter {
                 it.name.lowercase().startsWith(searchText) || it.organizationName.lowercase()
                     .startsWith(searchText)
             }) { activity ->

@@ -10,8 +10,8 @@ sealed interface ActivityListScreenState {
     data object Idle : ActivityListScreenState
 
     data class Loaded(
-        val title: String,
+        val title: State<String>,
         val date: State<Date>,
-        val activities: List<ActivityInfo>
+        val activities: State<List<ActivityInfo>>
     ) : ActivityListScreenState
 }

@@ -136,7 +136,11 @@ fun PhoneCell(hint: String? = null, onVerifyClick: (String) -> Unit) {
                     .isPossibleNumber(it.text, LOCALE) && it.text.length == 10
                 text = it
             },
-            textStyle = TextStyle.Default.copy(fontSize = 24.sp, fontWeight = FontWeight.Bold),
+            textStyle = TextStyle.Default.copy(
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = ReChargeTokens.TextPrimary.getThemedColor()
+            ),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             singleLine = true,
             visualTransformation = PhoneNumberVisualTransformation(),
@@ -155,7 +159,11 @@ fun PhoneCell(hint: String? = null, onVerifyClick: (String) -> Unit) {
             ) {
                 Text(
                     text = PREFIX,
-                    style = TextStyle.Default.copy(fontSize = 24.sp, fontWeight = FontWeight.Bold),
+                    style = TextStyle.Default.copy(
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = ReChargeTokens.TextPrimary.getThemedColor()
+                    ),
                     modifier = Modifier.padding(end = 4.dp)
                 )
                 Box {

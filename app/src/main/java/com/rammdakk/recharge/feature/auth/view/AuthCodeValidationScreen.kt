@@ -164,7 +164,10 @@ fun CodeCell(codeSize: Int, onVerifyClick: (String) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .background(Color.White, shape = RoundedCornerShape(50))
+                .background(
+                    ReChargeTokens.TextPrimaryInverse.getThemedColor(),
+                    shape = RoundedCornerShape(50)
+                )
                 .onSizeChanged {
                     height = it.height
                 }
@@ -179,6 +182,7 @@ fun CodeCell(codeSize: Int, onVerifyClick: (String) -> Unit) {
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
+                color = ReChargeTokens.TextPrimary.getThemedColor()
             ),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             singleLine = true,
@@ -203,7 +207,7 @@ fun CodeCell(codeSize: Int, onVerifyClick: (String) -> Unit) {
                     .height(height = (height).pxToDp() - 10.dp)
                     .padding(10.dp)
                     .aspectRatio(1f, true),
-                Color.White
+                ReChargeTokens.TextPrimaryInverse.getThemedColor()
             )
         }
     }

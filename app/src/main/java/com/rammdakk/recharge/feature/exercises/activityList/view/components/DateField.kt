@@ -18,10 +18,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimarySmall
+import com.rammdakk.recharge.base.theme.getThemedColor
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -52,7 +53,7 @@ fun DateField(
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                 contentDescription = "Previous Day",
-                tint = Color.Black,
+                tint = ReChargeTokens.BackgroundInverse.getThemedColor(),
                 modifier = Modifier.fillMaxSize(0.8f)
             )
         }
@@ -75,7 +76,7 @@ fun DateField(
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = "Next Day",
-                tint = Color.Black,
+                tint = ReChargeTokens.BackgroundInverse.getThemedColor(),
                 modifier = Modifier.fillMaxSize(0.8f)
             )
         }

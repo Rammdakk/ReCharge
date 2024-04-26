@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Color
 
 enum class ReChargeTokens {
     Background,
+    BackgroundConstant,
     BackgroundInverse,
     BackgroundColored,
     BackgroundContainer,
@@ -32,6 +33,7 @@ val LocalTokens: ProvidableCompositionLocal<Map<ReChargeTokens, Color>> =
 
 fun lightThemeTokensMap(): Map<ReChargeTokens, Color> = mapOf(
     ReChargeTokens.Background to Color.White,
+    ReChargeTokens.BackgroundConstant to Color.White,
     ReChargeTokens.BackgroundInverse to Color.Black,
     ReChargeTokens.BackgroundColored to Color(0xFFA5B7E4),
     ReChargeTokens.BackgroundContainer to Color(0xFF8EA5E1),
@@ -53,6 +55,7 @@ fun lightThemeTokensMap(): Map<ReChargeTokens, Color> = mapOf(
 
 fun darkThemeTokensMap(): Map<ReChargeTokens, Color> = mapOf(
     ReChargeTokens.Background to Color.Black,
+    ReChargeTokens.BackgroundConstant to Color.White,
     ReChargeTokens.BackgroundInverse to Color.White,
     ReChargeTokens.BackgroundColored to Color(0xFFA5B7E4),
     ReChargeTokens.BackgroundContainer to Color(0xFF96AADD),
@@ -65,6 +68,7 @@ fun darkThemeTokensMap(): Map<ReChargeTokens, Color> = mapOf(
     ReChargeTokens.TextPrimaryInverseConstant to Color.White,
     ReChargeTokens.TextPrimaryColored to Color(0xFFA5B7E4),
     ReChargeTokens.TextSecondary to Color(0xC83E3E3E),
+    ReChargeTokens.TextTertiary to Color(0xFFD9D9D9),
     ReChargeTokens.TextError to Color.Red,
     ReChargeTokens.TextAttention to Color(0xFFEE9022),
     ReChargeTokens.ConstantWhite to Color.White,

@@ -570,6 +570,7 @@ fun IconText(
                     style = TextStyle.Default.copy(
                         fontSize = fontSize,
                         fontWeight = FontWeight.Normal,
+                        color = ReChargeTokens.TextPrimary.getThemedColor()
                     ),
                     maxLines = maxLines,
                 )
@@ -613,7 +614,11 @@ fun InputIconTextField(
             readOnly = readOnly,
             maxLines = maxLines,
             onValueChange = onValueChange,
-            textStyle = TextStyle.Default.copy(fontSize = fontSize, fontWeight = FontWeight.Normal),
+            textStyle = TextStyle.Default.copy(
+                fontSize = fontSize,
+                fontWeight = FontWeight.Normal,
+                color = ReChargeTokens.TextPrimary.getThemedColor()
+            ),
             keyboardOptions = keyboardOptions,
             singleLine = true,
             visualTransformation = visualTransformation,

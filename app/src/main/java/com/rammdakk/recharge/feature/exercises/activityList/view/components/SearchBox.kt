@@ -20,10 +20,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.rammdakk.recharge.R
-import com.rammdakk.recharge.base.theme.PlainText
+import com.rammdakk.recharge.base.theme.PlainTextLarge
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.getThemedColor
 
@@ -39,6 +41,11 @@ fun SearchBox(modifier: Modifier, onSearch: (String) -> Unit, onClose: () -> Uni
                 color = ReChargeTokens.BackgroundColored.getThemedColor(),
                 shape = RoundedCornerShape(50)
             ),
+        textStyle = TextStyle.Default.copy(
+            fontSize = 16.sp,
+            lineHeight = 16.sp,
+            color = ReChargeTokens.TextPrimary.getThemedColor(),
+        ),
         shape = RoundedCornerShape(50),
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = ReChargeTokens.Background.getThemedColor(),
@@ -68,7 +75,7 @@ fun SearchBox(modifier: Modifier, onSearch: (String) -> Unit, onClose: () -> Uni
             searchQuery = it
             onSearch(it.lowercase())
         },
-        placeholder = { PlainText(text = stringResource(id = R.string.exercise_search)) },
+        placeholder = { PlainTextLarge(text = stringResource(id = R.string.exercise_search)) },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = {
             onSearch(searchQuery.lowercase())

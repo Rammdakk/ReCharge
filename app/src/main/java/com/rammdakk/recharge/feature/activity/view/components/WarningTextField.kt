@@ -40,7 +40,7 @@ fun WarningText(modifier: Modifier = Modifier, text: String) {
                 .padding(all = 4.dp)
                 .size(36.dp)
                 .clip(RoundedCornerShape(50))
-                .background(ReChargeTokens.Background.getThemedColor())
+                .background(ReChargeTokens.BackgroundConstant.getThemedColor())
                 .padding(vertical = 5.dp)
         )
         TextPrimaryMediumInverse(

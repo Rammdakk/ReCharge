@@ -19,7 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -53,6 +53,7 @@ fun AppBar(
     }
     Box(
         modifier = Modifier
+            .background(ReChargeTokens.Background.getThemedColor())
             .padding(top = 20.dp, start = 8.dp, end = 8.dp)
             .height(50.dp)
             .fillMaxWidth(),
@@ -84,7 +85,7 @@ fun AppBar(
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                         contentDescription = "",
                         tint = ReChargeTokens.TextPrimary.getThemedColor(),
                         modifier = Modifier.fillMaxSize()

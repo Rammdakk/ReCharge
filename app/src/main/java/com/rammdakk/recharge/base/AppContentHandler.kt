@@ -44,6 +44,7 @@ import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.view.NavScaffold
 import com.rammdakk.recharge.feature.NavGraphs
 import com.rammdakk.recharge.feature.destinations.ActivityContentDestination
+import com.rammdakk.recharge.feature.destinations.ActivityListContentDestination
 import com.rammdakk.recharge.feature.destinations.AuthContentDestination
 import com.rammdakk.recharge.feature.destinations.CalendarContentDestination
 import com.rammdakk.recharge.feature.destinations.CatalogContentDestination
@@ -195,4 +196,7 @@ sealed class BottomNavItem(
 
 private val Destination.shouldShowScaffoldElements
     get() =
-        this !is AuthContentDestination && this !is ActivityContentDestination && this !is ReservationContentDestination
+        this !is AuthContentDestination
+                && this !is ActivityContentDestination
+                && this !is ReservationContentDestination
+                && this !is ActivityListContentDestination

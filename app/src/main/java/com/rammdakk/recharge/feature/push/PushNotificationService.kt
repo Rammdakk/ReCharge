@@ -1,0 +1,37 @@
+package com.rammdakk.recharge.feature.push
+
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.rammdakk.recharge.feature.push.domain.NotificationRepository
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@AndroidEntryPoint
+class PushNotificationService : FirebaseMessagingService() {
+
+    @Inject
+    lateinit var notificationRepository: NotificationRepository
+
+    @Inject
+    lateinit var dispatchers: Dispatchers
+
+    private var scope: CoroutineScope? = null
+
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
+        scope?.cancel()
+        scope = CoroutineScope(SupervisorJob() + dispatchers.IO)
+        scope?.launch {
+            notificationRepository.updateToken(token)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scope?.cancel()
+    }
+}

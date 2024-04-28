@@ -23,16 +23,14 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -94,51 +92,21 @@ fun ActivityInfoScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val state = rememberBottomSheetScaffoldState(
-        rememberModalBottomSheetState()
-    )
+    val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     var selectedId: Int? by remember {
         mutableStateOf(null)
     }
 
-    LaunchedEffect(state.bottomSheetState.currentValue) {
-        if (state.bottomSheetState.currentValue != SheetValue.Expanded) {
-            selectedId = null
-        }
-    }
-
     BackHandler {
         if (selectedId != null) {
-            coroutineScope.launch { state.bottomSheetState.hide() }
+            selectedId = null
         } else {
             onBackPressed.invoke()
         }
     }
 
-    LaunchedEffect(selectedId) {
-        if (selectedId == null) {
-            state.bottomSheetState.hide()
-        } else {
-            state.bottomSheetState.expand()
-        }
-    }
-
-
-    BottomSheetScaffold(
-        scaffoldState = state,
-        sheetPeekHeight = 0.dp,
-        sheetContent = {
-            SheetContent(
-                selectedId,
-                timePadList.value,
-                maxUserNumber,
-                activityInfo
-            ) { id, usiderInfo ->
-                onReserve.invoke(id, usiderInfo)
-                selectedId = null
-            }
-        },
+    Scaffold(
         topBar = {
             Row(
                 modifier = Modifier
@@ -155,7 +123,7 @@ fun ActivityInfoScreen(
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                         contentDescription = "",
                         tint = ReChargeTokens.TextPrimary.getThemedColor(),
                         modifier = Modifier.fillMaxSize()
@@ -172,8 +140,6 @@ fun ActivityInfoScreen(
             }
         },
         containerColor = ReChargeTokens.BackgroundColored.getThemedColor(),
-        sheetDragHandle = null,
-        sheetContainerColor = ReChargeTokens.BackgroundContainer.getThemedColor(),
     ) { padding ->
         Column(
             modifier = Modifier
@@ -233,7 +199,29 @@ fun ActivityInfoScreen(
             }
 
         }
-
+    }
+    if (selectedId != null) {
+        ModalBottomSheet(
+            onDismissRequest = { selectedId = null },
+            sheetState = state,
+            containerColor = ReChargeTokens.BackgroundContainer.getThemedColor(),
+            dragHandle = null
+        ) {
+            SheetContent(
+                selectedId,
+                timePadList.value,
+                maxUserNumber,
+                activityInfo
+            ) { id, userInfo ->
+                coroutineScope.launch { state.hide() }.invokeOnCompletion {
+                    if (!state.isVisible) {
+                        selectedId = null
+                    }
+                }
+                onReserve.invoke(id, userInfo)
+                selectedId = null
+            }
+        }
     }
 }
 

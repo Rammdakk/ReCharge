@@ -18,6 +18,7 @@
     <string name="exit">Выйти</string>
     <string name="contacts">Контакты</string>
     <string name="exercise_search">Найти занятие</string>
+    <string name="exercise_filters">Фильтры</string>
     <string name="profile_header">Профиль</string>
     <string name="profile_calendar_error_dialog_title">Некорректный возвраст</string>
     <string name="profile_calendar_error_dialog_text">Ваш возвраст меньше минимального.\nМинимальный возраст %1$d лет.</string>

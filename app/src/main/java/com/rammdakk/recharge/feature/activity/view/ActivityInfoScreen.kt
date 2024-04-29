@@ -20,8 +20,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -95,7 +97,7 @@ fun ActivityInfoScreen(
     val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     var selectedId: Int? by remember {
-        mutableStateOf(null)
+        mutableStateOf(preSelectedId)
     }
 
     BackHandler {
@@ -145,6 +147,7 @@ fun ActivityInfoScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 15.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -173,14 +176,20 @@ fun ActivityInfoScreen(
                         .fillMaxWidth()
                         .padding(top = 10.dp)
                 ) {
-                    timePadList.value.let { timepad ->
-                        items(timepad.size) {
-                            TimePad(timePad = timepad[it]) { id ->
+                    timePadList.value.let { timePad ->
+                        items(timePad.size) {
+                            TimePad(timePad = timePad[it]) { id ->
                                 selectedId = id
                             }
                         }
                     }
                 }
+            }
+            activityInfo.warning?.let {
+                WarningText(
+                    text = it, modifier = Modifier
+                        .padding(top = 10.dp)
+                )
             }
             activityInfo.activityDescription?.let {
                 PlainText(
@@ -193,9 +202,6 @@ fun ActivityInfoScreen(
                         .background(ReChargeTokens.Background.getThemedColor())
                         .padding(15.dp)
                 )
-            }
-            activityInfo.warning?.let {
-                WarningText(text = it)
             }
 
         }
@@ -414,8 +420,8 @@ fun ActivityInfoScreenPreview() {
         preSelectedId = null,
         {},
         timePadList = mutableStateOf(list),
-        maxUserNumber = mutableStateOf(0),
-        onBackPressed = {}, onReserve = { _, _ -> {} })
+        maxUserNumber = mutableIntStateOf(0),
+        onBackPressed = {}, onReserve = { _, _ -> })
 }
 
 private val roundedCorner = 20.dp

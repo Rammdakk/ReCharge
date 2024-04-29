@@ -44,6 +44,8 @@
     <string name="reservation_code_header">Код доступа</string>
     <string name="reservation_code_text">Для подтверждения записи\nпредъявите данный код\nадминистратору</string>
     <string name="reservation_code_codetext">Код: %1$s</string>
+    <string name="reservation_cancel">Отменить бронь</string>
+    <string name="reservation_canceled_success">Бронь отменена</string>
     <string name="calendar_header">Календарь</string>
     <string name="calendar_current_month">В этом месяце:</string>
     <string name="calendar_no_activities">В этом месяце\nнет забронированных занятий</string>

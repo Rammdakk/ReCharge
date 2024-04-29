@@ -33,6 +33,21 @@ class ReservationRepositoryImpl(
             )
         }
 
+    override suspend fun cancelReservation(reservationId: Int): Result<Unit> =
+        withContext(dispatchers.IO) {
+            getAccessToken()?.let {
+                makeRequest {
+                    api.setReservationCanceled(
+                        accessToken = it,
+                        reservationId = reservationId
+                    )
+                }
+            } ?: Result.failure(
+                NetworkError(InternetError.Unauthorized)
+            )
+        }
+
+
     private suspend fun getAccessToken(): String? = withContext(dispatchers.IO) {
         authRepository.getToken()
     }

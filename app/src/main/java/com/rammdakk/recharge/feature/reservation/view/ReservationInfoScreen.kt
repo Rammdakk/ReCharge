@@ -11,9 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -56,7 +59,8 @@ import kotlinx.coroutines.launch
 fun ReservationInfoScreen(
     activityInfo: ActivityExtendedInfo,
     reservationInfo: ReservationInfo,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    onCancelClick: (Int) -> Unit
 ) {
     val state = rememberBottomSheetScaffoldState(
         rememberModalBottomSheetState(confirmValueChange = { sheetValue -> sheetValue != SheetValue.Hidden })
@@ -155,7 +159,7 @@ fun ReservationInfoScreen(
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                         contentDescription = "",
                         tint = ReChargeTokens.TextPrimary.getThemedColor(),
                         modifier = Modifier.fillMaxSize()
@@ -178,6 +182,7 @@ fun ReservationInfoScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 15.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -203,6 +208,13 @@ fun ReservationInfoScreen(
                     .fillMaxWidth()
                     .padding(bottom = 10.dp)
             )
+            activityInfo.warning?.let {
+                WarningText(
+                    text = it, modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp)
+                )
+            }
             activityInfo.activityDescription?.let {
                 PlainText(
                     text = it,
@@ -215,9 +227,16 @@ fun ReservationInfoScreen(
                         .padding(15.dp)
                 )
             }
-            activityInfo.warning?.let {
-                WarningText(text = it)
-            }
+            TextPrimaryMedium(
+                text = stringResource(id = R.string.reservation_cancel),
+                modifier = Modifier
+                    .wrapContentSize()
+                    .clickable {
+                        reservationInfo.reservationId?.let { onCancelClick.invoke(it) }
+                    }
+                    .padding(vertical = 10.dp, horizontal = 10.dp),
+                textAlign = TextAlign.Center,
+            )
 
         }
 

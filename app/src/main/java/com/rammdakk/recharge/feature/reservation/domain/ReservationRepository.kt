@@ -4,4 +4,6 @@ import com.rammdakk.recharge.feature.reservation.data.model.ReservationMetaDataM
 
 interface ReservationRepository {
     suspend fun getReservationInfo(reservationId: Int): Result<ReservationMetaDataModel>
+
+    suspend fun cancelReservation(reservationId: Int): Result<Unit>
 }

@@ -41,7 +41,8 @@ fun ReservationContent(
                 ReservationInfoScreen(
                     state.activityInfo,
                     state.reservationInfo,
-                    navigator::popBackStack
+                    navigator::popBackStack,
+                    viewModel::cancelReservation
                 )
                 setSystemBarsColors(
                     statusBarColor = ReChargeTokens.BackgroundColored.getThemedColor(),

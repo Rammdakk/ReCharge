@@ -13,4 +13,10 @@ interface ReservationApi {
         @Header("accessToken") accessToken: String,
         @Query("reservationId") reservationId: Int
     ): Response<ReservationMetaDataModel>
+
+    @GET("/api/Reservations/setReservationCanceledByUser")
+    suspend fun setReservationCanceled(
+        @Header("accessToken") accessToken: String,
+        @Query("reservationId") reservationId: Int
+    ): Response<Unit>
 }

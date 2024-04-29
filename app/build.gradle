@@ -67,6 +67,7 @@ android {
 
 dependencies {
     implementation "com.google.dagger:hilt-android:2.48"
+    implementation 'com.google.android.gms:play-services-location:21.2.0'
     kapt "com.google.dagger:hilt-compiler:2.48"
     implementation "io.coil-kt:coil-compose:2.5.0"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.34.0"
@@ -113,4 +114,6 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.8.1')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
+
+    implementation 'com.google.accompanist:accompanist-permissions:0.35.0-alpha'
 }

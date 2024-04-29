@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
@@ -40,7 +41,9 @@ import com.rammdakk.recharge.feature.exercises.activityList.view.components.Acti
 import com.rammdakk.recharge.feature.exercises.activityList.view.components.AppBar
 import com.rammdakk.recharge.feature.exercises.activityList.view.components.DateField
 import com.rammdakk.recharge.feature.exercises.activityList.view.components.FiltersSheetContent
+import com.rammdakk.recharge.feature.exercises.activityList.view.components.SortBottomSheet
 import com.rammdakk.recharge.feature.exercises.activityList.view.model.ActivityInfo
+import com.rammdakk.recharge.feature.exercises.activityList.view.model.SortingTypes
 import kotlinx.coroutines.launch
 import java.util.Date
 
@@ -49,6 +52,8 @@ import java.util.Date
 fun ActivityListScreen(
     title: String,
     date: State<Date>,
+    sortingType: State<SortingTypes>,
+    sort: (SortingTypes) -> Unit,
     activities: State<List<ActivityInfo>>,
     updateDate: (Date) -> Unit,
     navigator: DestinationsNavigator,
@@ -64,7 +69,9 @@ fun ActivityListScreen(
         )
 
     val coroutineScope = rememberCoroutineScope()
-    val state = rememberModalBottomSheetState()
+    val filtersState = rememberModalBottomSheetState()
+    val sortingState = rememberModalBottomSheetState()
+    val listState = rememberLazyListState()
     var searchText by remember {
         mutableStateOf("")
     }
@@ -82,6 +89,7 @@ fun ActivityListScreen(
         },
     ) { paddingValues ->
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
@@ -97,15 +105,26 @@ fun ActivityListScreen(
                 ) {
                     DateField(date) {
                         updateDate.invoke(it)
+                        coroutineScope.launch { listState.animateScrollToItem(0) }
                     }
-                    Icon(
-                        painter = painterResource(id = R.drawable.filter),
-                        tint = ReChargeTokens.BackgroundInverse.getThemedColor(),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .padding(end = 4.dp)
-                            .size(24.dp)
-                            .clickable { isFiltersBottomSheetVisible = true })
+                    Row {
+                        Icon(
+                            painter = painterResource(id = R.drawable.filter),
+                            tint = ReChargeTokens.BackgroundInverse.getThemedColor(),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .padding(end = 18.dp)
+                                .size(24.dp)
+                                .clickable { isFiltersBottomSheetVisible = true })
+                        Icon(
+                            painter = painterResource(id = R.drawable.sort),
+                            tint = ReChargeTokens.BackgroundInverse.getThemedColor(),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .padding(end = 4.dp)
+                                .size(24.dp)
+                                .clickable { isSortBottomSheetVisible = true })
+                    }
                 }
             }
             items(activities.value.filter {
@@ -124,35 +143,35 @@ fun ActivityListScreen(
         ModalBottomSheet(
             containerColor = ReChargeTokens.Background.getThemedColor(),
             onDismissRequest = { isFiltersBottomSheetVisible = false },
-            sheetState = state,
+            sheetState = filtersState,
             dragHandle = null
         ) {
             FiltersSheetContent(time.value, price.value) { selectedTime, selectedPrice ->
                 Log.d("Ramil", selectedTime.endInclusive.toString())
                 time.value = selectedTime
                 price.value = selectedPrice
-                coroutineScope.launch { state.hide() }.invokeOnCompletion {
-                    if (!state.isVisible) {
+                coroutineScope.launch { listState.animateScrollToItem(0) }
+                coroutineScope.launch { filtersState.hide() }.invokeOnCompletion {
+                    if (!filtersState.isVisible) {
                         isFiltersBottomSheetVisible = false
                     }
                 }
             }
         }
     }
-    if (isFiltersBottomSheetVisible) {
+    if (isSortBottomSheetVisible) {
         ModalBottomSheet(
             containerColor = ReChargeTokens.Background.getThemedColor(),
-            onDismissRequest = { isFiltersBottomSheetVisible = false },
-            sheetState = state,
+            onDismissRequest = { isSortBottomSheetVisible = false },
+            sheetState = sortingState,
             dragHandle = null
         ) {
-            FiltersSheetContent(time.value, price.value) { selectedTime, selectedPrice ->
-                Log.d("Ramil", selectedTime.endInclusive.toString())
-                time.value = selectedTime
-                price.value = selectedPrice
-                coroutineScope.launch { state.hide() }.invokeOnCompletion {
-                    if (!state.isVisible) {
-                        isFiltersBottomSheetVisible = false
+            SortBottomSheet(sortingType.value) {
+                sort.invoke(it)
+                coroutineScope.launch { listState.animateScrollToItem(0) }
+                coroutineScope.launch { sortingState.hide() }.invokeOnCompletion {
+                    if (!sortingState.isVisible) {
+                        isSortBottomSheetVisible = false
                     }
                 }
             }

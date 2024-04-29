@@ -19,6 +19,11 @@
     <string name="contacts">Контакты</string>
     <string name="exercise_search">Найти занятие</string>
     <string name="exercise_filters">Фильтры</string>
+    <string name="exercise_sort_default">По умолчанию</string>
+    <string name="exercise_sort_price_low">Сначала дешевле</string>
+    <string name="exercise_sort_price_high">Сначала дороже</string>
+    <string name="exercise_sort_date">По времени</string>
+    <string name="exercise_sort_location">По удаленности от меня</string>
     <string name="exercise_apply">Применить</string>
     <string name="profile_header">Профиль</string>
     <string name="profile_calendar_error_dialog_title">Некорректный возвраст</string>

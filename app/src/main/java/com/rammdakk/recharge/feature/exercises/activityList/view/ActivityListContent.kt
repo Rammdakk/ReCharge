@@ -34,6 +34,7 @@ fun ActivityListContent(
     LaunchedEffect(Unit) {
         viewModel.loadData(activityCatId)
     }
+
     val uiState by viewModel.screenState
 
     Crossfade(
@@ -45,6 +46,8 @@ fun ActivityListContent(
                 ActivityListScreen(
                     title = state.title.value,
                     date = state.date,
+                    sortingType = state.sortingType,
+                    sort = viewModel::sort,
                     activities = state.activities,
                     updateDate = { date -> viewModel.loadActivitiesData(activityCatId, date) },
                     navigator = navigator,

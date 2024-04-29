@@ -4,6 +4,7 @@ import android.text.format.DateFormat
 import android.util.Log
 import com.rammdakk.recharge.feature.exercises.activityList.data.model.ActivityDataModel
 import com.rammdakk.recharge.feature.exercises.activityList.data.model.Coordinates
+import java.util.Calendar
 import java.util.Date
 
 data class ActivityInfo(
@@ -13,6 +14,7 @@ data class ActivityInfo(
     val name: String,
     val organizationName: String,
     val date: Date,
+    val startTime: Int,
     val time: String,
     val price: Float,
     val address: String,
@@ -32,6 +34,7 @@ fun ActivityDataModel.convertToActivityInfo(): ActivityInfo? {
         name = this.name,
         date = this.time ?: return null,
         time = convertToTimeString(this.time, this.duration),
+        startTime = covertToStartTime(time),
         address = this.address,
         price = this.price,
         location = this.coordinates.convertToLocationInfo(),
@@ -47,6 +50,12 @@ private fun convertToTimeString(startDate: Date, lengthInMinutes: Long?): String
     val endDate = Date(startDate.time + lengthInMinutes * 60 * 1000)
     val endDateString = DateFormat.format("HH:mm", endDate).toString()
     return "$startDateString-$endDateString"
+}
+
+private fun covertToStartTime(startDate: Date): Int {
+    val calendar = Calendar.getInstance()
+        .apply { time = startDate }
+    return calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE)
 }
 
 fun Coordinates.convertToLocationInfo(): LocationInfo {

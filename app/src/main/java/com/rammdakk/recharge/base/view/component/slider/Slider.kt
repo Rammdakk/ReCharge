@@ -29,7 +29,7 @@ fun Slider(
     modifier: Modifier = Modifier,
     onValueChanged: (ClosedFloatingPointRange<Float>) -> Unit
 ) {
-    val stepsCount = (maxValue - minValue) / steps
+    val stepsCount = (maxValue - minValue) / steps - 1f
 
 
     Column(modifier = modifier.fillMaxWidth()) {
@@ -64,7 +64,7 @@ fun SliderWithTextInfo(
     onValueChanged: (ClosedFloatingPointRange<Float>) -> Unit,
 ) {
 
-    val stepsCount = (maxValue - minValue) / steps
+    val stepsCount = ((maxValue - minValue) / steps) - 1f
 
     Column(modifier = modifier) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
@@ -90,7 +90,7 @@ fun PreviewTimeSlider() {
     ReChargeTheme {
         val sliderPosition = remember { mutableStateOf(0f..24 * 60f) }
         Column(modifier = Modifier.padding(10.dp)) {
-            Slider(24 * 60f, 0f, 15f, sliderPosition) {
+            Slider(5f, 0f, 1f, sliderPosition) {
                 sliderPosition.value = it
             }
             Text(text = sliderPosition.value.toString())

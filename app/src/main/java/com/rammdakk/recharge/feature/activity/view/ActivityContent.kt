@@ -1,10 +1,12 @@
 package com.rammdakk.recharge.feature.activity.view
 
+import android.content.Intent
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -30,6 +32,8 @@ fun ActivityContent(
         navBarColor = ReChargeTokens.BackgroundColored.getThemedColor()
     )
 
+    val context = LocalContext.current
+
     Crossfade(
         modifier = Modifier
             .background(ReChargeTokens.BackgroundColored.getThemedColor()),
@@ -49,7 +53,22 @@ fun ActivityContent(
                     { viewModel.loadScheduleForDate(activityId, it) },
                     state.scheduleInfo,
                     state.usersMaxNumber,
-                    viewModel::reserve,
+                    { id, userBookingInfo ->
+                        viewModel.reserve(id, userBookingInfo) {
+                            val intent = Intent(Intent.ACTION_EDIT)
+                            intent.setType("vnd.android.cursor.item/event")
+                            intent.putExtra("beginTime", userBookingInfo.calendarInfo.startDate)
+                            intent.putExtra("allDay", false)
+                            intent.putExtra("rrule", "FREQ=ONCE")
+                            intent.putExtra("endTime", userBookingInfo.calendarInfo.endTime)
+                            intent.putExtra("title", userBookingInfo.calendarInfo.activityName)
+                            intent.putExtra(
+                                "eventLocation",
+                                userBookingInfo.calendarInfo.locationName
+                            )
+                            context.startActivity(intent)
+                        }
+                    },
                     navigator::popBackStack,
                 )
             }

@@ -3,7 +3,6 @@ package com.rammdakk.recharge.feature.activity.view
 import android.annotation.SuppressLint
 import android.util.Patterns
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
@@ -12,12 +11,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
@@ -70,6 +67,7 @@ import com.rammdakk.recharge.feature.activity.view.components.NumberField
 import com.rammdakk.recharge.feature.activity.view.components.TimePad
 import com.rammdakk.recharge.feature.activity.view.components.WarningText
 import com.rammdakk.recharge.feature.activity.view.model.ActivityExtendedInfo
+import com.rammdakk.recharge.feature.activity.view.model.CalendarActivityInfo
 import com.rammdakk.recharge.feature.activity.view.model.TimePad
 import com.rammdakk.recharge.feature.activity.view.model.UserBookingInfo
 import com.rammdakk.recharge.feature.activity.view.model.convertToActivityInfo
@@ -80,7 +78,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityInfoScreen(
     activityInfo: ActivityExtendedInfo,
@@ -237,14 +235,14 @@ private fun SheetContent(
     timePadList: List<TimePad>,
     maxUserNumber: State<Int?>,
     activityInfo: ActivityExtendedInfo,
-    onSuccess: (Int, UserBookingInfo) -> Unit
+    onReserve: (Int, UserBookingInfo) -> Unit
 ) {
-    val bottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .padding(top = 32.dp, bottom = bottomPadding)
+            .padding(top = 32.dp)
+            .navigationBarsPadding()
     ) {
         val id = selectedId ?: 0
         val timePad = runCatching { timePadList.first { it.id == id } }.getOrNull()
@@ -265,7 +263,7 @@ private fun SheetContent(
             mutableIntStateOf(1)
         }
         val format = SimpleDateFormat("HH:mm", Locale.getDefault())
-        Column {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             HeaderTextPrimaryInverse(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
@@ -351,13 +349,19 @@ private fun SheetContent(
                                     .isPossibleNumber(phone.text, LOCALE)
 
                     ) {
-                        onSuccess.invoke(
+                        onReserve.invoke(
                             id,
                             UserBookingInfo(
                                 userName = userName.text,
                                 email = email.text,
                                 phone = phone.text,
-                                reserveCount = guestNum
+                                reserveCount = guestNum,
+                                calendarInfo = CalendarActivityInfo(
+                                    activityName = activityInfo.name,
+                                    startDate = timePad.startTime.time,
+                                    endTime = timePad.endTime.time,
+                                    locationName = activityInfo.organizationName
+                                )
                             )
                         )
                     }

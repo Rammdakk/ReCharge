@@ -90,20 +90,22 @@ class ActivityViewModel @Inject constructor(
         }
     }
 
-    fun reserve(timeId: Int, userBookingInfo: UserBookingInfo) = viewModelScope.launch {
-        activityRepository.reserveActivity(timeId, userBookingInfo.covertToDataModel())
-            .getOrElse {
-                handleError(it)
-                null
-            }?.let {
-                _errorState.value =
-                    ErrorState.Success(resources.getString(R.string.reservation_success))
-                errorJob = async {
-                    delay(2000)
-                    _errorState.value = ErrorState.Idle
+    fun reserve(timeId: Int, userBookingInfo: UserBookingInfo, onSuccessReserve: () -> Unit) =
+        viewModelScope.launch {
+            activityRepository.reserveActivity(timeId, userBookingInfo.covertToDataModel())
+                .getOrElse {
+                    handleError(it)
+                    null
+                }?.let {
+                    _errorState.value =
+                        ErrorState.Success(resources.getString(R.string.reservation_success))
+                    errorJob = async {
+                        delay(2000)
+                        _errorState.value = ErrorState.Idle
+                    }
+                    onSuccessReserve.invoke()
                 }
-            }
-    }
+        }
 
     private suspend fun handleError(throwable: Throwable) = withContext(dispatchers.Main) {
         errorJob?.cancel()

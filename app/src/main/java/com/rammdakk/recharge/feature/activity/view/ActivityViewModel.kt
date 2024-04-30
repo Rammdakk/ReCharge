@@ -10,11 +10,13 @@ import androidx.lifecycle.viewModelScope
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.view.component.error.ErrorState
 import com.rammdakk.recharge.feature.activity.domain.ActivityRepository
+import com.rammdakk.recharge.feature.activity.view.model.CurrentUserInfo
 import com.rammdakk.recharge.feature.activity.view.model.TimePad
 import com.rammdakk.recharge.feature.activity.view.model.UserBookingInfo
 import com.rammdakk.recharge.feature.activity.view.model.convertToActivityInfo
 import com.rammdakk.recharge.feature.activity.view.model.covertToDataModel
 import com.rammdakk.recharge.feature.activity.view.model.covertToTimePad
+import com.rammdakk.recharge.feature.profile.domain.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -28,12 +30,13 @@ import javax.inject.Inject
 @HiltViewModel
 class ActivityViewModel @Inject constructor(
     private val activityRepository: ActivityRepository,
+    private val profileRepository: ProfileRepository,
     private val dispatchers: Dispatchers,
     private val resources: Resources
 ) : ViewModel() {
 
     private var errorJob: Job? = null
-
+    private var currentUser: CurrentUserInfo? = null
     private val _screenState: MutableState<ActivityScreenState> =
         mutableStateOf(ActivityScreenState.Idle)
     private val _schedule: MutableState<List<TimePad>> = mutableStateOf(emptyList())
@@ -47,15 +50,31 @@ class ActivityViewModel @Inject constructor(
 
     fun loadData(activityId: Int, date: Date = Date()) = viewModelScope.launch(dispatchers.IO) {
         loadScheduleForDate(activityId, date)
+
+        val deferred = if (currentUser == null) {
+            async {
+                profileRepository.getProfileShortInfo().getOrNull()?.let {
+                    CurrentUserInfo(
+                        userName = "${it.firstName.orEmpty()} ${it.secondName.orEmpty()}",
+                        phone = it.phone.orEmpty(),
+                        email = it.email.orEmpty()
+                    )
+                }
+            }
+        } else {
+            null
+        }
         val activityInfo =
             activityRepository.getActivityInfo(activityId).getOrElse { handleError(it) }
                 ?.convertToActivityInfo()
                 ?: return@launch
+        currentUser = currentUser ?: deferred?.await()
         withContext(dispatchers.Main) {
             _screenState.value = ActivityScreenState.Loaded(
                 activityInfo = activityInfo,
                 scheduleInfo = _schedule,
                 usersMaxNumber = _userNumber,
+                currentUserInfo = currentUser
             )
         }
     }

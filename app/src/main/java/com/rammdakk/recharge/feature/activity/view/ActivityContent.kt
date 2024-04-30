@@ -53,6 +53,7 @@ fun ActivityContent(
                     { viewModel.loadScheduleForDate(activityId, it) },
                     state.scheduleInfo,
                     state.usersMaxNumber,
+                    state.currentUserInfo,
                     { id, userBookingInfo ->
                         viewModel.reserve(id, userBookingInfo) {
                             val intent = Intent(Intent.ACTION_EDIT)

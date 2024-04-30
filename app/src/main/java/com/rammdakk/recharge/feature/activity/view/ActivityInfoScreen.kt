@@ -69,6 +69,7 @@ import com.rammdakk.recharge.feature.activity.view.components.TimePad
 import com.rammdakk.recharge.feature.activity.view.components.WarningText
 import com.rammdakk.recharge.feature.activity.view.model.ActivityExtendedInfo
 import com.rammdakk.recharge.feature.activity.view.model.CalendarActivityInfo
+import com.rammdakk.recharge.feature.activity.view.model.CurrentUserInfo
 import com.rammdakk.recharge.feature.activity.view.model.TimePad
 import com.rammdakk.recharge.feature.activity.view.model.UserBookingInfo
 import com.rammdakk.recharge.feature.activity.view.model.convertToActivityInfo
@@ -88,6 +89,7 @@ fun ActivityInfoScreen(
     onDateChanged: (Date) -> Unit,
     timePadList: State<List<TimePad>>,
     maxUserNumber: State<Int?>,
+    userInfo: CurrentUserInfo?,
     onReserve: (Int, UserBookingInfo) -> Unit,
     onBackPressed: () -> Unit
 ) {
@@ -215,6 +217,7 @@ fun ActivityInfoScreen(
             SheetContent(
                 selectedId,
                 timePadList.value,
+                userInfo,
                 maxUserNumber,
                 activityInfo
             ) { id, userInfo ->
@@ -234,6 +237,7 @@ fun ActivityInfoScreen(
 private fun SheetContent(
     selectedId: Int?,
     timePadList: List<TimePad>,
+    userInfo: CurrentUserInfo?,
     maxUserNumber: State<Int?>,
     activityInfo: ActivityExtendedInfo,
     onReserve: (Int, UserBookingInfo) -> Unit
@@ -252,13 +256,13 @@ private fun SheetContent(
             return
         }
         var userName by remember {
-            mutableStateOf(TextFieldValue())
+            mutableStateOf(TextFieldValue(text = userInfo?.userName.orEmpty()))
         }
         var phone by remember {
-            mutableStateOf(TextFieldValue())
+            mutableStateOf(TextFieldValue(text = userInfo?.phone.orEmpty()))
         }
         var email by remember {
-            mutableStateOf(TextFieldValue())
+            mutableStateOf(TextFieldValue(text = userInfo?.email.orEmpty()))
         }
         var guestNum by remember {
             mutableIntStateOf(1)
@@ -424,6 +428,7 @@ fun ActivityInfoScreenPreview() {
         initialDate = Date(),
         preSelectedId = null,
         {},
+        userInfo = null,
         timePadList = mutableStateOf(list),
         maxUserNumber = mutableIntStateOf(0),
         onBackPressed = {}, onReserve = { _, _ -> })

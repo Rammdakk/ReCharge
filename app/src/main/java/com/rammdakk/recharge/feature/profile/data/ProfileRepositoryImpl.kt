@@ -10,6 +10,7 @@ import com.rammdakk.recharge.feature.profile.domain.ProfileRepository
 import com.rammdakk.recharge.feature.profile.models.data.ProfileInfo
 import com.rammdakk.recharge.feature.profile.models.data.ShortProfileInfo
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 
@@ -26,13 +27,18 @@ class ProfileRepositoryImpl(
     override suspend fun getProfile(): Result<ProfileInfo> =
         withContext(dispatchers.IO) {
             getAccessToken()?.let {
+                async { getProfileShortInfo(forceUpdate = true) }
                 makeRequest { api.getUserInfo(it) }
             } ?: Result.failure(NetworkError(InternetError.Unauthorized))
         }
 
-    override suspend fun getProfileShortInfo(): Result<ShortProfileInfo> {
-        sharedPreferences.getData(PROFILE_INFO_KEY, ShortProfileInfo::class.java)?.let {
-            return Result.success(it)
+    override suspend fun getProfileShortInfo(forceUpdate: Boolean): Result<ShortProfileInfo> {
+        if (!forceUpdate) {
+            withContext(dispatchers.IO) {
+                sharedPreferences.getData(PROFILE_INFO_KEY, ShortProfileInfo::class.java)?.let {
+                    return@withContext Result.success(it)
+                }
+            }
         }
         return withContext(dispatchers.IO) {
             getAccessToken()?.let {

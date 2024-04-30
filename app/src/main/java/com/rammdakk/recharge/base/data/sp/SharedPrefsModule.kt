@@ -9,8 +9,12 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RechargeRetrofitModule {
+object RechargeDataModule {
     @Provides
-    fun encryptedSharedPreferences(@ApplicationContext context: Context): EncryptedSharedPreferences =
+    fun provideEncryptedSharedPreferences(@ApplicationContext context: Context): EncryptedSharedPreferences =
         EncryptedSharedPreferences(context)
+
+    @Provides
+    fun provideSharedPreferences(@ApplicationContext context: Context): CustomSharedPreferences =
+        CustomSharedPreferences(context)
 }

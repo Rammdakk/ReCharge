@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.profile.di
 
+import com.rammdakk.recharge.base.data.sp.CustomSharedPreferences
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.profile.data.ProfileRepositoryImpl
 import com.rammdakk.recharge.feature.profile.domain.ProfileRepository
@@ -19,7 +20,8 @@ class ProfileModule {
         retrofit: Retrofit,
         authRepository: AuthRepository,
         dispatchers: Dispatchers,
+        sharedPreferences: CustomSharedPreferences
     ): ProfileRepository {
-        return ProfileRepositoryImpl(retrofit, authRepository, dispatchers)
+        return ProfileRepositoryImpl(retrofit, authRepository, dispatchers, sharedPreferences)
     }
 }

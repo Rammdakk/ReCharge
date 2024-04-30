@@ -1,6 +1,10 @@
 package com.rammdakk.recharge.feature.exercises.activityList.view.components
 
 import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -18,13 +22,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
+import androidx.core.content.ContextCompat
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryLarge
@@ -66,26 +69,30 @@ fun SortBottomSheet(sortingType: SortingTypes, onSort: (SortingTypes) -> Unit) {
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun RadioButton(sortingType: SortingTypes, currentState: MutableState<SortingTypes>) {
-    val geoPermission =
-        rememberPermissionState(permission = Manifest.permission.ACCESS_FINE_LOCATION) { isGranted ->
-            if (isGranted) {
-                currentState.value = SortingTypes.LOCATION
-            } else {
-                currentState.value = SortingTypes.TIME
-            }
+
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            currentState.value = SortingTypes.LOCATION
+        } else {
+            currentState.value = SortingTypes.TIME
         }
+    }
+    val context = LocalContext.current
     Row(
         Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
             .clickable {
-                if (sortingType != SortingTypes.LOCATION || geoPermission.status.isGranted) {
+                if (sortingType != SortingTypes.LOCATION ||
+                    isPermissionGranted(context)
+                ) {
                     currentState.value = sortingType
                 } else {
-                    geoPermission.launchPermissionRequest()
+                    launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 }
             },
         verticalAlignment = Alignment.CenterVertically
@@ -95,16 +102,24 @@ private fun RadioButton(sortingType: SortingTypes, currentState: MutableState<So
             colors = RadioButtonDefaults.colors()
                 .copy(selectedColor = ReChargeTokens.BackgroundColored.getThemedColor()),
             onClick = {
-                if (sortingType != SortingTypes.LOCATION || geoPermission.status.isGranted) {
+                if (sortingType != SortingTypes.LOCATION ||
+                    isPermissionGranted(context)
+                ) {
                     currentState.value = sortingType
                 } else {
-                    geoPermission.launchPermissionRequest()
+                    launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 }
             })
         TextPrimarySmall(text = stringResource(id = sortingType.res))
     }
 
 }
+
+private fun isPermissionGranted(context: Context) =
+    PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
+        context,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
 
 
 @Preview

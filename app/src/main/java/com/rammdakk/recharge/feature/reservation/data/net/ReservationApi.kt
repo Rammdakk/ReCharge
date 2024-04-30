@@ -4,6 +4,7 @@ import com.rammdakk.recharge.feature.reservation.data.model.ReservationMetaDataM
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface ReservationApi {
@@ -14,7 +15,7 @@ interface ReservationApi {
         @Query("reservationId") reservationId: Int
     ): Response<ReservationMetaDataModel>
 
-    @GET("/api/Reservations/setReservationCanceledByUser")
+    @POST("/api/Reservations/SetReservationCanceledByUser")
     suspend fun setReservationCanceled(
         @Header("accessToken") accessToken: String,
         @Query("reservationId") reservationId: Int

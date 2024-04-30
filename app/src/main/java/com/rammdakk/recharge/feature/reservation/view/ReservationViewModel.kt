@@ -58,7 +58,7 @@ class ReservationViewModel @Inject constructor(
     }
 
     fun cancelReservation(reservationId: Int) = viewModelScope.launch {
-        reservationRepository.getReservationInfo(reservationId = reservationId)
+        reservationRepository.cancelReservation(reservationId = reservationId)
             .getOrElse { error ->
                 handleError(error)
                 null

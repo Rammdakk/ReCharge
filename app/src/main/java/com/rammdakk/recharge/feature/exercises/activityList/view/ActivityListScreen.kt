@@ -1,6 +1,5 @@
 package com.rammdakk.recharge.feature.exercises.activityList.view
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -147,7 +146,6 @@ fun ActivityListScreen(
             dragHandle = null
         ) {
             FiltersSheetContent(time.value, price.value) { selectedTime, selectedPrice ->
-                Log.d("Ramil", selectedTime.endInclusive.toString())
                 time.value = selectedTime
                 price.value = selectedPrice
                 coroutineScope.launch { listState.animateScrollToItem(0) }

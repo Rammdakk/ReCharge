@@ -21,4 +21,8 @@ class CustomSharedPreferences(
         ObjectMapper().readValue(value, valueType)
     }.getOrNull()
 
+    fun onLogOut() = runCatching {
+        sharedPreferences.edit().clear().commit()
+    }
+
 }

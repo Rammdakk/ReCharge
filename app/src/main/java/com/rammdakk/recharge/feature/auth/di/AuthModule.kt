@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.auth.di
 
+import com.rammdakk.recharge.base.data.sp.CustomSharedPreferences
 import com.rammdakk.recharge.base.data.sp.EncryptedSharedPreferences
 import com.rammdakk.recharge.feature.auth.data.AuthRepositoryImpl
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
@@ -18,8 +19,14 @@ class AuthModule {
     fun provideAuthRepository(
         retrofit: Retrofit,
         encryptedSharedPreferences: EncryptedSharedPreferences,
+        customSharedPreferences: CustomSharedPreferences,
         dispatchers: Dispatchers
     ): AuthRepository {
-        return AuthRepositoryImpl(retrofit, encryptedSharedPreferences, dispatchers)
+        return AuthRepositoryImpl(
+            retrofit,
+            encryptedSharedPreferences,
+            customSharedPreferences,
+            dispatchers
+        )
     }
 }

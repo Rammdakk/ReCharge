@@ -1,6 +1,7 @@
 package com.rammdakk.recharge.feature.auth.data
 
 import com.rammdakk.recharge.base.data.network.makeRequest
+import com.rammdakk.recharge.base.data.sp.CustomSharedPreferences
 import com.rammdakk.recharge.base.data.sp.EncryptedSharedPreferences
 import com.rammdakk.recharge.base.data.sp.EncryptedSharedPreferences.Companion.ACCESS_KEY
 import com.rammdakk.recharge.feature.auth.data.model.AuthCodeRequest
@@ -16,6 +17,7 @@ import retrofit2.Retrofit
 class AuthRepositoryImpl(
     retrofit: Retrofit,
     private val encryptedSharedPreferences: EncryptedSharedPreferences,
+    private val customSharedPreferences: CustomSharedPreferences,
     private val dispatchers: Dispatchers
 ) : AuthRepository {
 
@@ -58,6 +60,7 @@ class AuthRepositoryImpl(
     override suspend fun logOut(): Boolean = withContext(dispatchers.IO) {
         getToken(logoutOnError = false)?.let { makeRequest { api.logOut(it) } }
         encryptedSharedPreferences.sharedPreferences.edit().remove(ACCESS_KEY).apply()
+        customSharedPreferences.onLogOut()
         return@withContext getToken(logoutOnError = false).isNullOrBlank()
     }
 

@@ -30,7 +30,8 @@ class CatalogRepositoryMockkImp : CatalogRepository {
                 time = Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000 * 10),
                 address = "м.Курская, Земляной вал, 33",
                 organizationName = "Бассейн Чайка",
-                coordinates = Coordinates(55.757114f, 37.65905f)
+                coordinates = Coordinates(55.757114f, 37.65905f),
+                reservationStatus = 3
             )
         )
 

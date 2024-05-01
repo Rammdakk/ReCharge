@@ -9,7 +9,11 @@ sealed interface CalendarScreenState {
 
     data class Loaded(
         val calendarState: CalendarState,
-        val reservationList: State<List<ReservationModel>>
+        val reservationList: ReservationListState
     ) : CalendarScreenState
 }
 
+data class ReservationListState(
+    val isLoading: State<Boolean>,
+    val reservationList: State<List<ReservationModel>>
+)

@@ -20,7 +20,8 @@ data class ReservationDataModel(
     @JsonProperty("dateTime") val time: Date,
     @JsonProperty("locationName") val organizationName: String,
     @JsonProperty("address") val address: String,
-    @JsonProperty("coordinates") val coordinates: Coordinates?
+    @JsonProperty("coordinates") val coordinates: Coordinates?,
+    @JsonProperty("status") val reservationStatus: Int
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

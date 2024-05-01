@@ -1,6 +1,5 @@
 package com.rammdakk.recharge.feature.calendar.view
 
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -45,7 +44,6 @@ fun CalendarContent(
             }
 
             is CalendarScreenState.Loaded -> {
-                Log.d("ramil", "loaded ${state.calendarState.currentMoth.value}")
                 CalendarScreen(
                     calendarState = state.calendarState,
                     reservationList = state.reservationList,

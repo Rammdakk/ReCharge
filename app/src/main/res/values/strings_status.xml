@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="status_new">Создан</string>
+    <string name="status_confirmed">Подтвержден</string>
+    <string name="status_used">Использован</string>
+    <string name="status_missed">Пропущен</string>
+    <string name="status_canceled_user">Отменен</string>
+    <string name="status_canceled_admin">Отменен администратором</string>
+    <string name="status_unknown">Неизвестный</string>
+</resources>

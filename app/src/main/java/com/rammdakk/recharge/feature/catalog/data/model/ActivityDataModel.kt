@@ -13,7 +13,8 @@ data class NextActivityDataModel(
     @JsonProperty("dateTime") val time: Date,
     @JsonProperty("locationName") val organizationName: String,
     @JsonProperty("addressString") val address: String,
-    @JsonProperty("coordinates") val coordinates: Coordinates
+    @JsonProperty("coordinates") val coordinates: Coordinates,
+    @JsonProperty("status") val reservationStatus: Int
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

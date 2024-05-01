@@ -34,6 +34,7 @@ class CalendarScreenViewModel @Inject constructor(
     private val _screenState: MutableState<CalendarScreenState> =
         mutableStateOf(CalendarScreenState.Idle)
     private val _calendarState: MutableState<YearMonth> = mutableStateOf(YearMonth.now())
+    private val _isLoadingList: MutableState<Boolean> = mutableStateOf(true)
     private val _reservationList: MutableState<List<ReservationModel>> = mutableStateOf(emptyList())
     private var _errorState = mutableStateOf<ErrorState>(ErrorState.Idle)
 
@@ -45,13 +46,18 @@ class CalendarScreenViewModel @Inject constructor(
         updateReservations(_calendarState.value)
         _screenState.value = CalendarScreenState.Loaded(
             CalendarState(_calendarState, ::onMonthChanged, {}),
-            _reservationList
+            ReservationListState(
+                _isLoadingList,
+                _reservationList
+            )
+
         )
     }
 
     private fun onMonthChanged(newMonth: YearMonth) = viewModelScope.launch {
         updateJob?.cancel()
         if (newMonth != _calendarState.value) {
+            _isLoadingList.value = true
             _reservationList.value = emptyList()
             _calendarState.value = newMonth
         }
@@ -65,9 +71,11 @@ class CalendarScreenViewModel @Inject constructor(
             calendarRepository.loadReservations(
                 newMonth.atDay(1).toDate(),
                 newMonth.plusMonths(1).atDay(1).toDate(),
-            ).getOrElse { handleError(it) }?.map { it.convertToReservationModel() }
+            ).getOrElse { handleError(it) }?.sortedBy { it.time }
+                ?.map { it.convertToReservationModel() }
         }.orEmpty()
         _reservationList.value = date
+        _isLoadingList.value = false
     }
 
     private fun LocalDate.toDate() = Date.from(

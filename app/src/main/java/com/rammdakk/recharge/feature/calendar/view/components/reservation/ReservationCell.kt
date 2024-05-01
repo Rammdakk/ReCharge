@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -27,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -34,11 +36,13 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.rammdakk.recharge.R
+import com.rammdakk.recharge.base.theme.PlainTextLarge
 import com.rammdakk.recharge.base.theme.PlainTextSmallInverse
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryMediumInverse
 import com.rammdakk.recharge.base.theme.getThemedColor
 import com.rammdakk.recharge.feature.calendar.view.model.ReservationModel
+import com.rammdakk.recharge.feature.calendar.view.model.ReservationStatus
 import com.rammdakk.recharge.feature.destinations.ReservationContentDestination
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -57,7 +61,10 @@ fun ReservationCell(
         .wrapContentHeight()
         .padding(vertical = 10.dp)
         .clip(RoundedCornerShape(roundedCorner))
-        .clickable {
+        .clickable(
+            enabled = activityInfo.status == ReservationStatus.NEW ||
+                    activityInfo.status == ReservationStatus.CONFIRMED
+        ) {
             navigator.navigate(
                 ReservationContentDestination(
                     ReservationContentDestination.NavArgs(
@@ -67,17 +74,30 @@ fun ReservationCell(
                 )
             )
         }) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(activityInfo.imagePath)
-                .crossfade(true)
-                .build(),
-            contentDescription = "",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(3.8f),
-        )
+        Box {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(activityInfo.imagePath)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(3.8f),
+            )
+            PlainTextLarge(
+                text = stringResource(id = activityInfo.status.stringRes),
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 8.dp, end = 8.dp)
+                    .background(
+                        activityInfo.status.cellColor.copy(alpha = 0.9f),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(vertical = 2.dp, horizontal = 8.dp)
+            )
+        }
         Column(
             modifier = Modifier
                 .background(ReChargeTokens.BackgroundColored.getThemedColor())

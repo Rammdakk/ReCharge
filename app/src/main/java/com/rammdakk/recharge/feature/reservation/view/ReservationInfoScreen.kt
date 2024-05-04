@@ -26,7 +26,11 @@ import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,6 +58,7 @@ import com.rammdakk.recharge.base.theme.getThemedColor
 import com.rammdakk.recharge.feature.activity.view.components.ActivityImage
 import com.rammdakk.recharge.feature.activity.view.components.WarningText
 import com.rammdakk.recharge.feature.activity.view.model.ActivityExtendedInfo
+import com.rammdakk.recharge.feature.reservation.view.components.CancelReservationDialog
 import com.rammdakk.recharge.feature.reservation.view.model.ReservationInfo
 import kotlinx.coroutines.launch
 
@@ -75,6 +80,10 @@ fun ReservationInfoScreen(
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
 
     val scope = rememberCoroutineScope()
+
+    var isCancelDialogVisible by remember {
+        mutableStateOf(false)
+    }
 
     BottomSheetScaffold(
         scaffoldState = state,
@@ -240,7 +249,7 @@ fun ReservationInfoScreen(
                 modifier = Modifier
                     .wrapContentSize()
                     .clickable {
-                        reservationInfo.reservationId?.let { onCancelClick.invoke(it) }
+                        isCancelDialogVisible = true
                     }
                     .padding(vertical = 10.dp, horizontal = 10.dp),
                 textAlign = TextAlign.Center,
@@ -248,6 +257,12 @@ fun ReservationInfoScreen(
 
         }
 
+    }
+    if (isCancelDialogVisible) {
+        CancelReservationDialog(onDismissRequest = { isCancelDialogVisible = false }) {
+            reservationInfo.reservationId?.let { onCancelClick.invoke(it) }
+            isCancelDialogVisible = false
+        }
     }
 }
 

@@ -1,10 +1,12 @@
 package com.rammdakk.recharge.feature.profile.view
 
+import android.content.res.Resources
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.view.component.error.ErrorState
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.profile.domain.ProfileRepository
@@ -25,6 +27,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val authRepository: AuthRepository,
+    private val resources: Resources,
     private val dispatchers: Dispatchers,
 ) : ViewModel() {
 
@@ -65,7 +68,10 @@ class ProfileViewModel @Inject constructor(
         profileScreenModel.covertToProfileInfo()
             .let {
                 profile = it
-                profileRepository.updateProfile(it).getOrElse { handleError(it) }
+                profileRepository.updateProfile(it).fold(
+                    onSuccess = { handleSuccess(resources.getString(R.string.profile_update_success)) },
+                    onFailure = { err -> handleError(err) }
+                )
             }
 
     }
@@ -104,6 +110,16 @@ class ProfileViewModel @Inject constructor(
     private suspend fun handleError(throwable: Throwable) = withContext(dispatchers.Main) {
         errorJob?.cancel()
         _errorState.value = ErrorState.Error(throwable.message.toString())
+        errorJob = async {
+            delay(2000)
+            _errorState.value = ErrorState.Idle
+        }
+        null
+    }
+
+    private suspend fun handleSuccess(message: String) = withContext(dispatchers.Main) {
+        errorJob?.cancel()
+        _errorState.value = ErrorState.Success(message)
         errorJob = async {
             delay(2000)
             _errorState.value = ErrorState.Idle

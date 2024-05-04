@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.calendar.di
 
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.build.isMock
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.calendar.data.CalendarMockRepositoryImpl
@@ -21,10 +22,11 @@ class CalendarModule {
         retrofit: Retrofit,
         authRepository: AuthRepository,
         dispatchers: Dispatchers,
+        errorMessageConverter: ErrorMessageConverter
     ): CalendarRepository {
         if (isMock()) {
             return CalendarMockRepositoryImpl()
         }
-        return CalendarRepositoryImpl(retrofit, authRepository, dispatchers)
+        return CalendarRepositoryImpl(retrofit, authRepository, dispatchers, errorMessageConverter)
     }
 }

@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.profile.di
 
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.base.data.sp.CustomSharedPreferences
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.profile.data.ProfileRepositoryImpl
@@ -20,8 +21,15 @@ class ProfileModule {
         retrofit: Retrofit,
         authRepository: AuthRepository,
         dispatchers: Dispatchers,
-        sharedPreferences: CustomSharedPreferences
+        sharedPreferences: CustomSharedPreferences,
+        errorMessageConverter: ErrorMessageConverter
     ): ProfileRepository {
-        return ProfileRepositoryImpl(retrofit, authRepository, dispatchers, sharedPreferences)
+        return ProfileRepositoryImpl(
+            retrofit,
+            authRepository,
+            dispatchers,
+            sharedPreferences,
+            errorMessageConverter
+        )
     }
 }

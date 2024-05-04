@@ -1,6 +1,7 @@
 package com.rammdakk.recharge.feature.activity.data
 
 
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.network.makeRequest
@@ -19,14 +20,15 @@ import java.util.Date
 class ActivityRepositoryImp(
     retrofit: Retrofit,
     private val authRepository: AuthRepository,
-    private val dispatchers: Dispatchers
+    private val dispatchers: Dispatchers,
+    private val errorMessageConverter: ErrorMessageConverter
 ) : ActivityRepository {
 
     private val api = retrofit.create(ActivityApi::class.java)
 
     override suspend fun getActivityInfo(activityId: Int): Result<ActivityExtendedDataModel> =
         withContext(dispatchers.IO) {
-            makeRequest { api.getActivityInfo(activityId) }
+            makeRequest(errorMessageConverter) { api.getActivityInfo(activityId) }
         }
 
     override suspend fun getActivityTimeTable(
@@ -34,7 +36,7 @@ class ActivityRepositoryImp(
         date: Date
     ): Result<List<TimePadDataModel>> =
         withContext(dispatchers.IO) {
-            makeRequest {
+            makeRequest(errorMessageConverter) {
                 api.getActivityTabs(
                     activityId,
                     date.formatToUtcString()
@@ -44,13 +46,19 @@ class ActivityRepositoryImp(
 
     override suspend fun getUsersMaxNumber(tabId: Int): Result<Int> =
         withContext(dispatchers.IO) {
-            makeRequest { api.getUsersMaxNumber(tabId) }.map { it.freeSpots }
+            makeRequest(errorMessageConverter) { api.getUsersMaxNumber(tabId) }.map { it.freeSpots }
         }
 
     override suspend fun reserveActivity(tabId: Int, userBookingInfo: UserBookingDataModel) =
         withContext(dispatchers.IO) {
             getAccessToken()?.let {
-                makeRequest { api.reserveActivity(it, tabId, userBookingInfo) }
+                makeRequest(errorMessageConverter) {
+                    api.reserveActivity(
+                        it,
+                        tabId,
+                        userBookingInfo
+                    )
+                }
             } ?: Result.failure(NetworkError(InternetError.Unauthorized))
         }
 

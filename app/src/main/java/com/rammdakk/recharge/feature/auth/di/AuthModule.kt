@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.auth.di
 
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.base.data.sp.CustomSharedPreferences
 import com.rammdakk.recharge.base.data.sp.EncryptedSharedPreferences
 import com.rammdakk.recharge.feature.auth.data.AuthRepositoryImpl
@@ -20,13 +21,15 @@ class AuthModule {
         retrofit: Retrofit,
         encryptedSharedPreferences: EncryptedSharedPreferences,
         customSharedPreferences: CustomSharedPreferences,
-        dispatchers: Dispatchers
+        dispatchers: Dispatchers,
+        errorMessageConverter: ErrorMessageConverter
     ): AuthRepository {
         return AuthRepositoryImpl(
             retrofit,
             encryptedSharedPreferences,
             customSharedPreferences,
-            dispatchers
+            dispatchers,
+            errorMessageConverter
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.calendar.data
 
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.network.makeRequest
@@ -16,7 +17,8 @@ import java.util.Date
 class CalendarRepositoryImpl(
     retrofit: Retrofit,
     private val authRepository: AuthRepository,
-    private val dispatchers: Dispatchers
+    private val dispatchers: Dispatchers,
+    private val errorMessageConverter: ErrorMessageConverter
 ) : CalendarRepository {
 
     private val api = retrofit.create(CalendarReservationApi::class.java)
@@ -25,7 +27,7 @@ class CalendarRepositoryImpl(
         endDate: Date
     ): Result<List<ReservationDataModel>> = withContext(dispatchers.IO) {
         getAccessToken()?.let {
-            makeRequest {
+            makeRequest(errorMessageConverter) {
                 api.getReservationList(
                     it,
                     startDate.formatToUtcString(),

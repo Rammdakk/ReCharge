@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.activity.di
 
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.build.isMock
 import com.rammdakk.recharge.feature.activity.data.ActivityMockRepositoryImp
 import com.rammdakk.recharge.feature.activity.data.ActivityRepositoryImp
@@ -21,9 +22,10 @@ class ActivityModule {
         dispatchers: Dispatchers,
         authRepository: AuthRepository,
         retrofit: Retrofit,
+        errorMessageConverter: ErrorMessageConverter
     ): ActivityRepository {
         if (isMock())
             return ActivityMockRepositoryImp()
-        return ActivityRepositoryImp(retrofit, authRepository, dispatchers)
+        return ActivityRepositoryImp(retrofit, authRepository, dispatchers, errorMessageConverter)
     }
 }

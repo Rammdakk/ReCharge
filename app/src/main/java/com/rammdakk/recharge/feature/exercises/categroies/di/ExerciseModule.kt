@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.exercises.categroies.di
 
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.build.isMock
 import com.rammdakk.recharge.feature.exercises.categroies.data.ExerciseRepositoryImpl
 import com.rammdakk.recharge.feature.exercises.categroies.data.ExerciseRepositoryMockImpl
@@ -19,10 +20,11 @@ class ExerciseModule {
     fun provideExerciseRepository(
         dispatchers: Dispatchers,
         retrofit: Retrofit,
+        errorMessageConverter: ErrorMessageConverter
     ): ExerciseRepository {
         if (isMock()) {
             return ExerciseRepositoryMockImpl()
         }
-        return ExerciseRepositoryImpl(retrofit, dispatchers)
+        return ExerciseRepositoryImpl(retrofit, dispatchers, errorMessageConverter)
     }
 }

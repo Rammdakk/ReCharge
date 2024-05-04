@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.exercises.activityList.di
 
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.exercises.activityList.data.ActivityListRepositoryImpl
 import com.rammdakk.recharge.feature.exercises.activityList.domain.ActivityListRepository
@@ -19,7 +20,13 @@ class ActivityListModule {
         retrofit: Retrofit,
         authRepository: AuthRepository,
         dispatchers: Dispatchers,
+        errorMessageConverter: ErrorMessageConverter
     ): ActivityListRepository {
-        return ActivityListRepositoryImpl(retrofit, authRepository, dispatchers)
+        return ActivityListRepositoryImpl(
+            retrofit,
+            authRepository,
+            dispatchers,
+            errorMessageConverter
+        )
     }
 }

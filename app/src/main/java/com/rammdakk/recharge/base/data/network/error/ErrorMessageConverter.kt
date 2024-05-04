@@ -3,15 +3,15 @@ package com.rammdakk.recharge.base.data.network.error
 import android.content.res.Resources
 import com.rammdakk.recharge.R
 
-internal interface ErrorMessageConverter {
-    fun getError(internetError: InternetError, message: Any): String
+interface ErrorMessageConverter {
+    fun getError(internetError: InternetError, message: Any? = null): String
 }
 
-internal class ErrorMessageConverterImpl(
-    private val resources: Resources,
+class ErrorMessageConverterImpl(
+    val resources: Resources,
 ) : ErrorMessageConverter {
 
-    override fun getError(internetError: InternetError, message: Any): String =
+    override fun getError(internetError: InternetError, message: Any?): String =
         when (internetError) {
             is InternetError.Network -> resources.getString(R.string.error_network)
             is InternetError.Timeout -> resources.getString(R.string.error_network_timeout)
@@ -20,10 +20,7 @@ internal class ErrorMessageConverterImpl(
             is InternetError.AccessDenied -> resources.getString(R.string.error_network_access_denied)
             is InternetError.Unauthorized -> resources.getString(R.string.error_network_unauthorized)
             is InternetError.ServiceUnavailable -> resources.getString(R.string.error_network_service_unavailable)
-            is InternetError.Unknown -> resources.getString(
-                R.string.error_unknown,
-                message.toString().replace("\n", " ")
-            )
+            is InternetError.Unknown -> resources.getString(R.string.error_unknown, message)
 
             is InternetError.ServerInternetError -> resources.getString(R.string.error_50x)
             is InternetError.TooManyRequests -> resources.getString(R.string.error_too_many_requests)

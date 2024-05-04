@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.reservation.di
 
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.build.isMock
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.reservation.data.ReservationMockRepositoryImpl
@@ -21,10 +22,16 @@ class ReservationModule {
         retrofit: Retrofit,
         authRepository: AuthRepository,
         dispatchers: Dispatchers,
+        errorMessageConverter: ErrorMessageConverter
     ): ReservationRepository {
         if (isMock()) {
             return ReservationMockRepositoryImpl()
         }
-        return ReservationRepositoryImpl(retrofit, authRepository, dispatchers)
+        return ReservationRepositoryImpl(
+            retrofit,
+            authRepository,
+            dispatchers,
+            errorMessageConverter
+        )
     }
 }

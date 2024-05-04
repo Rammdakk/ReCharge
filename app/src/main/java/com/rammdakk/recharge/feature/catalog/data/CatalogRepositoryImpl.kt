@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.catalog.data
 
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.network.makeRequest
@@ -18,12 +19,14 @@ class CatalogRepositoryImpl(
     retrofit: Retrofit,
     private val authRepository: AuthRepository,
     private val dispatchers: Dispatchers,
+    private val errorMessageConverter: ErrorMessageConverter
 ) : CatalogRepository {
 
     private val api = retrofit.create(CatalogApi::class.java)
 
     override suspend fun getProfileInfo(): Result<ProfileDataModel> = withContext(dispatchers.IO) {
-        getAccessToken()?.let { makeRequest { api.getProfileInfo(it) } } ?: Result.failure(
+        getAccessToken()?.let { makeRequest(errorMessageConverter) { api.getProfileInfo(it) } }
+            ?: Result.failure(
             NetworkError(InternetError.Unauthorized)
         )
     }
@@ -31,14 +34,16 @@ class CatalogRepositoryImpl(
 
     override suspend fun getNextActivityInfo(): Result<NextActivityDataModel> =
         withContext(dispatchers.IO) {
-            getAccessToken()?.let { makeRequest { api.getNextActivity(it) } } ?: Result.failure(
+            getAccessToken()?.let { makeRequest(errorMessageConverter) { api.getNextActivity(it) } }
+                ?: Result.failure(
                 NetworkError(InternetError.Unauthorized)
             )
         }
 
     override suspend fun getCategories(): Result<List<CategoryDataModel>> =
         withContext(dispatchers.IO) {
-            getAccessToken()?.let { makeRequest { api.getCategories(it) } } ?: Result.failure(
+            getAccessToken()?.let { makeRequest(errorMessageConverter) { api.getCategories(it) } }
+                ?: Result.failure(
                 NetworkError(InternetError.Unauthorized)
             )
         }
@@ -46,7 +51,12 @@ class CatalogRepositoryImpl(
     override suspend fun updateCatalog(selectedCategoryId: Int?): Result<List<ActivityRecommendationDataModel>> =
         withContext(dispatchers.IO) {
             getAccessToken()?.let {
-                makeRequest { api.getActivitiesForCategory(it, selectedCategoryId) }
+                makeRequest(errorMessageConverter) {
+                    api.getActivitiesForCategory(
+                        it,
+                        selectedCategoryId
+                    )
+                }
             } ?: Result.failure(NetworkError(InternetError.Unauthorized))
         }
 

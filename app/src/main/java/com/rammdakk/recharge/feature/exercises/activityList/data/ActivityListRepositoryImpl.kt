@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.exercises.activityList.data
 
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.network.makeRequest
@@ -14,7 +15,8 @@ import java.util.Date
 class ActivityListRepositoryImpl(
     retrofit: Retrofit,
     private val authRepository: AuthRepository,
-    private val dispatchers: Dispatchers
+    private val dispatchers: Dispatchers,
+    private val errorMessageConverter: ErrorMessageConverter
 ) : ActivityListRepository {
 
     private val api = retrofit.create(ActivityListApi::class.java)
@@ -22,7 +24,13 @@ class ActivityListRepositoryImpl(
     override suspend fun getActivities(activityCatId: Int, date: Date) =
         withContext(dispatchers.IO) {
             getAccessToken()?.let {
-                makeRequest { api.getActivities(it, activityCatId, date.formatToUtcString()) }
+                makeRequest(errorMessageConverter) {
+                    api.getActivities(
+                        it,
+                        activityCatId,
+                        date.formatToUtcString()
+                    )
+                }
             } ?: Result.failure(NetworkError(InternetError.Unauthorized))
         }
 

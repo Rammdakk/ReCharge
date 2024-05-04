@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.profile.data
 
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.network.makeRequest
@@ -18,7 +19,8 @@ class ProfileRepositoryImpl(
     retrofit: Retrofit,
     private val authRepository: AuthRepository,
     private val dispatchers: Dispatchers,
-    private val sharedPreferences: CustomSharedPreferences
+    private val sharedPreferences: CustomSharedPreferences,
+    private val errorMessageConverter: ErrorMessageConverter
 ) : ProfileRepository {
 
 
@@ -28,7 +30,7 @@ class ProfileRepositoryImpl(
         withContext(dispatchers.IO) {
             getAccessToken()?.let {
                 async { getProfileShortInfo(forceUpdate = true) }
-                makeRequest { api.getUserInfo(it) }
+                makeRequest(errorMessageConverter) { api.getUserInfo(it) }
             } ?: Result.failure(NetworkError(InternetError.Unauthorized))
         }
 
@@ -42,7 +44,7 @@ class ProfileRepositoryImpl(
         }
         return withContext(dispatchers.IO) {
             getAccessToken()?.let {
-                makeRequest { api.getUserShortInfo(it) }.onSuccess {
+                makeRequest(errorMessageConverter) { api.getUserShortInfo(it) }.onSuccess {
                     sharedPreferences.saveData(it, PROFILE_INFO_KEY)
                 }
             } ?: Result.failure(NetworkError(InternetError.Unauthorized))
@@ -53,7 +55,7 @@ class ProfileRepositoryImpl(
     override suspend fun updateProfile(profile: ProfileInfo): Result<Unit> =
         withContext(dispatchers.IO) {
             getAccessToken()?.let {
-                makeRequest {
+                makeRequest(errorMessageConverter) {
                     api.updateUser(
                         accessToken = it,
                         profileInfo = profile

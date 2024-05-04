@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.reservation.data
 
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.network.makeRequest
@@ -14,7 +15,8 @@ import retrofit2.Retrofit
 class ReservationRepositoryImpl(
     retrofit: Retrofit,
     private val authRepository: AuthRepository,
-    private val dispatchers: Dispatchers
+    private val dispatchers: Dispatchers,
+    private val errorMessageConverter: ErrorMessageConverter
 ) : ReservationRepository {
 
     private val api = retrofit.create(ReservationApi::class.java)
@@ -22,7 +24,7 @@ class ReservationRepositoryImpl(
     override suspend fun getReservationInfo(reservationId: Int): Result<ReservationMetaDataModel> =
         withContext(dispatchers.IO) {
             getAccessToken()?.let {
-                makeRequest {
+                makeRequest(errorMessageConverter) {
                     api.getReservationInfo(
                         accessToken = it,
                         reservationId = reservationId
@@ -36,7 +38,7 @@ class ReservationRepositoryImpl(
     override suspend fun cancelReservation(reservationId: Int): Result<Unit> =
         withContext(dispatchers.IO) {
             getAccessToken()?.let {
-                makeRequest {
+                makeRequest(errorMessageConverter) {
                     api.setReservationCanceled(
                         accessToken = it,
                         reservationId = reservationId

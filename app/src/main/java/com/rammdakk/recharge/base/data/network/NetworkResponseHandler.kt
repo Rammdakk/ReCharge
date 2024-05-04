@@ -1,27 +1,32 @@
 package com.rammdakk.recharge.base.data.network
 
 import android.util.Log
-import com.rammdakk.recharge.base.data.network.error.ErrorHandlerImpl
+import com.rammdakk.recharge.base.data.network.error.ErrorHandlerImpl.getErrorType
+import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.base.data.network.error.HttpException
 import com.rammdakk.recharge.base.data.network.error.InternetError
 import com.rammdakk.recharge.base.data.network.error.NetworkError
 import retrofit2.Response
 
-inline fun <T> makeRequest(requestFunc: () -> Response<T>): Result<T> {
+inline fun <T> makeRequest(
+    errorConverter: ErrorMessageConverter,
+    requestFunc: () -> Response<T>
+): Result<T> {
     val response = runCatching { requestFunc.invoke() }.getOrElse {
         Log.d("Make request", it.message.toString())
-        null
-    } ?: return Result.failure(
-        NetworkError(
-            code = InternetError.Unknown,
-            message = "Не удалось получить значения"
+        val error = getErrorType(it)
+        return Result.failure(
+            NetworkError(
+                error,
+                errorConverter.getError(error)
+            )
         )
-    )
+    }
 
     if (!response.isSuccessful) {
         return Result.failure(
             NetworkError(
-                ErrorHandlerImpl.getErrorType(HttpException(response.code())),
+                getErrorType(HttpException(response.code())),
                 response.errorBody()?.string() ?: response.message()
             )
         )

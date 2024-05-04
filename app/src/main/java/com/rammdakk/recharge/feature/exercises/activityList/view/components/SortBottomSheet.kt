@@ -46,7 +46,7 @@ fun SortBottomSheet(sortingType: SortingTypes, onSort: (SortingTypes) -> Unit) {
             .navigationBarsPadding()
     ) {
         TextPrimaryLarge(
-            text = stringResource(id = R.string.exercise_filters),
+            text = stringResource(id = R.string.exercise_sort),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp, bottom = 16.dp),

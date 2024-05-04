@@ -69,7 +69,8 @@ fun DatePickerDialog(
                 TextButton(
                     onClick = {
                         visibleDialog = false
-                    }
+                    },
+                    colors = ButtonDefaults.textButtonColors(contentColor = ReChargeTokens.BackgroundContainer.getThemedColor())
                 ) {
                     Text(
                         text = stringResource(
@@ -79,10 +80,12 @@ fun DatePickerDialog(
                     )
                 }
             },
+            containerColor = ReChargeTokens.Background.getThemedColor()
         )
     }
 
     DatePickerDialog(
+        colors = DatePickerDefaults.colors(containerColor = ReChargeTokens.Background.getThemedColor()),
         onDismissRequest = { onDismiss() },
         confirmButton = {
             Button(

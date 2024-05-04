@@ -19,6 +19,7 @@
     <string name="contacts">Контакты</string>
     <string name="exercise_search">Найти занятие</string>
     <string name="exercise_filters">Фильтры</string>
+    <string name="exercise_sort">Сортировка</string>
     <string name="exercise_sort_default">По умолчанию</string>
     <string name="exercise_sort_price_low">Сначала дешевле</string>
     <string name="exercise_sort_price_high">Сначала дороже</string>
@@ -45,6 +46,10 @@
     <string name="reservation_code_text">Для подтверждения записи\nпредъявите данный код\nадминистратору</string>
     <string name="reservation_code_codetext">Код: %1$s</string>
     <string name="reservation_cancel">Отменить бронь</string>
+    <string name="reservation_cancel_dialog">Подтвердите действие</string>
+    <string name="reservation_cancel_dialog_text">После отмены вы сможете забронировать занятие повторно</string>
+    <string name="reservation_cancel_dialog_dismiss">Не отменять</string>
+    <string name="reservation_cancel_dialog_confirm">Отменить бронь</string>
     <string name="reservation_canceled_success">Бронь отменена</string>
     <string name="calendar_header">Календарь</string>
     <string name="calendar_current_month">В этом месяце:</string>

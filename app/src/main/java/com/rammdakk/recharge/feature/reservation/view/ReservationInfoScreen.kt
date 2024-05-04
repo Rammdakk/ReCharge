@@ -31,9 +31,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,6 +71,8 @@ fun ReservationInfoScreen(
     LaunchedEffect(Unit) {
         state.bottomSheetState.partialExpand()
     }
+
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
 
     val scope = rememberCoroutineScope()
 
@@ -200,6 +205,8 @@ fun ReservationInfoScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(top = 10.dp)
+                    .clickable { clipboardManager.setText(AnnotatedString(activityInfo.address)) }
             )
             TextPrimarySmall(
                 text = activityInfo.address,
@@ -207,6 +214,7 @@ fun ReservationInfoScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 10.dp)
+                    .clickable { clipboardManager.setText(AnnotatedString(activityInfo.address)) }
             )
             activityInfo.warning?.let {
                 WarningText(

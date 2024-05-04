@@ -41,7 +41,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -96,6 +99,8 @@ fun ActivityInfoScreen(
     val coroutineScope = rememberCoroutineScope()
 
     val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
 
     var selectedId: Int? by remember {
         mutableStateOf(preSelectedId)
@@ -160,6 +165,7 @@ fun ActivityInfoScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 10.dp)
+                    .clickable { clipboardManager.setText(AnnotatedString(activityInfo.address)) }
             )
             TextPrimarySmall(
                 text = activityInfo.address,
@@ -167,6 +173,7 @@ fun ActivityInfoScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 10.dp)
+                    .clickable { clipboardManager.setText(AnnotatedString(activityInfo.address)) }
             )
             DateField(initialDate = initialDate, onDateChanged = onDateChanged)
             if (timePadList.value.isNotEmpty()) {

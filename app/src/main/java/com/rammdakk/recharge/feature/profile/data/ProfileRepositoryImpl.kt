@@ -34,6 +34,11 @@ class ProfileRepositoryImpl(
             } ?: Result.failure(NetworkError(InternetError.Unauthorized))
         }
 
+    override suspend fun getProfileHeaderInfo() = withContext(dispatchers.IO) {
+        getAccessToken()?.let { makeRequest(errorMessageConverter) { api.getUserHeader(it) } }
+            ?: Result.failure(NetworkError(InternetError.Unauthorized))
+    }
+
     override suspend fun getProfileShortInfo(forceUpdate: Boolean): Result<ShortProfileInfo> {
         if (!forceUpdate) {
             withContext(dispatchers.IO) {

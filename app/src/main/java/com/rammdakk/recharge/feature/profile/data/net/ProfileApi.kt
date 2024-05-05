@@ -1,6 +1,6 @@
 package com.rammdakk.recharge.feature.profile.data.net
 
-import com.rammdakk.recharge.feature.profile.data.models.ProfileHeader
+import com.rammdakk.recharge.feature.profile.data.models.ProfileHeaderDataModel
 import com.rammdakk.recharge.feature.profile.data.models.ProfileInfo
 import com.rammdakk.recharge.feature.profile.data.models.ShortProfileInfo
 import retrofit2.Response
@@ -23,7 +23,7 @@ interface ProfileApi {
     @GET("/api/User/GetProfileHeader")
     suspend fun getUserHeader(
         @Header("accessToken") accessToken: String,
-    ): Response<ProfileHeader>
+    ): Response<ProfileHeaderDataModel>
 
     @POST("/api/User/UpdateUser")
     suspend fun updateUser(

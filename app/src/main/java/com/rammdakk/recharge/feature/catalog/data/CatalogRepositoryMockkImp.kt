@@ -4,21 +4,10 @@ import com.rammdakk.recharge.feature.catalog.data.model.ActivityRecommendationDa
 import com.rammdakk.recharge.feature.catalog.data.model.CategoryDataModel
 import com.rammdakk.recharge.feature.catalog.data.model.Coordinates
 import com.rammdakk.recharge.feature.catalog.data.model.NextActivityDataModel
-import com.rammdakk.recharge.feature.catalog.data.model.ProfileDataModel
 import com.rammdakk.recharge.feature.catalog.domain.CatalogRepository
 import java.util.Date
 
 class CatalogRepositoryMockkImp : CatalogRepository {
-
-
-    override suspend fun getProfileInfo(): Result<ProfileDataModel> =
-        Result.success(
-            ProfileDataModel(
-                photoPath = "https://fiverr-res.cloudinary.com/videos/t_main1,q_auto,f_auto/ayao3nn9ntatngxnuaf7/create-you-an-3d-animoji-avatar.png",
-                name = "Анна"
-            )
-        )
-
 
     override suspend fun getNextActivityInfo(): Result<NextActivityDataModel> =
         Result.success(

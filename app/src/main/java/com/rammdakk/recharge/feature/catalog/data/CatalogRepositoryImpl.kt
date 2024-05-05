@@ -8,7 +8,6 @@ import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.catalog.data.model.ActivityRecommendationDataModel
 import com.rammdakk.recharge.feature.catalog.data.model.CategoryDataModel
 import com.rammdakk.recharge.feature.catalog.data.model.NextActivityDataModel
-import com.rammdakk.recharge.feature.catalog.data.model.ProfileDataModel
 import com.rammdakk.recharge.feature.catalog.data.network.CatalogApi
 import com.rammdakk.recharge.feature.catalog.domain.CatalogRepository
 import kotlinx.coroutines.Dispatchers
@@ -23,13 +22,6 @@ class CatalogRepositoryImpl(
 ) : CatalogRepository {
 
     private val api = retrofit.create(CatalogApi::class.java)
-
-    override suspend fun getProfileInfo(): Result<ProfileDataModel> = withContext(dispatchers.IO) {
-        getAccessToken()?.let { makeRequest(errorMessageConverter) { api.getProfileInfo(it) } }
-            ?: Result.failure(
-            NetworkError(InternetError.Unauthorized)
-        )
-    }
 
 
     override suspend fun getNextActivityInfo(): Result<NextActivityDataModel> =

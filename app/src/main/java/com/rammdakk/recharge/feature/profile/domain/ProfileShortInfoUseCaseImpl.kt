@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.profile.domain
 
+import com.rammdakk.recharge.feature.profile.data.models.ProfileHeaderDataModel
 import com.rammdakk.recharge.feature.profile.data.models.ShortProfileInfo
 
 class ProfileShortInfoUseCaseImpl(
@@ -7,4 +8,7 @@ class ProfileShortInfoUseCaseImpl(
 ) : ProfileShortInfoUseCase {
     override suspend fun getProfileShortInfo(forceUpdate: Boolean): Result<ShortProfileInfo> =
         profileRepository.getProfileShortInfo(forceUpdate)
+
+    override suspend fun getProfileHeaderInfo(): Result<ProfileHeaderDataModel> =
+        profileRepository.getProfileHeaderInfo()
 }

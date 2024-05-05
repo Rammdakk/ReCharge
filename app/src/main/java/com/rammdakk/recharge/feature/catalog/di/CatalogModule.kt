@@ -6,6 +6,10 @@ import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.catalog.data.CatalogRepositoryImpl
 import com.rammdakk.recharge.feature.catalog.data.CatalogRepositoryMockkImp
 import com.rammdakk.recharge.feature.catalog.domain.CatalogRepository
+import com.rammdakk.recharge.feature.catalog.domain.NextReservationUseCase
+import com.rammdakk.recharge.feature.catalog.domain.NextReservationUseCaseImpl
+import com.rammdakk.recharge.feature.catalog.domain.RecommendationUseCase
+import com.rammdakk.recharge.feature.catalog.domain.RecommendationUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,4 +33,14 @@ class CatalogModule {
         }
         return CatalogRepositoryImpl(retrofit, authRepository, dispatchers, errorMessageConverter)
     }
+
+    @Provides
+    fun provideRecommendationUseCase(
+        catalogRepository: CatalogRepository
+    ): RecommendationUseCase = RecommendationUseCaseImpl(catalogRepository)
+
+    @Provides
+    fun provideNextReservationUseCase(
+        catalogRepository: CatalogRepository
+    ): NextReservationUseCase = NextReservationUseCaseImpl(catalogRepository)
 }

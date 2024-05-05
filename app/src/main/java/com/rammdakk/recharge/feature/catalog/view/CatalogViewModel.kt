@@ -7,7 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rammdakk.recharge.base.extensions.merge
 import com.rammdakk.recharge.base.view.component.error.ErrorState
-import com.rammdakk.recharge.feature.catalog.domain.CatalogRepository
+import com.rammdakk.recharge.feature.catalog.domain.NextReservationUseCase
+import com.rammdakk.recharge.feature.catalog.domain.RecommendationUseCase
 import com.rammdakk.recharge.feature.catalog.view.model.ActivityRecommendationModel
 import com.rammdakk.recharge.feature.catalog.view.model.CategoriesList
 import com.rammdakk.recharge.feature.catalog.view.model.Category
@@ -15,6 +16,7 @@ import com.rammdakk.recharge.feature.catalog.view.model.NextActivityModel
 import com.rammdakk.recharge.feature.catalog.view.model.ProfileInfo
 import com.rammdakk.recharge.feature.catalog.view.model.convertToActivityInfo
 import com.rammdakk.recharge.feature.catalog.view.model.convertToProfileInfo
+import com.rammdakk.recharge.feature.profile.domain.ProfileShortInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -26,7 +28,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CatalogViewModel @Inject constructor(
-    private val catalogRepository: CatalogRepository,
+    private val recommendationUseCase: RecommendationUseCase,
+    private val nextReservationUseCase: NextReservationUseCase,
+    private val profileShortInfoUseCase: ProfileShortInfoUseCase,
     private val dispatchers: Dispatchers,
 ) : ViewModel() {
 
@@ -85,14 +89,15 @@ class CatalogViewModel @Inject constructor(
 
     private suspend fun loadProfile() = withContext(dispatchers.IO) {
         val result =
-            catalogRepository.getProfileInfo().getOrNull()?.convertToProfileInfo()
+            profileShortInfoUseCase.getProfileHeaderInfo().getOrNull()?.convertToProfileInfo()
         withContext(dispatchers.Main) {
             _profileInfo.value = result
         }
     }
 
     private suspend fun loadNextActivity() = withContext(dispatchers.IO) {
-        val result = catalogRepository.getNextActivityInfo().getOrNull()?.convertToActivityInfo()
+        val result =
+            nextReservationUseCase.getNextActivityInfo().getOrNull()?.convertToActivityInfo()
 
         withContext(dispatchers.Main) {
             _nextActivity.value = result
@@ -100,7 +105,8 @@ class CatalogViewModel @Inject constructor(
     }
 
     private suspend fun loadCategories() = withContext(dispatchers.IO) {
-        val result = catalogRepository.getCategories().getOrElse { handleError(it) }?.map { cat ->
+        val result =
+            recommendationUseCase.getCategories().getOrElse { handleError(it) }?.map { cat ->
             Category(
                 id = cat.id,
                 imagePath = cat.imagePath
@@ -112,7 +118,7 @@ class CatalogViewModel @Inject constructor(
     }
 
     private fun loadActivities(catId: Int? = null) = viewModelScope.launch(dispatchers.IO) {
-        catalogRepository.updateCatalog(catId).getOrElse { handleError(it) }?.map {
+        recommendationUseCase.getRecommendations(catId).getOrElse { handleError(it) }?.map {
             it.convertToActivityInfo()
         }.let { activityList ->
             _nonFilteredActivitiesList = activityList.orEmpty()

@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.view.component.error.ErrorState
-import com.rammdakk.recharge.feature.auth.domain.AuthRepository
+import com.rammdakk.recharge.feature.auth.domain.LogOutUseCase
 import com.rammdakk.recharge.feature.profile.data.models.Gender
 import com.rammdakk.recharge.feature.profile.data.models.ProfileInfo
 import com.rammdakk.recharge.feature.profile.domain.ProfileInfoUseCase
@@ -26,7 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileInfoUseCase: ProfileInfoUseCase,
-    private val authRepository: AuthRepository,
+    private val logOutUseCase: LogOutUseCase,
     private val resources: Resources,
     private val dispatchers: Dispatchers,
 ) : ViewModel() {
@@ -101,7 +101,7 @@ class ProfileViewModel @Inject constructor(
 
     fun logOut(onLogOutSuccess: () -> Unit) = viewModelScope.launch {
         _isLoggedOut.value = LogOutState.IN_PROGRESS
-        authRepository.logOut().let {
+        logOutUseCase.logOut().let {
             _isLoggedOut.value = LogOutState.LOGOUT
             onLogOutSuccess.invoke()
         }

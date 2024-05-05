@@ -10,7 +10,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.feature.auth.data.model.AuthPhoneResponse
-import com.rammdakk.recharge.feature.auth.domain.AuthRepository
+import com.rammdakk.recharge.feature.auth.domain.AuthValidationUseCase
+import com.rammdakk.recharge.feature.auth.domain.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
+    private val authValidationUseCase: AuthValidationUseCase,
+    private val loginUseCase: LoginUseCase,
     private val resources: Resources
 ) : ViewModel() {
 
@@ -49,7 +51,7 @@ class AuthViewModel @Inject constructor(
     }
 
     private suspend fun checkLoginStatus(): Boolean {
-        return authRepository.validateAuth().also {
+        return authValidationUseCase.validateAuth().also {
             _isLoggedIn.value = it
         }
     }
@@ -58,7 +60,7 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             _errorMessage.value = null
 
-            authRepository.requestCode(phoneNumber).fold(
+            loginUseCase.requestCode(phoneNumber).fold(
                 onSuccess = { result ->
                     updateState(result, phoneNumber)
                 },
@@ -97,7 +99,7 @@ class AuthViewModel @Inject constructor(
 
     private fun validateCode(code: String, phoneNumber: String) = viewModelScope.launch {
         sessionId?.let {
-            authRepository.validateCode(code, it, phoneNumber).fold(
+            loginUseCase.validateCode(code, it, phoneNumber).fold(
                 onSuccess = {
                     _isLoggedIn.value = true
                 },

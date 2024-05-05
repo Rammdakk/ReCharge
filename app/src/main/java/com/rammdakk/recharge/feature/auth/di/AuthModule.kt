@@ -5,6 +5,12 @@ import com.rammdakk.recharge.base.data.sp.CustomSharedPreferences
 import com.rammdakk.recharge.base.data.sp.EncryptedSharedPreferences
 import com.rammdakk.recharge.feature.auth.data.AuthRepositoryImpl
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
+import com.rammdakk.recharge.feature.auth.domain.AuthValidationUseCase
+import com.rammdakk.recharge.feature.auth.domain.AuthValidationUseCaseImpl
+import com.rammdakk.recharge.feature.auth.domain.LogOutUseCase
+import com.rammdakk.recharge.feature.auth.domain.LogOutUseCaseImpl
+import com.rammdakk.recharge.feature.auth.domain.LoginUseCase
+import com.rammdakk.recharge.feature.auth.domain.LoginUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,4 +38,19 @@ class AuthModule {
             errorMessageConverter
         )
     }
+
+    @Provides
+    fun provideAuthValidationUseCase(
+        authRepository: AuthRepository
+    ): AuthValidationUseCase = AuthValidationUseCaseImpl(authRepository)
+
+    @Provides
+    fun provideLoginUseCase(
+        authRepository: AuthRepository
+    ): LoginUseCase = LoginUseCaseImpl(authRepository)
+
+    @Provides
+    fun provideLogOutUseCase(
+        authRepository: AuthRepository
+    ): LogOutUseCase = LogOutUseCaseImpl(authRepository)
 }

@@ -1,4 +1,4 @@
-package com.rammdakk.recharge.feature.profile.models.data
+package com.rammdakk.recharge.feature.profile.data.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

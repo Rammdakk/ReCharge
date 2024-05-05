@@ -1,8 +1,8 @@
 package com.rammdakk.recharge.feature.profile.data.net
 
-import com.rammdakk.recharge.feature.profile.models.data.ProfileHeader
-import com.rammdakk.recharge.feature.profile.models.data.ProfileInfo
-import com.rammdakk.recharge.feature.profile.models.data.ShortProfileInfo
+import com.rammdakk.recharge.feature.profile.data.models.ProfileHeader
+import com.rammdakk.recharge.feature.profile.data.models.ProfileInfo
+import com.rammdakk.recharge.feature.profile.data.models.ShortProfileInfo
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

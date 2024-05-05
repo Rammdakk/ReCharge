@@ -6,10 +6,10 @@ import com.rammdakk.recharge.base.data.network.error.NetworkError
 import com.rammdakk.recharge.base.data.network.makeRequest
 import com.rammdakk.recharge.base.data.sp.CustomSharedPreferences
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
+import com.rammdakk.recharge.feature.profile.data.models.ProfileInfo
+import com.rammdakk.recharge.feature.profile.data.models.ShortProfileInfo
 import com.rammdakk.recharge.feature.profile.data.net.ProfileApi
 import com.rammdakk.recharge.feature.profile.domain.ProfileRepository
-import com.rammdakk.recharge.feature.profile.models.data.ProfileInfo
-import com.rammdakk.recharge.feature.profile.models.data.ShortProfileInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext

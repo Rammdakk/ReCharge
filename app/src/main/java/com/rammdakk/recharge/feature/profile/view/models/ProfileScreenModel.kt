@@ -1,6 +1,6 @@
-package com.rammdakk.recharge.feature.profile.models.presentation
+package com.rammdakk.recharge.feature.profile.view.models
 
-import com.rammdakk.recharge.feature.profile.models.data.Gender
+import com.rammdakk.recharge.feature.profile.data.models.Gender
 
 data class ProfileScreenModel(
     val firstName: String,

@@ -5,6 +5,10 @@ import com.rammdakk.recharge.build.isMock
 import com.rammdakk.recharge.feature.activity.data.ActivityMockRepositoryImp
 import com.rammdakk.recharge.feature.activity.data.ActivityRepositoryImp
 import com.rammdakk.recharge.feature.activity.domain.ActivityRepository
+import com.rammdakk.recharge.feature.activity.domain.ActivityUseCase
+import com.rammdakk.recharge.feature.activity.domain.ActivityUseCaseImpl
+import com.rammdakk.recharge.feature.activity.domain.ReservationInfoUseCase
+import com.rammdakk.recharge.feature.activity.domain.ReservationInfoUseCaseImpl
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import dagger.Module
 import dagger.Provides
@@ -18,7 +22,7 @@ import retrofit2.Retrofit
 class ActivityModule {
 
     @Provides
-    fun provideAuthRepository(
+    fun provideActivityRepository(
         dispatchers: Dispatchers,
         authRepository: AuthRepository,
         retrofit: Retrofit,
@@ -28,4 +32,14 @@ class ActivityModule {
             return ActivityMockRepositoryImp()
         return ActivityRepositoryImp(retrofit, authRepository, dispatchers, errorMessageConverter)
     }
+
+    @Provides
+    fun provideActivityUseCase(
+        activityRepository: ActivityRepository
+    ): ActivityUseCase = ActivityUseCaseImpl(activityRepository)
+
+    @Provides
+    fun provideReservationUseCase(
+        activityRepository: ActivityRepository
+    ): ReservationInfoUseCase = ReservationInfoUseCaseImpl(activityRepository)
 }

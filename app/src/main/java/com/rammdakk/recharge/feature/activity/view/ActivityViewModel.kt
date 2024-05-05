@@ -1,7 +1,6 @@
 package com.rammdakk.recharge.feature.activity.view
 
 import android.content.res.Resources
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -9,14 +8,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.view.component.error.ErrorState
-import com.rammdakk.recharge.feature.activity.domain.ActivityRepository
+import com.rammdakk.recharge.feature.activity.domain.ActivityUseCase
+import com.rammdakk.recharge.feature.activity.domain.ReservationInfoUseCase
 import com.rammdakk.recharge.feature.activity.view.model.CurrentUserInfo
 import com.rammdakk.recharge.feature.activity.view.model.TimePad
 import com.rammdakk.recharge.feature.activity.view.model.UserBookingInfo
 import com.rammdakk.recharge.feature.activity.view.model.convertToActivityInfo
 import com.rammdakk.recharge.feature.activity.view.model.covertToDataModel
 import com.rammdakk.recharge.feature.activity.view.model.covertToTimePad
-import com.rammdakk.recharge.feature.profile.domain.ProfileRepository
+import com.rammdakk.recharge.feature.profile.domain.ProfileShortInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,8 +29,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ActivityViewModel @Inject constructor(
-    private val activityRepository: ActivityRepository,
-    private val profileRepository: ProfileRepository,
+    private val activityUseCase: ActivityUseCase,
+    private val reservationInfoUseCase: ReservationInfoUseCase,
+    private val profileUseCase: ProfileShortInfoUseCase,
     private val dispatchers: Dispatchers,
     private val resources: Resources
 ) : ViewModel() {
@@ -53,7 +54,7 @@ class ActivityViewModel @Inject constructor(
 
         val deferred = if (currentUser == null) {
             async {
-                profileRepository.getProfileShortInfo().getOrNull()?.let {
+                profileUseCase.getProfileShortInfo().getOrNull()?.let {
                     CurrentUserInfo(
                         userName = "${it.firstName.orEmpty()} ${it.secondName.orEmpty()}",
                         phone = it.phone.orEmpty(),
@@ -65,7 +66,7 @@ class ActivityViewModel @Inject constructor(
             null
         }
         val activityInfo =
-            activityRepository.getActivityInfo(activityId).getOrElse { handleError(it) }
+            activityUseCase.getActivityInfo(activityId).getOrElse { handleError(it) }
                 ?.convertToActivityInfo()
                 ?: return@launch
         currentUser = currentUser ?: deferred?.await()
@@ -80,7 +81,6 @@ class ActivityViewModel @Inject constructor(
     }
 
     fun loadScheduleForDate(activityId: Int, date: Date) = viewModelScope.launch {
-        Log.d("Ramil loadScheduleForDate", date.toString())
         job?.cancel()
         job = async(dispatchers.IO) {
             date.apply {
@@ -88,7 +88,7 @@ class ActivityViewModel @Inject constructor(
                 minutes = 0
                 seconds = 0
             }
-            val timePad = activityRepository.getActivityTimeTable(activityId, date)
+            val timePad = activityUseCase.getActivityTimeTable(activityId, date)
                 .getOrElse { handleError(it) }
                 ?.map { timePad ->
                     timePad.covertToTimePad {
@@ -104,14 +104,15 @@ class ActivityViewModel @Inject constructor(
 
     private fun getMaxUsersNumber(timeId: Int) = viewModelScope.launch {
         _userNumber.value = null
-        activityRepository.getUsersMaxNumber(tabId = timeId).getOrElse { handleError(it) }?.let {
+        reservationInfoUseCase.getUsersMaxNumber(tabId = timeId).getOrElse { handleError(it) }
+            ?.let {
             _userNumber.value = it
         }
     }
 
     fun reserve(timeId: Int, userBookingInfo: UserBookingInfo, onSuccessReserve: () -> Unit) =
         viewModelScope.launch {
-            activityRepository.reserveActivity(timeId, userBookingInfo.covertToDataModel())
+            reservationInfoUseCase.reserveActivity(timeId, userBookingInfo.covertToDataModel())
                 .getOrElse {
                     handleError(it)
                     null

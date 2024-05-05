@@ -43,9 +43,9 @@ import com.rammdakk.recharge.base.theme.InputIconTextField
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryLarge
 import com.rammdakk.recharge.base.theme.getThemedColor
-import com.rammdakk.recharge.feature.profile.models.data.Gender
-import com.rammdakk.recharge.feature.profile.models.presentation.ProfileScreenModel
+import com.rammdakk.recharge.feature.profile.data.models.Gender
 import com.rammdakk.recharge.feature.profile.view.components.DatePickerDialog
+import com.rammdakk.recharge.feature.profile.view.models.ProfileScreenModel
 import java.text.SimpleDateFormat
 import java.util.Date
 

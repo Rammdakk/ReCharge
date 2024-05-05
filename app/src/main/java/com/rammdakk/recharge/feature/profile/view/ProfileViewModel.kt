@@ -9,10 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.view.component.error.ErrorState
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
-import com.rammdakk.recharge.feature.profile.domain.ProfileRepository
-import com.rammdakk.recharge.feature.profile.models.data.Gender
-import com.rammdakk.recharge.feature.profile.models.data.ProfileInfo
-import com.rammdakk.recharge.feature.profile.models.presentation.ProfileScreenModel
+import com.rammdakk.recharge.feature.profile.data.models.Gender
+import com.rammdakk.recharge.feature.profile.data.models.ProfileInfo
+import com.rammdakk.recharge.feature.profile.domain.ProfileInfoUseCase
+import com.rammdakk.recharge.feature.profile.view.models.ProfileScreenModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val profileRepository: ProfileRepository,
+    private val profileInfoUseCase: ProfileInfoUseCase,
     private val authRepository: AuthRepository,
     private val resources: Resources,
     private val dispatchers: Dispatchers,
@@ -49,7 +49,7 @@ class ProfileViewModel @Inject constructor(
         if (profile != null) {
             updateScreenValues()
         }
-        val newProfile = profileRepository.getProfile().getOrElse { handleError(it) }
+        val newProfile = profileInfoUseCase.getProfile().getOrElse { handleError(it) }
         if (newProfile == null) {
             if (_profileState.value is ProfileScreenState.Idle) {
                 _profileState.value = ProfileScreenState.Error
@@ -68,7 +68,7 @@ class ProfileViewModel @Inject constructor(
         profileScreenModel.covertToProfileInfo()
             .let {
                 profile = it
-                profileRepository.updateProfile(it).fold(
+                profileInfoUseCase.updateProfile(it).fold(
                     onSuccess = { handleSuccess(resources.getString(R.string.profile_update_success)) },
                     onFailure = { err -> handleError(err) }
                 )
@@ -128,4 +128,4 @@ class ProfileViewModel @Inject constructor(
     }
 }
 
-public enum class LogOutState { LOGIN, IN_PROGRESS, LOGOUT }
+enum class LogOutState { LOGIN, IN_PROGRESS, LOGOUT }

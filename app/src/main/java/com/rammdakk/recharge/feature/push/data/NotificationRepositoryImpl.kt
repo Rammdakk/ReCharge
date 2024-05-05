@@ -1,9 +1,13 @@
 package com.rammdakk.recharge.feature.push.data
 
+import android.util.Log
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.messaging
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.push.data.network.NotificationApi
 import com.rammdakk.recharge.feature.push.domain.NotificationRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 
@@ -13,14 +17,24 @@ class NotificationRepositoryImpl(
     private val dispatchers: Dispatchers,
 ) : NotificationRepository {
 
-    val api = retrofit.create(NotificationApi::class.java)
-    override suspend fun updateToken(token: String) {
+    private val api = retrofit.create(NotificationApi::class.java)
+    override suspend fun updateToken(token: String?) {
         withContext(dispatchers.IO) {
+            val realToken =
+                token ?: runCatching {
+                    Firebase.messaging.token.await()
+                }.getOrNull() ?: return@withContext
+
             runCatching {
                 authRepository.getToken(logoutOnError = false)?.let {
-                    api.updateFcmToken(accessToken = it, fcmToken = token)
+                    Log.d("Ramil", realToken)
+                    api.updateFcmToken(accessToken = it, fcmToken = realToken)
                 }
             }
         }
+    }
+
+    override suspend fun invalidateToken(): Unit = withContext(dispatchers.IO) {
+        runCatching { Firebase.messaging.deleteToken() }
     }
 }

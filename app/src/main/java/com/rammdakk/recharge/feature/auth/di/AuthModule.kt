@@ -11,6 +11,7 @@ import com.rammdakk.recharge.feature.auth.domain.LogOutUseCase
 import com.rammdakk.recharge.feature.auth.domain.LogOutUseCaseImpl
 import com.rammdakk.recharge.feature.auth.domain.LoginUseCase
 import com.rammdakk.recharge.feature.auth.domain.LoginUseCaseImpl
+import com.rammdakk.recharge.feature.push.domain.NotificationRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -46,11 +47,13 @@ class AuthModule {
 
     @Provides
     fun provideLoginUseCase(
-        authRepository: AuthRepository
-    ): LoginUseCase = LoginUseCaseImpl(authRepository)
+        authRepository: AuthRepository,
+        notificationRepository: NotificationRepository
+    ): LoginUseCase = LoginUseCaseImpl(authRepository, notificationRepository)
 
     @Provides
     fun provideLogOutUseCase(
-        authRepository: AuthRepository
-    ): LogOutUseCase = LogOutUseCaseImpl(authRepository)
+        authRepository: AuthRepository,
+        notificationRepository: NotificationRepository
+    ): LogOutUseCase = LogOutUseCaseImpl(authRepository, notificationRepository)
 }

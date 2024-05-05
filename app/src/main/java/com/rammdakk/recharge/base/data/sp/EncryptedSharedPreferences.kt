@@ -19,7 +19,8 @@ class EncryptedSharedPreferences(
 //    )
 
 
-    val sharedPreferences = context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE)
+    val sharedPreferences =
+        context.getSharedPreferences("${context.packageName}.auth", Context.MODE_PRIVATE)
 
     companion object {
         const val ACCESS_KEY = "AccessKey"

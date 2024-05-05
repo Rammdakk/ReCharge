@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rammdakk.recharge.base.view.component.error.ErrorState
-import com.rammdakk.recharge.feature.exercises.categroies.domain.ExerciseRepository
+import com.rammdakk.recharge.feature.exercises.categroies.domain.ExerciseCategoryUseCase
 import com.rammdakk.recharge.feature.exercises.categroies.models.data.ExerciseTabDataModel
 import com.rammdakk.recharge.feature.exercises.categroies.models.data.SportTypeDataModel
 import com.rammdakk.recharge.feature.exercises.categroies.models.presentation.ExercisesTab
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExerciseCatViewModel @Inject constructor(
-    private val exerciseRepository: ExerciseRepository,
+    private val exerciseCategoryUseCase: ExerciseCategoryUseCase,
     private val dispatchers: Dispatchers,
 ) : ViewModel() {
 
@@ -58,11 +58,11 @@ class ExerciseCatViewModel @Inject constructor(
 
     private suspend fun loadTabs() = withContext(dispatchers.IO) {
         val tabs =
-            exerciseRepository.getTabsCategories().getOrElse { handleError(it) }
+            exerciseCategoryUseCase.getTabsCategories().getOrElse { handleError(it) }
                 ?.map { it.covertToScreenModel() }
                 ?: return@withContext
         val sports = tabs.first().let { exercisesTab ->
-            exerciseRepository.getSports(exercisesTab.id).getOrElse { handleError(it) }
+            exerciseCategoryUseCase.getSports(exercisesTab.id).getOrElse { handleError(it) }
                 ?.map { it.covertToScreenModel() }
         } ?: emptyList()
         withContext(dispatchers.Main) {
@@ -79,7 +79,7 @@ class ExerciseCatViewModel @Inject constructor(
                 _selectedId.intValue = id
             }
         }
-        exerciseRepository.getSports(id).getOrElse { handleError(it) }
+        exerciseCategoryUseCase.getSports(id).getOrElse { handleError(it) }
             ?.map { it.covertToScreenModel() }?.let {
                 withContext(dispatchers.Main) {
                     _sportTypes.value = it

@@ -4,6 +4,8 @@ import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.build.isMock
 import com.rammdakk.recharge.feature.exercises.categroies.data.ExerciseRepositoryImpl
 import com.rammdakk.recharge.feature.exercises.categroies.data.ExerciseRepositoryMockImpl
+import com.rammdakk.recharge.feature.exercises.categroies.domain.ExerciseCategoryUseCase
+import com.rammdakk.recharge.feature.exercises.categroies.domain.ExerciseCategoryUseCaseImpl
 import com.rammdakk.recharge.feature.exercises.categroies.domain.ExerciseRepository
 import dagger.Module
 import dagger.Provides
@@ -27,4 +29,9 @@ class ExerciseModule {
         }
         return ExerciseRepositoryImpl(retrofit, dispatchers, errorMessageConverter)
     }
+
+    @Provides
+    fun provideExerciseCatsUseCase(
+        exerciseRepository: ExerciseRepository
+    ): ExerciseCategoryUseCase = ExerciseCategoryUseCaseImpl(exerciseRepository)
 }

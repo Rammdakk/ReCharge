@@ -4,6 +4,8 @@ import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.exercises.activityList.data.ActivityListRepositoryImpl
 import com.rammdakk.recharge.feature.exercises.activityList.domain.ActivityListRepository
+import com.rammdakk.recharge.feature.exercises.activityList.domain.ActivityListUseCase
+import com.rammdakk.recharge.feature.exercises.activityList.domain.ActivityListUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,4 +31,9 @@ class ActivityListModule {
             errorMessageConverter
         )
     }
+
+    @Provides
+    fun provideActivityListUseCase(
+        activityListRepository: ActivityListRepository
+    ): ActivityListUseCase = ActivityListUseCaseImpl(activityListRepository)
 }

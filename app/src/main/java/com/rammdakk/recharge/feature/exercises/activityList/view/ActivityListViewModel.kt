@@ -14,7 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationServices
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.view.component.error.ErrorState
-import com.rammdakk.recharge.feature.exercises.activityList.domain.ActivityListRepository
+import com.rammdakk.recharge.feature.exercises.activityList.domain.ActivityListUseCase
 import com.rammdakk.recharge.feature.exercises.activityList.view.model.ActivityInfo
 import com.rammdakk.recharge.feature.exercises.activityList.view.model.SortingTypes
 import com.rammdakk.recharge.feature.exercises.activityList.view.model.convertToActivityInfo
@@ -32,7 +32,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ActivityListViewModel @Inject constructor(
-    private val activityListRepository: ActivityListRepository,
+    private val activityListUseCase: ActivityListUseCase,
     private val dispatchers: Dispatchers,
     private val resources: Resources,
     @ApplicationContext private val context: Context
@@ -75,7 +75,7 @@ class ActivityListViewModel @Inject constructor(
 
             withContext(dispatchers.IO)
             {
-                activityListRepository.getActivities(activityCatId, _selectedDate.value)
+                activityListUseCase.getActivities(activityCatId, _selectedDate.value)
                     .getOrElse { handleError(it) }
                     ?.let {
                         _timeSortedActivities =

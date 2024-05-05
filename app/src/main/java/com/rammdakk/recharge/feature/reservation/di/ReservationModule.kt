@@ -6,6 +6,8 @@ import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.reservation.data.ReservationMockRepositoryImpl
 import com.rammdakk.recharge.feature.reservation.data.ReservationRepositoryImpl
 import com.rammdakk.recharge.feature.reservation.domain.ReservationRepository
+import com.rammdakk.recharge.feature.reservation.domain.ReservationUseCase
+import com.rammdakk.recharge.feature.reservation.domain.ReservationUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,4 +36,9 @@ class ReservationModule {
             errorMessageConverter
         )
     }
+
+    @Provides
+    fun provideReservationUseCase(
+        reservationRepository: ReservationRepository
+    ): ReservationUseCase = ReservationUseCaseImpl(reservationRepository)
 }

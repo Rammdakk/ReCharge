@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rammdakk.recharge.base.view.component.error.ErrorState
-import com.rammdakk.recharge.feature.calendar.domain.CalendarRepository
+import com.rammdakk.recharge.feature.calendar.domain.ReservationListUseCase
 import com.rammdakk.recharge.feature.calendar.view.components.calendar.CalendarState
 import com.rammdakk.recharge.feature.calendar.view.model.ReservationModel
 import com.rammdakk.recharge.feature.calendar.view.model.convertToReservationModel
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CalendarScreenViewModel @Inject constructor(
-    private val calendarRepository: CalendarRepository,
+    private val reservationListUseCase: ReservationListUseCase,
     private val dispatchers: Dispatchers,
 ) : ViewModel() {
     private var errorJob: Job? = null
@@ -45,7 +45,7 @@ class CalendarScreenViewModel @Inject constructor(
     fun loadData() = viewModelScope.launch {
         updateReservations(_calendarState.value)
         _screenState.value = CalendarScreenState.Loaded(
-            CalendarState(_calendarState, ::onMonthChanged, {}),
+            CalendarState(_calendarState, ::onMonthChanged),
             ReservationListState(
                 _isLoadingList,
                 _reservationList
@@ -68,7 +68,7 @@ class CalendarScreenViewModel @Inject constructor(
 
     private suspend fun updateReservations(newMonth: YearMonth) {
         val date = withContext(dispatchers.IO) {
-            calendarRepository.loadReservations(
+            reservationListUseCase.loadReservations(
                 newMonth.atDay(1).toDate(),
                 newMonth.plusMonths(1).atDay(1).toDate(),
             ).getOrElse { handleError(it) }?.sortedBy { it.time }

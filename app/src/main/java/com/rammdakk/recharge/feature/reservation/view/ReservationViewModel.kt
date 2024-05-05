@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.view.component.error.ErrorState
-import com.rammdakk.recharge.feature.activity.domain.ActivityRepository
+import com.rammdakk.recharge.feature.activity.domain.ActivityUseCase
 import com.rammdakk.recharge.feature.activity.view.model.convertToActivityInfo
-import com.rammdakk.recharge.feature.reservation.domain.ReservationRepository
+import com.rammdakk.recharge.feature.reservation.domain.ReservationUseCase
 import com.rammdakk.recharge.feature.reservation.view.model.convertToReservationInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReservationViewModel @Inject constructor(
-    private val activityRepository: ActivityRepository,
-    private val reservationRepository: ReservationRepository,
+    private val activityUseCase: ActivityUseCase,
+    private val reservationUseCase: ReservationUseCase,
     private val resources: Resources,
     private val dispatchers: Dispatchers,
 ) : ViewModel() {
@@ -40,12 +40,12 @@ class ReservationViewModel @Inject constructor(
 
     fun loadData(reservationId: Int, activityId: Int) = viewModelScope.launch(dispatchers.IO) {
         val reservationDeferred = async {
-            reservationRepository.getReservationInfo(reservationId = reservationId)
+            reservationUseCase.getReservationInfo(reservationId = reservationId)
                 .getOrElse { error -> handleError(error) }?.convertToReservationInfo()
         }
 
         val activityInfoDeferred = async {
-            activityRepository.getActivityInfo(activityId)
+            activityUseCase.getActivityInfo(activityId)
                 .getOrElse { error -> handleError(error) }?.convertToActivityInfo()
         }
 
@@ -58,7 +58,7 @@ class ReservationViewModel @Inject constructor(
     }
 
     fun cancelReservation(reservationId: Int) = viewModelScope.launch {
-        reservationRepository.cancelReservation(reservationId = reservationId)
+        reservationUseCase.cancelReservation(reservationId = reservationId)
             .getOrElse { error ->
                 handleError(error)
                 null

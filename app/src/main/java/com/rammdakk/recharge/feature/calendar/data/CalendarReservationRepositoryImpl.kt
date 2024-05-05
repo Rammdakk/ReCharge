@@ -8,18 +8,18 @@ import com.rammdakk.recharge.base.extensions.formatToUtcString
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
 import com.rammdakk.recharge.feature.calendar.data.model.ReservationDataModel
 import com.rammdakk.recharge.feature.calendar.data.network.CalendarReservationApi
-import com.rammdakk.recharge.feature.calendar.domain.CalendarRepository
+import com.rammdakk.recharge.feature.calendar.domain.CalendarReservationRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import java.util.Date
 
-class CalendarRepositoryImpl(
+class CalendarReservationRepositoryImpl(
     retrofit: Retrofit,
     private val authRepository: AuthRepository,
     private val dispatchers: Dispatchers,
     private val errorMessageConverter: ErrorMessageConverter
-) : CalendarRepository {
+) : CalendarReservationRepository {
 
     private val api = retrofit.create(CalendarReservationApi::class.java)
     override suspend fun loadReservations(

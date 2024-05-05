@@ -3,9 +3,11 @@ package com.rammdakk.recharge.feature.calendar.di
 import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.build.isMock
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
-import com.rammdakk.recharge.feature.calendar.data.CalendarMockRepositoryImpl
-import com.rammdakk.recharge.feature.calendar.data.CalendarRepositoryImpl
-import com.rammdakk.recharge.feature.calendar.domain.CalendarRepository
+import com.rammdakk.recharge.feature.calendar.data.CalendarMockReservationRepositoryImpl
+import com.rammdakk.recharge.feature.calendar.data.CalendarReservationRepositoryImpl
+import com.rammdakk.recharge.feature.calendar.domain.CalendarReservationRepository
+import com.rammdakk.recharge.feature.calendar.domain.ReservationListUseCase
+import com.rammdakk.recharge.feature.calendar.domain.ReservationListUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,10 +25,20 @@ class CalendarModule {
         authRepository: AuthRepository,
         dispatchers: Dispatchers,
         errorMessageConverter: ErrorMessageConverter
-    ): CalendarRepository {
+    ): CalendarReservationRepository {
         if (isMock()) {
-            return CalendarMockRepositoryImpl()
+            return CalendarMockReservationRepositoryImpl()
         }
-        return CalendarRepositoryImpl(retrofit, authRepository, dispatchers, errorMessageConverter)
+        return CalendarReservationRepositoryImpl(
+            retrofit,
+            authRepository,
+            dispatchers,
+            errorMessageConverter
+        )
     }
+
+    @Provides
+    fun provideReservationListUseCase(
+        calendarReservationRepository: CalendarReservationRepository
+    ): ReservationListUseCase = ReservationListUseCaseImpl(calendarReservationRepository)
 }

@@ -2,11 +2,11 @@ package com.rammdakk.recharge.feature.calendar.data
 
 import com.rammdakk.recharge.feature.calendar.data.model.Coordinates
 import com.rammdakk.recharge.feature.calendar.data.model.ReservationDataModel
-import com.rammdakk.recharge.feature.calendar.domain.CalendarRepository
+import com.rammdakk.recharge.feature.calendar.domain.CalendarReservationRepository
 import java.util.Date
 
-class CalendarMockRepositoryImpl(
-) : CalendarRepository {
+class CalendarMockReservationRepositoryImpl(
+) : CalendarReservationRepository {
 
     override suspend fun loadReservations(
         startDate: Date,

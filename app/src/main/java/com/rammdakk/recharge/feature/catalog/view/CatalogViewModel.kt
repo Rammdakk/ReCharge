@@ -41,7 +41,7 @@ class CatalogViewModel @Inject constructor(
     private val _profileInfo: MutableState<ProfileInfo?> = mutableStateOf(null)
     private val _nextActivity: MutableState<NextActivityModel?> = mutableStateOf(null)
     private val _categoriesList: MutableState<CategoriesList> =
-        mutableStateOf(CategoriesList(emptyList()) {})
+        mutableStateOf(CategoriesList(emptyList(), ::loadActivities))
     private var _nonFilteredActivitiesList: List<ActivityRecommendationModel> = emptyList()
     private val _activitiesList: MutableState<List<ActivityRecommendationModel>> =
         mutableStateOf(emptyList())
@@ -107,13 +107,13 @@ class CatalogViewModel @Inject constructor(
     private suspend fun loadCategories() = withContext(dispatchers.IO) {
         val result =
             recommendationUseCase.getCategories().getOrElse { handleError(it) }?.map { cat ->
-            Category(
-                id = cat.id,
-                imagePath = cat.imagePath
-            )
-        }
+                Category(
+                    id = cat.id,
+                    imagePath = cat.imagePath
+                )
+            }
         withContext(dispatchers.Main) {
-            _categoriesList.value = CategoriesList(result.orEmpty(), ::loadActivities)
+            result?.let { _categoriesList.value = CategoriesList(it, ::loadActivities) }
         }
     }
 
@@ -121,7 +121,7 @@ class CatalogViewModel @Inject constructor(
         recommendationUseCase.getRecommendations(catId).getOrElse { handleError(it) }?.map {
             it.convertToActivityInfo()
         }.let { activityList ->
-            _nonFilteredActivitiesList = activityList.orEmpty()
+            _nonFilteredActivitiesList = activityList ?: _nonFilteredActivitiesList
             withContext(dispatchers.Main) {
                 _activitiesList.value = _nonFilteredActivitiesList
             }

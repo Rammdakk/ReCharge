@@ -1,6 +1,7 @@
 package com.rammdakk.recharge.feature.auth.view
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -80,6 +81,9 @@ fun AuthCodeValidationScreen(
     onRequestCodeClick: () -> Unit,
     bottomInfo: State<BottomInfo?>
 ) {
+    BackHandler {
+        onBackPressed.invoke()
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -98,11 +102,12 @@ fun AuthCodeValidationScreen(
                 .height(height = 45.dp)
                 .aspectRatio(1f, true)
                 .padding(10.dp), ReChargeTokens.TextPrimaryInverse.getThemedColor())
-        Box(modifier = Modifier.fillMaxHeight(0.3f))
+        Box(modifier = Modifier.fillMaxHeight(0.25f))
         Text(
             modifier = Modifier
                 .wrapContentHeight()
-                .padding(bottom = 30.dp),
+                .padding(bottom = 30.dp)
+                .padding(horizontal = 10.dp),
             text = greetingText,
             textAlign = TextAlign.Center,
             fontSize = 45.sp,

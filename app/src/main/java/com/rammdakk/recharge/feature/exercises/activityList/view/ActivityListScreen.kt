@@ -79,7 +79,7 @@ fun ActivityListScreen(
     var isSortBottomSheetVisible by remember { mutableStateOf(false) }
 
     val time = rememberSaveable(stateSaver = saver) { mutableStateOf(0f..24 * 60f) }
-    val price = rememberSaveable(stateSaver = saver) { mutableStateOf(0f..100000f) }
+    val price = rememberSaveable(stateSaver = saver) { mutableStateOf(0f..MAX_PRICE) }
 
     Scaffold(
         containerColor = ReChargeTokens.Background.getThemedColor(),
@@ -177,3 +177,4 @@ fun ActivityListScreen(
     }
 }
 
+const val MAX_PRICE = 20000f

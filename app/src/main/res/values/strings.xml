@@ -19,6 +19,8 @@
     <string name="contacts">Контакты</string>
     <string name="exercise_search">Найти занятие</string>
     <string name="exercise_filters">Фильтры</string>
+    <string name="exercise_filters_time">Время занятия</string>
+    <string name="exercise_filters_price">Стоимость</string>
     <string name="exercise_sort">Сортировка</string>
     <string name="exercise_sort_default">По умолчанию</string>
     <string name="exercise_sort_price_low">Сначала дешевле</string>

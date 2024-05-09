@@ -1,5 +1,6 @@
 package com.rammdakk.recharge.feature.exercises.activityList.view.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -21,8 +22,10 @@ import androidx.compose.ui.unit.dp
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.TextPrimaryLarge
+import com.rammdakk.recharge.base.theme.TextPrimaryMedium
 import com.rammdakk.recharge.base.theme.getThemedColor
 import com.rammdakk.recharge.base.view.component.slider.SliderWithTextInfo
+import com.rammdakk.recharge.feature.exercises.activityList.view.MAX_PRICE
 import kotlin.math.roundToInt
 
 @Composable
@@ -51,6 +54,13 @@ fun FiltersSheetContent(
                 .padding(top = 24.dp, bottom = 16.dp),
             textAlign = TextAlign.Center
         )
+        TextPrimaryMedium(
+            text = stringResource(id = R.string.exercise_filters_time),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            textAlign = TextAlign.Start
+        )
         SliderWithTextInfo(
             modifier = Modifier.padding(vertical = 8.dp),
             maxValue = (24 * 60f),
@@ -62,11 +72,18 @@ fun FiltersSheetContent(
         ) {
             time.value = it
         }
+        TextPrimaryMedium(
+            text = stringResource(id = R.string.exercise_filters_price),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            textAlign = TextAlign.Start
+        )
         SliderWithTextInfo(
             modifier = Modifier.padding(vertical = 8.dp),
-            maxValue = 100000f,
+            maxValue = MAX_PRICE,
             minValue = 0f,
-            steps = 1000f,
+            steps = 100f,
             sliderPosition = price,
             toTextTransformation = ::toCurrency,
             colors = colors
@@ -87,6 +104,7 @@ fun FiltersSheetContent(
     }
 }
 
+@SuppressLint("DefaultLocale")
 private fun toTime(value: Float): String {
     val time = value.toInt()
     return "${String.format("%02d", time / 60)}:${String.format("%02d", time % 60)}"

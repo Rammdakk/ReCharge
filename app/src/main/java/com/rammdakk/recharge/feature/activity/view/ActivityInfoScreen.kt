@@ -1,6 +1,7 @@
 package com.rammdakk.recharge.feature.activity.view
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.util.Patterns
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -43,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
@@ -66,6 +68,7 @@ import com.rammdakk.recharge.base.theme.getThemedColor
 import com.rammdakk.recharge.feature.activity.data.model.ActivityExtendedDataModel
 import com.rammdakk.recharge.feature.activity.data.model.TimePadDataModel
 import com.rammdakk.recharge.feature.activity.view.components.ActivityImage
+import com.rammdakk.recharge.feature.activity.view.components.AddToCalendarDialog
 import com.rammdakk.recharge.feature.activity.view.components.DateField
 import com.rammdakk.recharge.feature.activity.view.components.NumberField
 import com.rammdakk.recharge.feature.activity.view.components.TimePad
@@ -93,7 +96,9 @@ fun ActivityInfoScreen(
     timePadList: State<List<TimePad>>,
     maxUserNumber: State<Int?>,
     userInfo: CurrentUserInfo?,
+    isDialogVisible: State<UserBookingInfo?>,
     onReserve: (Int, UserBookingInfo) -> Unit,
+    onDismissDialog: () -> Unit,
     onBackPressed: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -236,6 +241,23 @@ fun ActivityInfoScreen(
                 onReserve.invoke(id, userInfo)
                 selectedId = null
             }
+        }
+    }
+    isDialogVisible.value?.let { userBookingInfo ->
+        val context = LocalContext.current
+        AddToCalendarDialog(onDismissRequest = onDismissDialog) {
+            onDismissDialog.invoke()
+            val intent = Intent(Intent.ACTION_EDIT).apply {
+                setType("vnd.android.cursor.item/event")
+                putExtra("beginTime", userBookingInfo.calendarInfo.startDate)
+                putExtra("allDay", false)
+                putExtra("rrule", "FREQ=ONCE")
+                putExtra("endTime", userBookingInfo.calendarInfo.endTime)
+                putExtra("title", userBookingInfo.calendarInfo.activityName)
+                putExtra("eventLocation", userBookingInfo.calendarInfo.locationName)
+            }
+
+            context.startActivity(intent)
         }
     }
 }
@@ -436,9 +458,10 @@ fun ActivityInfoScreenPreview() {
         preSelectedId = null,
         {},
         userInfo = null,
+        isDialogVisible = mutableStateOf(null),
         timePadList = mutableStateOf(list),
         maxUserNumber = mutableIntStateOf(0),
-        onBackPressed = {}, onReserve = { _, _ -> })
+        onBackPressed = {}, onReserve = { _, _ -> }, onDismissDialog = {})
 }
 
 private val roundedCorner = 20.dp

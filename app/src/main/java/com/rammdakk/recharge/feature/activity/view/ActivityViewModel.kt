@@ -37,11 +37,12 @@ class ActivityViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var errorJob: Job? = null
-    private var currentUser: CurrentUserInfo? = null
+    private var _currentUser: CurrentUserInfo? = null
     private val _screenState: MutableState<ActivityScreenState> =
         mutableStateOf(ActivityScreenState.Idle)
     private val _schedule: MutableState<List<TimePad>> = mutableStateOf(emptyList())
-    private var _userNumber: MutableState<Int?> = mutableStateOf(null)
+    private val _userNumber: MutableState<Int?> = mutableStateOf(null)
+    private val _isDialogVisible: MutableState<UserBookingInfo?> = mutableStateOf(null)
     private var _errorState = mutableStateOf<ErrorState>(ErrorState.Idle)
 
     private var job: Job? = null
@@ -52,7 +53,7 @@ class ActivityViewModel @Inject constructor(
     fun loadData(activityId: Int, date: Date = Date()) = viewModelScope.launch(dispatchers.IO) {
         loadScheduleForDate(activityId, date)
 
-        val deferred = if (currentUser == null) {
+        val deferred = if (_currentUser == null) {
             async {
                 profileUseCase.getProfileShortInfo().getOrNull()?.let {
                     CurrentUserInfo(
@@ -69,13 +70,14 @@ class ActivityViewModel @Inject constructor(
             activityUseCase.getActivityInfo(activityId).getOrElse { handleError(it) }
                 ?.convertToActivityInfo()
                 ?: return@launch
-        currentUser = currentUser ?: deferred?.await()
+        _currentUser = _currentUser ?: deferred?.await()
         withContext(dispatchers.Main) {
             _screenState.value = ActivityScreenState.Loaded(
                 activityInfo = activityInfo,
                 scheduleInfo = _schedule,
                 usersMaxNumber = _userNumber,
-                currentUserInfo = currentUser
+                currentUserInfo = _currentUser,
+                addToCalendarDialog = _isDialogVisible
             )
         }
     }
@@ -106,26 +108,31 @@ class ActivityViewModel @Inject constructor(
         _userNumber.value = null
         reservationInfoUseCase.getUsersMaxNumber(tabId = timeId).getOrElse { handleError(it) }
             ?.let {
-            _userNumber.value = it
-        }
+                _userNumber.value = it
+            }
     }
 
-    fun reserve(timeId: Int, userBookingInfo: UserBookingInfo, onSuccessReserve: () -> Unit) =
+    fun reserve(timeId: Int, userBookingInfo: UserBookingInfo) {
         viewModelScope.launch {
             reservationInfoUseCase.reserveActivity(timeId, userBookingInfo.covertToDataModel())
                 .getOrElse {
                     handleError(it)
                     null
                 }?.let {
+                    _isDialogVisible.value = userBookingInfo
                     _errorState.value =
                         ErrorState.Success(resources.getString(R.string.reservation_success))
                     errorJob = async {
                         delay(2000)
                         _errorState.value = ErrorState.Idle
                     }
-                    onSuccessReserve.invoke()
                 }
         }
+    }
+
+    fun hideDialog() {
+        _isDialogVisible.value = null
+    }
 
     private suspend fun handleError(throwable: Throwable) = withContext(dispatchers.Main) {
         errorJob?.cancel()

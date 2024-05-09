@@ -17,6 +17,10 @@
     <string name="save">Сохранить</string>
     <string name="exit">Выйти</string>
     <string name="contacts">Контакты</string>
+    <string name="activity_add_to_calendar_title">Добавить событие в календарь?</string>
+    <string name="activity_add_to_calendar">Так вы сможете отслеживать его вне приложения</string>
+    <string name="activity_add_to_calendar_cancel">Не добавлять</string>
+    <string name="activity_add_to_calendar_add">Добавить</string>
     <string name="exercise_search">Найти занятие</string>
     <string name="exercise_filters">Фильтры</string>
     <string name="exercise_filters_time">Время занятия</string>

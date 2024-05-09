@@ -7,7 +7,7 @@
     <string name="error_network_access_denied">Ошибка получения доступа</string>
     <string name="error_network_unauthorized">Сессия авторизации сброшена</string>
     <string name="error_network_service_unavailable">Сервер недоступен</string>
-    <string name="error_unknown">Ошибка:\n%1$s</string>
+    <string name="error_unknown">Ошибка:%1$s</string>
     <string name="error_50x">Ошибка сервера</string>
     <string name="error_too_many_requests">Превышено доспустиое число запросов</string>
     <string name="error_protocol_exception">Операция не поддерживается на вашем устройстве, воспользуйтесь веб версией</string>

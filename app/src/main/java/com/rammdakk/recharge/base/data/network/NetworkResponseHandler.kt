@@ -24,10 +24,13 @@ inline fun <T> makeRequest(
     }
 
     if (!response.isSuccessful) {
+        val error = getErrorType(HttpException(response.code()))
         return Result.failure(
             NetworkError(
-                getErrorType(HttpException(response.code())),
-                response.errorBody()?.string() ?: response.message()
+                error,
+                response.errorBody()?.string() ?: response.message() ?: errorConverter.getError(
+                    error
+                )
             )
         )
     }

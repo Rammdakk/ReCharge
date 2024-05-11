@@ -68,7 +68,7 @@ fun ReservationInfoScreen(
     activityInfo: ActivityExtendedInfo,
     reservationInfo: ReservationInfo,
     onBackPressed: () -> Unit,
-    onCancelClick: (Int) -> Unit
+    onCancelClick: (Int, () -> Unit) -> Unit
 ) {
     val state = rememberBottomSheetScaffoldState(
         rememberModalBottomSheetState(confirmValueChange = { sheetValue -> sheetValue != SheetValue.Hidden })
@@ -260,7 +260,7 @@ fun ReservationInfoScreen(
     }
     if (isCancelDialogVisible) {
         CancelReservationDialog(onDismissRequest = { isCancelDialogVisible = false }) {
-            reservationInfo.reservationId?.let { onCancelClick.invoke(it) }
+            reservationInfo.reservationId?.let { onCancelClick.invoke(it, onBackPressed) }
             isCancelDialogVisible = false
         }
     }

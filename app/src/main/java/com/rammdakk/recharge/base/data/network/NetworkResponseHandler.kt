@@ -28,7 +28,8 @@ inline fun <T> makeRequest(
         return Result.failure(
             NetworkError(
                 error,
-                response.errorBody()?.string() ?: response.message() ?: errorConverter.getError(
+                response.errorBody()?.string().takeIf { !it.isNullOrBlank() }
+                    ?: errorConverter.getError(
                     error
                 )
             )

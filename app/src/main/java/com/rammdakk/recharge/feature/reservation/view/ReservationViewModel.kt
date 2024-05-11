@@ -57,7 +57,7 @@ class ReservationViewModel @Inject constructor(
         }
     }
 
-    fun cancelReservation(reservationId: Int) = viewModelScope.launch {
+    fun cancelReservation(reservationId: Int, onSuccessAction: () -> Unit) = viewModelScope.launch {
         reservationUseCase.cancelReservation(reservationId = reservationId)
             .getOrElse { error ->
                 handleError(error)
@@ -66,8 +66,9 @@ class ReservationViewModel @Inject constructor(
                 _errorState.value =
                     ErrorState.Success(resources.getString(R.string.reservation_canceled_success))
                 errorJob = async {
-                    delay(2000)
+                    delay(1000)
                     _errorState.value = ErrorState.Idle
+                    onSuccessAction.invoke()
                 }
             }
     }

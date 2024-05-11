@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -67,7 +68,8 @@ fun AuthCodePreview() {
                 "Совершая авторизацию, вы соглашаетесь \n" +
                         "с правилами работы сервиса", {}
             )
-        )
+        ),
+        isLoading = mutableStateOf(false)
     )
 }
 
@@ -79,7 +81,8 @@ fun AuthCodeValidationScreen(
     onClick: (String) -> Unit,
     errorMessage: State<String?>,
     onRequestCodeClick: () -> Unit,
-    bottomInfo: State<BottomInfo?>
+    bottomInfo: State<BottomInfo?>,
+    isLoading: State<Boolean>
 ) {
     BackHandler {
         onBackPressed.invoke()
@@ -115,7 +118,7 @@ fun AuthCodeValidationScreen(
             color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
             fontWeight = FontWeight.Bold
         )
-        CodeCell(codeSize) { str -> onClick.invoke(str) }
+        CodeCell(codeSize, isLoading) { str -> onClick.invoke(str) }
         TextError(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -148,7 +151,7 @@ fun AuthCodeValidationScreen(
 }
 
 @Composable
-fun CodeCell(codeSize: Int, onVerifyClick: (String) -> Unit) {
+fun CodeCell(codeSize: Int, isLoading: State<Boolean>, onVerifyClick: (String) -> Unit) {
     var text by remember {
         mutableStateOf(TextFieldValue())
     }
@@ -197,23 +200,36 @@ fun CodeCell(codeSize: Int, onVerifyClick: (String) -> Unit) {
             }),
         )
         if (isButtonAvailable) {
-            Icon(
-                painterResource(id = R.drawable.navigate_next),
-                "",
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(5.dp)
-                    .clip(RoundedCornerShape(50))
-                    .background(Color(0xFFA5B7E4))
-                    .clickable {
-                        keyboardController?.hide()
-                        onVerifyClick(text.text)
-                    }
-                    .height(height = (height).pxToDp() - 10.dp)
-                    .padding(10.dp)
-                    .aspectRatio(1f, true),
-                ReChargeTokens.TextPrimaryInverse.getThemedColor()
-            )
+            if (isLoading.value) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(5.dp)
+                        .height(height = (height).pxToDp() - 5.dp)
+                        .padding(10.dp)
+                        .aspectRatio(1f, true),
+                    strokeWidth = 2.dp,
+                    color = ReChargeTokens.BackgroundContainer.getThemedColor()
+                )
+            } else {
+                Icon(
+                    painterResource(id = R.drawable.navigate_next),
+                    "",
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(5.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(Color(0xFFA5B7E4))
+                        .clickable {
+                            keyboardController?.hide()
+                            onVerifyClick(text.text)
+                        }
+                        .height(height = (height).pxToDp() - 10.dp)
+                        .padding(10.dp)
+                        .aspectRatio(1f, true),
+                    ReChargeTokens.TextPrimaryInverse.getThemedColor()
+                )
+            }
         }
     }
 }

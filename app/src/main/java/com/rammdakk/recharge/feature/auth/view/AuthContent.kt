@@ -29,6 +29,7 @@ fun AuthContent(
                 hintText = state.hintText?.let { stringResource(id = it) },
                 onClick = state.onRequestCodeClick,
                 errorMessage = state.errorMessage,
+                isLoading = state.isLoading
             )
         }
         if (state is AuthScreenState.RequestCode) {
@@ -43,7 +44,8 @@ fun AuthContent(
                 onClick = state.onSubmitClick,
                 onRequestCodeClick = state.onRequestCodeClick,
                 errorMessage = state.errorMessage,
-                bottomInfo = state.bottomInfo
+                bottomInfo = state.bottomInfo,
+                isLoading = state.isLoading
             )
         }
     }

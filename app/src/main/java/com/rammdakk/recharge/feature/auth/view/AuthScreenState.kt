@@ -11,6 +11,7 @@ sealed interface AuthScreenState {
         @StringRes val hintText: Int? = null,
         val onRequestCodeClick: (String) -> Unit,
         val errorMessage: State<String?>,
+        val isLoading: State<Boolean>
     ) : AuthScreenState
 
     data class RequestCode(
@@ -21,9 +22,8 @@ sealed interface AuthScreenState {
         val onRequestCodeClick: () -> Unit,
         val errorMessage: State<String?>,
         val bottomInfo: State<BottomInfo?>,
+        val isLoading: State<Boolean>
     ) : AuthScreenState
-
-    object LoggedIn : AuthScreenState
 }
 
 data class BottomInfo(

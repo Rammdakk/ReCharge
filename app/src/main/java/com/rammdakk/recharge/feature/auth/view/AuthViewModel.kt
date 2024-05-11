@@ -28,6 +28,7 @@ class AuthViewModel @Inject constructor(
     private val _errorMessage: MutableState<String?> = mutableStateOf(null)
     private val _isLoggedIn: MutableLiveData<Boolean> = MutableLiveData(false)
     private val _openLink: MutableLiveData<String?> = MutableLiveData(null)
+    private val _isLoading: MutableState<Boolean> = mutableStateOf(false)
     private var sessionId: String? = null
 
     val authState: State<AuthScreenState> = _authState
@@ -45,7 +46,8 @@ class AuthViewModel @Inject constructor(
                 greetingText = R.string.greeting,
                 hintText = null,
                 onRequestCodeClick = this@AuthViewModel::requestCode,
-                errorMessage = _errorMessage
+                errorMessage = _errorMessage,
+                isLoading = _isLoading
             )
         }
     }
@@ -59,12 +61,14 @@ class AuthViewModel @Inject constructor(
     private fun requestCode(phoneNumber: String) {
         viewModelScope.launch {
             _errorMessage.value = null
-
+            _isLoading.value = true
             loginUseCase.requestCode(phoneNumber).fold(
                 onSuccess = { result ->
+                    _isLoading.value = false
                     updateState(result, phoneNumber)
                 },
                 onFailure = {
+                    _isLoading.value = false
                     _errorMessage.value = it.message
                 }
             )
@@ -92,18 +96,22 @@ class AuthViewModel @Inject constructor(
                         _openLink.value = info.url
                     }
                 }
-            )
+            ),
+            isLoading = _isLoading
         )
     }
 
 
     private fun validateCode(code: String, phoneNumber: String) = viewModelScope.launch {
         sessionId?.let {
+            _isLoading.value = true
             loginUseCase.validateCode(code, it, phoneNumber).fold(
                 onSuccess = {
+                    _isLoading.value = false
                     _isLoggedIn.value = true
                 },
                 onFailure = {
+                    _isLoading.value = false
                     _errorMessage.value = it.message
                 }
             )

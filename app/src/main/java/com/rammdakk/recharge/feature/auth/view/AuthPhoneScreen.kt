@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,7 +58,8 @@ fun AuthPreview() {
         greetingText = "Привет!",
         onClick = { },
         hintText = "Номер телефона",
-        errorMessage = mutableStateOf("Отправить код повторно")
+        errorMessage = mutableStateOf("Отправить код повторно"),
+        isLoading = mutableStateOf(false)
     )
 }
 
@@ -70,6 +72,7 @@ fun AuthPhoneScreen(
     hintText: String? = null,
     onClick: (String) -> Unit,
     errorMessage: State<String?>,
+    isLoading: State<Boolean>
 ) {
     Column(
         modifier = Modifier
@@ -88,7 +91,7 @@ fun AuthPhoneScreen(
             color = ReChargeTokens.TextPrimaryInverse.getThemedColor(),
             fontWeight = FontWeight.Bold
         )
-        PhoneCell(hint = hintText) { str -> onClick.invoke(str) }
+        PhoneCell(hint = hintText, isLoading = isLoading) { str -> onClick.invoke(str) }
         TextError(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -99,7 +102,7 @@ fun AuthPhoneScreen(
 }
 
 @Composable
-fun PhoneCell(hint: String? = null, onVerifyClick: (String) -> Unit) {
+fun PhoneCell(hint: String? = null, isLoading: State<Boolean>, onVerifyClick: (String) -> Unit) {
     var text by remember {
         mutableStateOf(TextFieldValue())
     }
@@ -181,23 +184,36 @@ fun PhoneCell(hint: String? = null, onVerifyClick: (String) -> Unit) {
             }
         }
         if (isButtonAvailable) {
-            Icon(
-                painterResource(id = R.drawable.navigate_next),
-                "",
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(5.dp)
-                    .clip(RoundedCornerShape(50))
-                    .background(Color(0xFFA5B7E4))
-                    .clickable {
-                        keyboardController?.hide()
-                        onVerifyClick(text.text.formatPhone())
-                    }
-                    .height(height = (height).pxToDp() - 10.dp)
-                    .padding(10.dp)
-                    .aspectRatio(1f, true),
-                ReChargeTokens.TextPrimaryInverse.getThemedColor()
-            )
+            if (isLoading.value) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(5.dp)
+                        .height(height = (height).pxToDp() - 5.dp)
+                        .padding(10.dp)
+                        .aspectRatio(1f, true),
+                    strokeWidth = 2.dp,
+                    color = ReChargeTokens.BackgroundContainer.getThemedColor()
+                )
+            } else {
+                Icon(
+                    painterResource(id = R.drawable.navigate_next),
+                    "",
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(5.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(Color(0xFFA5B7E4))
+                        .clickable {
+                            keyboardController?.hide()
+                            onVerifyClick(text.text.formatPhone())
+                        }
+                        .height(height = (height).pxToDp() - 10.dp)
+                        .padding(10.dp)
+                        .aspectRatio(1f, true),
+                    ReChargeTokens.TextPrimaryInverse.getThemedColor()
+                )
+            }
         }
     }
 }

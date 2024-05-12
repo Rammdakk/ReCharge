@@ -322,6 +322,7 @@ private fun SheetContent(
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 value = userName,
+                hint = stringResource(id = R.string.reservation_booiking_name),
                 fontSize = 18.sp,
                 iconId = R.drawable.account_circle,
                 iconColor = ReChargeTokens.TextPrimary.getThemedColor()
@@ -333,6 +334,7 @@ private fun SheetContent(
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 value = phone,
+                hint = stringResource(id = R.string.reservation_booiking_phone),
                 fontSize = 18.sp,
                 iconId = R.drawable.call,
                 iconColor = ReChargeTokens.TextPrimary.getThemedColor(),
@@ -345,6 +347,7 @@ private fun SheetContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
+                hint = stringResource(id = R.string.reservation_booiking_email),
                 value = email,
                 fontSize = 18.sp,
                 iconId = R.drawable.mail,

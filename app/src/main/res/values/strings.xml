@@ -13,6 +13,9 @@
     <string name="price">%1$s₽</string>
     <string name="error_text">Произошла ошибка,\nпопробуйте перезапустить приложение</string>
     <string name="number_of_visitors">Количество</string>
+    <string name="reservation_booiking_name">Имя и фамилия</string>
+    <string name="reservation_booiking_phone">Телефон</string>
+    <string name="reservation_booiking_email">Эл. почта</string>
     <string name="confirm">Подтвердить</string>
     <string name="save">Сохранить</string>
     <string name="exit">Выйти</string>

@@ -13,6 +13,7 @@
     <string name="price">%1$s₽</string>
     <string name="error_text">Произошла ошибка,\nпопробуйте перезапустить приложение</string>
     <string name="number_of_visitors">Количество</string>
+    <string name="reservation_no_slots">На сегодня свободных слотов нет</string>
     <string name="reservation_booiking_name">Имя и фамилия</string>
     <string name="reservation_booiking_phone">Телефон</string>
     <string name="reservation_booiking_email">Эл. почта</string>

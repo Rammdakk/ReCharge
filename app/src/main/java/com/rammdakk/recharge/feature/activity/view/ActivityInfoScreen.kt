@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -182,21 +183,24 @@ fun ActivityInfoScreen(
             )
             DateField(initialDate = initialDate, onDateChanged = onDateChanged)
             if (timePadList.value.isNotEmpty()) {
-
                 LazyRow(
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 10.dp)
                 ) {
-                    timePadList.value.let { timePad ->
-                        items(timePad.size) {
-                            TimePad(timePad = timePad[it]) { id ->
-                                selectedId = id
-                            }
+                    items(timePadList.value) {
+                        TimePad(timePad = it) { id ->
+                            selectedId = id
                         }
                     }
                 }
+            } else {
+                TextPrimaryMedium(
+                    text = stringResource(id = R.string.reservation_no_slots),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
             }
             activityInfo.warning?.let {
                 WarningText(

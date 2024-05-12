@@ -52,7 +52,7 @@ enum class ReservationStatus(
     @StringRes val stringRes: Int,
     val cellColor: Color
 ) {
-    NEW(R.string.status_new, Color(0xFFA2F4F9)),
+    NEW(R.string.status_new, Color(0xFF4974f5)),
     CONFIRMED(R.string.status_confirmed, Color(0xFFA1F3AE)),
     USED(R.string.status_used, Color(0xFFD9D9D9)),
     MISSED(R.string.status_missed, Color(0xFFD9D9D9)),

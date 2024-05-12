@@ -80,7 +80,9 @@ fun DatePickerDialog(
                     )
                 }
             },
-            containerColor = ReChargeTokens.Background.getThemedColor()
+            containerColor = ReChargeTokens.Background.getThemedColor(),
+            titleContentColor = ReChargeTokens.TextPrimary.getThemedColor(),
+            textContentColor = ReChargeTokens.TextSecondary.getThemedColor()
         )
     }
 
@@ -138,6 +140,11 @@ fun DatePickerDialog(
             colors = DatePickerDefaults.colors(
                 selectedDayContainerColor = ReChargeTokens.BackgroundColored.getThemedColor(),
                 selectedYearContainerColor = ReChargeTokens.BackgroundColored.getThemedColor(),
+                weekdayContentColor = ReChargeTokens.TextSecondary.getThemedColor(),
+                dayContentColor = ReChargeTokens.TextSecondary.getThemedColor(),
+                selectedDayContentColor = ReChargeTokens.TextSecondary.getThemedColor(),
+                selectedYearContentColor = ReChargeTokens.TextSecondary.getThemedColor(),
+                navigationContentColor = ReChargeTokens.TextSecondary.getThemedColor(),
             )
         )
     }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.rammdakk.recharge.R
 import com.rammdakk.recharge.base.theme.ReChargeTheme
+import com.rammdakk.recharge.base.theme.ReChargeTokens
 import com.rammdakk.recharge.base.theme.getThemedColor
 
 @Composable
@@ -31,7 +32,7 @@ fun AddToCalendarDialog(
                     onClick = {
                         onConfirmation()
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = com.rammdakk.recharge.base.theme.ReChargeTokens.BackgroundContainer.getThemedColor())
+                    colors = ButtonDefaults.textButtonColors(contentColor = ReChargeTokens.BackgroundContainer.getThemedColor())
                 ) {
                     Text(stringResource(id = R.string.activity_add_to_calendar_add))
                 }
@@ -41,12 +42,14 @@ fun AddToCalendarDialog(
                     onClick = {
                         onDismissRequest()
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = com.rammdakk.recharge.base.theme.ReChargeTokens.BackgroundContainer.getThemedColor())
+                    colors = ButtonDefaults.textButtonColors(contentColor = ReChargeTokens.BackgroundContainer.getThemedColor())
                 ) {
                     Text(stringResource(id = R.string.activity_add_to_calendar_cancel))
                 }
             },
-            containerColor = com.rammdakk.recharge.base.theme.ReChargeTokens.Background.getThemedColor(),
+            containerColor = ReChargeTokens.Background.getThemedColor(),
+            titleContentColor = ReChargeTokens.TextPrimary.getThemedColor(),
+            textContentColor = ReChargeTokens.TextSecondary.getThemedColor()
 
             )
     }

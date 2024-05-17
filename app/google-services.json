@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "7783437396",
+    "project_id": "recharge-00",
+    "storage_bucket": "recharge-00.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:7783437396:android:b6807f894706c864eb89c1",
+        "android_client_info": {
+          "package_name": "com.rammdakk.recharge"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhuVHt05Qmh7-EMsRALmMcf6scHGNv944"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

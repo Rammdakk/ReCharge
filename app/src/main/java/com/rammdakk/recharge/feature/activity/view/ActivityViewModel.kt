@@ -57,7 +57,8 @@ class ActivityViewModel @Inject constructor(
             async {
                 profileUseCase.getProfileShortInfo().getOrNull()?.let {
                     CurrentUserInfo(
-                        userName = "${it.firstName.orEmpty()} ${it.secondName.orEmpty()}",
+                        userName = "${it.firstName.orEmpty()} ".takeIf { name -> name.isNotBlank() }
+                            .orEmpty() + it.secondName.orEmpty(),
                         phone = it.phone.orEmpty(),
                         email = it.email.orEmpty()
                     )

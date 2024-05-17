@@ -1,7 +1,5 @@
 package com.rammdakk.recharge.feature.push
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.rammdakk.recharge.feature.push.domain.NotificationRepository
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,9 +24,6 @@ class PushNotificationService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        val clipboard: ClipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("token", token)
-        clipboard.setPrimaryClip(clip)
         scope?.cancel()
         scope = CoroutineScope(SupervisorJob() + dispatchers.IO)
         scope?.launch {

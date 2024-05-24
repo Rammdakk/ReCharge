@@ -224,7 +224,8 @@ fun ProfileScreen(
                     modifier = modifier,
                     value = cityState,
                     fontSize = 18.sp,
-                    iconVector = Icons.Default.LocationOn
+                    iconVector = Icons.Default.LocationOn,
+                    hint = stringResource(id = R.string.profile_city)
                 ) { fieldValue ->
                     cityState = fieldValue
                 }

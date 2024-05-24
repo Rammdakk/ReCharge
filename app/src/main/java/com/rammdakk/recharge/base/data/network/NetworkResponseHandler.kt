@@ -1,6 +1,5 @@
 package com.rammdakk.recharge.base.data.network
 
-import android.util.Log
 import com.rammdakk.recharge.base.data.network.error.ErrorHandlerImpl.getErrorType
 import com.rammdakk.recharge.base.data.network.error.ErrorMessageConverter
 import com.rammdakk.recharge.base.data.network.error.HttpException
@@ -13,7 +12,6 @@ inline fun <T> makeRequest(
     requestFunc: () -> Response<T>
 ): Result<T> {
     val response = runCatching { requestFunc.invoke() }.getOrElse {
-        Log.d("Make request", it.message.toString())
         val error = getErrorType(it)
         return Result.failure(
             NetworkError(
@@ -28,10 +26,10 @@ inline fun <T> makeRequest(
         return Result.failure(
             NetworkError(
                 error,
-                response.errorBody()?.string().takeIf { !it.isNullOrBlank() }
+                response.errorBody()?.string().takeIf { !it.isNullOrBlank() && it.length < 100 }
                     ?: errorConverter.getError(
-                    error
-                )
+                        error
+                    )
             )
         )
     }

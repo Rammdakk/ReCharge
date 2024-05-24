@@ -1,7 +1,6 @@
 package com.rammdakk.recharge.feature.exercises.activityList.view.model
 
 import android.text.format.DateFormat
-import android.util.Log
 import com.rammdakk.recharge.feature.exercises.activityList.data.model.ActivityDataModel
 import com.rammdakk.recharge.feature.exercises.activityList.data.model.Coordinates
 import java.util.Calendar
@@ -39,9 +38,7 @@ fun ActivityDataModel.convertToActivityInfo(): ActivityInfo? {
         price = this.price,
         location = this.coordinates.convertToLocationInfo(),
         organizationName = this.organizationName
-    ).also {
-        Log.d("Ramil convertToActivityInfo", this.time.toString())
-    }
+    )
 }
 
 private fun convertToTimeString(startDate: Date, lengthInMinutes: Long?): String {

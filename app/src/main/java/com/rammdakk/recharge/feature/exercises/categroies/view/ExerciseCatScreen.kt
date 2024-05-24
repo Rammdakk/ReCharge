@@ -1,6 +1,5 @@
 package com.rammdakk.recharge.feature.exercises.categroies.view
 
-import android.util.Log
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -49,7 +48,6 @@ fun ExerciseCatScreen(
     ) {
         SearchBox(onClick = {
             searchString = it
-            Log.d("Ramil", it)
         })
         LazyRow(
             modifier = Modifier
@@ -85,7 +83,6 @@ fun ExerciseCatScreen(
                     modifier = Modifier.fillMaxWidth(),
                     sportTypeItem = sportItem
                 ) {
-                    Log.d("Ramil", sportItem.title)
                     onCategoryClick.invoke(sportItem.id)
                 }
             }

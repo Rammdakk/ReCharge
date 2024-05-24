@@ -563,6 +563,7 @@ fun IconText(
                             fontSize = fontSize,
                             color = ReChargeTokens.TextTertiary.getThemedColor(),
                             maxLines = maxLines,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }

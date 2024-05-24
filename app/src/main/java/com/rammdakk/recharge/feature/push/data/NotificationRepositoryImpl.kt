@@ -1,6 +1,5 @@
 package com.rammdakk.recharge.feature.push.data
 
-import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.messaging.messaging
 import com.rammdakk.recharge.feature.auth.domain.AuthRepository
@@ -27,7 +26,6 @@ class NotificationRepositoryImpl(
 
             runCatching {
                 authRepository.getToken(logoutOnError = false)?.let {
-                    Log.d("Ramil", realToken)
                     api.updateFcmToken(accessToken = it, fcmToken = realToken)
                 }
             }
